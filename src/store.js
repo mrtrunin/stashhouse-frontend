@@ -8,7 +8,8 @@ const persistedState = localStorage.getItem("reduxState")
   ? JSON.parse(localStorage.getItem("reduxState"))
   : {};
 
-const DEBUG = true;
+const DEBUG = process.env.ENV === "development";
+
 const compose = (f, g) => a => f(g(a));
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
