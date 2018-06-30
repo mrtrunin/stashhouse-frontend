@@ -153,7 +153,7 @@ class LoginContainer extends Component {
                       Log in
                     </Button>
 
-                    {/* <GoogleLogin
+                    <GoogleLogin
                       clientId="55376108045-u21pjckajg7knr4dode63bqnm3u99tug.apps.googleusercontent.com"
                       buttonText="Google Login"
                       onSuccess={this.googleLogin}
@@ -163,7 +163,7 @@ class LoginContainer extends Component {
                         backgroundColor: "rgb(209, 72, 54)",
                         color: "white"
                       }}
-                    /> */}
+                    />
                   </Grid>
                 </Grid>
               </form>
