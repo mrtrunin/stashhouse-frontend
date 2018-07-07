@@ -53,7 +53,7 @@ export class ProductEditor extends Component {
   };
 
   handleCreateOrUpdateProduct = async () => {
-    const { product } = this.props;
+    const { product, business } = this.props;
 
     if (product.id) {
       await updateProduct(
@@ -68,16 +68,17 @@ export class ProductEditor extends Component {
         product.name,
         product.ean,
         product.default_price,
-        product.tax_rate
+        product.tax_rate,
+        business.name
       );
     }
-    await fetchProductsStock();
+    await fetchProductsStock(business.name);
   };
 
   handleDeleteProduct = async () => {
-    let productId = this.props.product.id;
-    await deleteProduct(productId);
-    await fetchProductsStock();
+    const { product, business } = this.props;
+    await deleteProduct(product.id);
+    await fetchProductsStock(business.name);
   };
 
   render() {
@@ -149,6 +150,7 @@ ProductEditor.propTypes = {
 
 export default connect(store => {
   return {
-    product: store.product.product
+    product: store.product.product,
+    business: store.user.business
   };
 })(ProductEditor);

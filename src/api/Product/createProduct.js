@@ -1,7 +1,13 @@
 import axios from "axios";
 import Message from "components/Message";
 
-async function createProduct(name, ean, default_price, tax_rate) {
+async function createProduct(
+  name,
+  ean,
+  default_price,
+  tax_rate,
+  business_name
+) {
   let url = process.env.REACT_APP_SERVER_URL;
 
   let payload = {};
@@ -10,6 +16,9 @@ async function createProduct(name, ean, default_price, tax_rate) {
   payload.ean = ean;
   payload.default_price = default_price;
   payload.tax_rate = tax_rate;
+  payload.business = {
+    name: business_name
+  };
 
   try {
     const { data } = await axios.post(url + "/products/", payload, {

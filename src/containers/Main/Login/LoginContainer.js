@@ -74,7 +74,7 @@ class LoginContainer extends Component {
     const { classes } = this.props;
 
     if (this.props.isLoggedIn) {
-      return <Redirect push exact to="/warehouse" />;
+      return <Redirect push exact to="/business-choice" />;
     }
 
     return (

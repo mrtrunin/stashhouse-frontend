@@ -13,6 +13,7 @@ import CustomerList from "containers/Main/CustomerList";
 import Test from "containers/Main/Test";
 
 import LandingPage from "containers/LandingPage";
+import BusinessChoice from "containers/Main/BusinessChoice";
 
 const Router = () => {
   return (
@@ -38,6 +39,11 @@ const Router = () => {
         <PrivateRoute exact path="/payment-list/" component={PaymentList} />
         <PrivateRoute path="/customer/:merchantId" component={CustomerList} />
         <PrivateRoute exact path="/customer-list/" component={CustomerList} />
+        <PrivateRoute
+          exact
+          path="/business-choice/"
+          component={BusinessChoice}
+        />
         <Route exact path="/logout/" component={Logout} />
         <Route exact path="/login/" component={Login} />
         <Route exact path="/" component={LandingPage} />

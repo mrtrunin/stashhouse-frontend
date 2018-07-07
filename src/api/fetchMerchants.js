@@ -1,7 +1,7 @@
 import store from "store";
 import axios from "axios";
 
-async function fetchMerchants() {
+async function fetchMerchants(businessName) {
   let url = process.env.REACT_APP_SERVER_URL;
 
   await store.dispatch({
@@ -9,7 +9,7 @@ async function fetchMerchants() {
   });
 
   await axios
-    .get(url + "/merchants/", {
+    .get(url + "/merchants/?business_name=" + businessName, {
       headers: {
         Authorization: "Bearer " + localStorage.jwtToken
       }

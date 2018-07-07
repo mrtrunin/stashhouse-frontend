@@ -1,7 +1,7 @@
 import store from "store";
 import axios from "axios";
 
-async function fetchProducts() {
+async function fetchProducts(businessName) {
   let url = process.env.REACT_APP_SERVER_URL;
 
   store.dispatch({
@@ -9,11 +9,14 @@ async function fetchProducts() {
   });
 
   try {
-    const { data } = await axios.get(url + "/products/", {
-      headers: {
-        Authorization: "Bearer " + localStorage.jwtToken
+    const { data } = await axios.get(
+      url + "/products/?business_name=" + businessName,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.jwtToken
+        }
       }
-    });
+    );
 
     store.dispatch({
       type: "FETCH_PRODUCTS_FULFILLED",

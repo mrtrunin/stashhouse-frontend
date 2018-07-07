@@ -47,22 +47,22 @@ export class WarehouseEditor extends Component {
   };
 
   handleCreateOrUpdateWarehouse = async () => {
-    const { warehouse } = this.props;
+    const { warehouse, business } = this.props;
 
     if (warehouse.id) {
       await updateWarehouse(warehouse.name, warehouse.id);
     } else {
-      await createWarehouse(warehouse.name);
+      await createWarehouse(warehouse.name, business.name);
     }
-    await fetchProductsStock();
-    await fetchWarehouses();
+    await fetchProductsStock(business.name);
+    await fetchWarehouses(business.name);
   };
 
   handleDeleteWarehouse = async () => {
-    const { warehouse } = this.props;
+    const { warehouse, business } = this.props;
     await deleteWarehouse(warehouse.id);
-    await fetchProductsStock();
-    await fetchWarehouses();
+    await fetchProductsStock(business.name);
+    await fetchWarehouses(business.name);
   };
 
   render() {
@@ -105,6 +105,7 @@ WarehouseEditor.propTypes = {
 
 export default connect(store => {
   return {
-    warehouse: store.warehouse.warehouse
+    warehouse: store.warehouse.warehouse,
+    business: store.user.business
   };
 })(WarehouseEditor);

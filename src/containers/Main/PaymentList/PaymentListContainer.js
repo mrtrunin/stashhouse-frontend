@@ -16,12 +16,23 @@ export class PaymentListContainer extends Component {
   };
 
   componentDidMount = () => {
-    fetchPayments();
+    this.fetchData();
     this.showEditors();
   };
 
-  UNSAFE_componentWillReceiveProps = nextProps => {
-    this.showEditors(nextProps);
+  componentDidUpdate = prevProps => {
+    if (prevProps !== this.props) {
+      this.showEditors(this.props);
+    }
+
+    if (prevProps.business !== this.props.business) {
+      this.fetchData();
+    }
+  };
+
+  fetchData = () => {
+    const { business } = this.props;
+    fetchPayments(business.name);
   };
 
   showEditors = nextProps => {
@@ -77,9 +88,14 @@ PaymentListContainer.propTypes = {
   fetched: PropTypes.bool,
   match: PropTypes.shape({
     params: PropTypes.shape({ paymentId: PropTypes.string })
-  })
+  }),
+  business: PropTypes.object.isRequired
 };
 
 export default connect(store => {
-  return { payments: store.payments.payments, fetched: store.payments.fetched };
+  return {
+    payments: store.payments.payments,
+    fetched: store.payments.fetched,
+    business: store.user.business
+  };
 })(PaymentListContainer);

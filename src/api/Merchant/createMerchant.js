@@ -7,7 +7,8 @@ async function createMerchant(
   zip_code,
   city,
   country,
-  phone_number
+  phone_number,
+  business_name
 ) {
   const url = process.env.REACT_APP_SERVER_URL;
 
@@ -19,7 +20,10 @@ async function createMerchant(
     zip_code,
     city,
     country,
-    phone_number
+    phone_number,
+    business: {
+      name: business_name
+    }
   };
 
   try {

@@ -80,7 +80,7 @@ export class PaymentEditor extends Component {
   };
 
   handleCreateOrUpdatePayment = async () => {
-    const { payment, invoices } = this.props;
+    const { payment, invoices, business } = this.props;
 
     let relatedInvoice = invoices.find(invoice => {
       return invoice.full_transaction_number === payment.transaction;
@@ -103,16 +103,17 @@ export class PaymentEditor extends Component {
         payment.amount,
         payment.sender_name,
         payment.payment_method,
-        payment.description
+        payment.description,
+        business.name
       );
     }
-    await fetchPayments();
+    await fetchPayments(business.name);
   };
 
   handleDeletePayment = async () => {
-    let paymentId = this.props.payment.id;
-    await deletePayment(paymentId);
-    await fetchPayments();
+    const { payment, business } = this.props;
+    await deletePayment(payment.id);
+    await fetchPayments(business.name);
   };
 
   render() {
@@ -246,6 +247,7 @@ PaymentEditor.propTypes = {
 export default connect(store => {
   return {
     payment: store.payment.payment,
-    invoices: store.invoices.invoices
+    invoices: store.invoices.invoices,
+    business: store.user.business
   };
 })(PaymentEditor);

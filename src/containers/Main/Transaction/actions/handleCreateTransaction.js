@@ -4,7 +4,7 @@ import Message from "components/Message";
 import createTransaction from "api/Transaction/createTransaction";
 import addProductToTransaction from "api/addProductToTransaction";
 
-const handleCreateTransaction = async (props, e) => {
+const handleCreateTransaction = async (transactionState, business, e) => {
   e.preventDefault();
 
   let createTransactionTypes = {
@@ -13,13 +13,17 @@ const handleCreateTransaction = async (props, e) => {
     move: "TRANSFER"
   };
 
-  let transactionType = props.transactionType;
+  const {
+    transactionType,
+    products,
+    fromWarehouse,
+    toWarehouse
+  } = transactionState;
   let selectedCreateTransactionType = createTransactionTypes[transactionType];
 
-  let products = props.products;
-  let merchant = ["sell"].includes(transactionType) ? props.merchant : {};
-  let fromWarehouse = props.fromWarehouse;
-  let toWarehouse = props.toWarehouse;
+  let merchant = ["sell"].includes(transactionType)
+    ? transactionState.merchant
+    : {};
 
   let hasNoProducts = Object.keys(products).length === 0;
   let hasNoMerchants = Object.keys(merchant).length === 0;
@@ -55,7 +59,8 @@ const handleCreateTransaction = async (props, e) => {
   try {
     let transaction = await createTransaction(
       merchant.id,
-      selectedCreateTransactionType
+      selectedCreateTransactionType,
+      business.name
     );
 
     let transactionId = transaction.id;
@@ -72,7 +77,8 @@ const handleCreateTransaction = async (props, e) => {
           transactionId,
           product.quantity,
           product.price,
-          product.tax_rate
+          product.tax_rate,
+          business.name
         );
         Message("Product successfully added to Transaction!");
       } catch (error) {

@@ -8,7 +8,8 @@ async function addProductToTransaction(
   transactionId,
   quantity,
   price,
-  tax_rate = null
+  tax_rate = null,
+  business_name
 ) {
   let url = process.env.REACT_APP_SERVER_URL;
   let payload = {};
@@ -20,6 +21,9 @@ async function addProductToTransaction(
   payload.to_warehouse = toWarehouseId;
   payload.transaction = transactionId;
   payload.quantity = quantity;
+  payload.business = {
+    name: business_name
+  };
 
   try {
     const { data } = await axios.post(url + "/stock/", payload, {

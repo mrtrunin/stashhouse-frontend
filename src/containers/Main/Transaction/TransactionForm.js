@@ -58,9 +58,10 @@ export class TransactionForm extends Component {
   };
 
   componentDidMount = async () => {
-    await fetchMerchants();
-    await fetchWarehouses();
-    await fetchProducts();
+    const { business } = this.props;
+    await fetchMerchants(business.name);
+    await fetchWarehouses(business.name);
+    await fetchProducts(business.name);
     await loadExistingTransaction(this.props, this.redirect);
     await setTransactionType(this.props.match.params.transactionType);
   };
@@ -226,7 +227,8 @@ export class TransactionForm extends Component {
                     variant="raised"
                     onClick={handleUpdateTransaction.bind(
                       null,
-                      this.props.transactionState
+                      this.props.transactionState,
+                      this.props.business
                     )}
                   >
                     Update
@@ -239,7 +241,8 @@ export class TransactionForm extends Component {
                     variant="raised"
                     onClick={handleCreateTransaction.bind(
                       null,
-                      this.props.transactionState
+                      this.props.transactionState,
+                      this.props.business
                     )}
                   >
                     {this.props.transactionState.transactionType}
@@ -264,6 +267,7 @@ TransactionForm.propTypes = {
   warehousesFetched: PropTypes.bool,
   productsFetched: PropTypes.bool,
   transactionState: PropTypes.object,
+  business: PropTypes.object.isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       transactionType: PropTypes.string.isRequired,
@@ -280,6 +284,7 @@ export default connect(store => {
     warehousesFetched: store.warehouses.fetched,
     products: store.products.products,
     productsFetched: store.products.fetched,
-    transactionState: store.transactionState
+    transactionState: store.transactionState,
+    business: store.user.business
   };
 })(withStyles(styles)(TransactionForm));

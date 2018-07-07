@@ -2,7 +2,7 @@ import store from "store";
 import axios from "axios";
 import Message from "components/Message";
 
-async function fetchTransactions() {
+async function fetchTransactions(businessName) {
   let url = process.env.REACT_APP_SERVER_URL;
 
   await store.dispatch({
@@ -10,11 +10,14 @@ async function fetchTransactions() {
   });
 
   try {
-    const { data } = await axios.get(url + "/transactions/", {
-      headers: {
-        Authorization: "Bearer " + localStorage.jwtToken
+    const { data } = await axios.get(
+      url + "/transactions/?business_name=" + businessName,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.jwtToken
+        }
       }
-    });
+    );
 
     await store.dispatch({
       type: "FETCH_TRANSACTIONS_FULFILLED",

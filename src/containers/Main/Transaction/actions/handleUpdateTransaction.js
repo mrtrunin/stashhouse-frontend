@@ -3,13 +3,15 @@ import Message from "components/Message";
 import addProductToTransaction from "api/addProductToTransaction";
 import deleteStockFromTransaction from "api/deleteStockFromTransaction";
 
-const handleUpdateTransaction = async props => {
-  let existingTransactionId = props.existingTransactionId;
-  let merchant = props.merchant;
-  let fromWarehouse = props.fromWarehouse;
-  let toWarehouse = props.toWarehouse;
-  let products = props.products;
-  let transactionType = props.transactionType;
+const handleUpdateTransaction = async (transactionState, business) => {
+  const {
+    existingTransactionId,
+    merchant,
+    fromWarehouse,
+    toWarehouse,
+    products,
+    transactionType
+  } = transactionState;
 
   let hasNoProducts = Object.keys(products).length === 0;
   let hasNoMerchants = Object.keys(merchant).length === 0;
@@ -52,7 +54,8 @@ const handleUpdateTransaction = async props => {
           existingTransactionId,
           product.quantity,
           product.price,
-          product.tax_rate
+          product.tax_rate,
+          business.name
         );
         await Message("Product successfully added to Transaction!");
       } catch (error) {

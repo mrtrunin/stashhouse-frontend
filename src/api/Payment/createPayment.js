@@ -7,7 +7,8 @@ async function createPayment(
   amount,
   sender_name,
   payment_method,
-  description
+  description,
+  business_name
 ) {
   let url = process.env.REACT_APP_SERVER_URL;
 
@@ -19,6 +20,9 @@ async function createPayment(
   payload.sender_name = sender_name;
   payload.payment_method = payment_method;
   payload.description = description;
+  payload.business = {
+    name: business_name
+  };
 
   try {
     const { data } = await axios.post(url + "/payments/", payload, {

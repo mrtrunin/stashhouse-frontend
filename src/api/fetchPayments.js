@@ -1,7 +1,7 @@
 import store from "store";
 import axios from "axios";
 
-async function fetchPayments() {
+async function fetchPayments(businessName) {
   let url = process.env.REACT_APP_SERVER_URL;
 
   await store.dispatch({
@@ -9,11 +9,14 @@ async function fetchPayments() {
   });
 
   try {
-    const { data } = await axios.get(url + "/payments/", {
-      headers: {
-        Authorization: "Bearer " + localStorage.jwtToken
+    const { data } = await axios.get(
+      url + "/payments/?business_name=" + businessName,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.jwtToken
+        }
       }
-    });
+    );
 
     await store.dispatch({
       type: "FETCH_PAYMENTS_FULFILLED",

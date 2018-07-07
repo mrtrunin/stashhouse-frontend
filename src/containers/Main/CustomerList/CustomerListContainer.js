@@ -14,12 +14,23 @@ export class CustomerListContainer extends Component {
   };
 
   componentDidMount = () => {
-    fetchMerchants();
+    this.fetchData();
     this.showEditors();
   };
 
-  UNSAFE_componentWillReceiveProps = nextProps => {
-    this.showEditors(nextProps);
+  componentDidUpdate = prevProps => {
+    if (prevProps !== this.props) {
+      this.showEditors(this.props);
+    }
+
+    if (prevProps.business !== this.props.business) {
+      this.fetchData();
+    }
+  };
+
+  fetchData = () => {
+    const { business } = this.props;
+    fetchMerchants(business.name);
   };
 
   showEditors = nextProps => {
@@ -77,12 +88,14 @@ CustomerListContainer.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({ merchantId: PropTypes.string })
   }),
-  fetched: PropTypes.bool.isRequired
+  fetched: PropTypes.bool.isRequired,
+  business: PropTypes.object.isRequired
 };
 
 export default connect(store => {
   return {
     merchants: store.merchants.merchants,
-    fetched: store.merchants.fetched
+    fetched: store.merchants.fetched,
+    business: store.user.business
   };
 })(CustomerListContainer);

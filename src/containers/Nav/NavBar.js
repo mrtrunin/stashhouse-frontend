@@ -2,13 +2,19 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import store from "store";
+import { fetchBusinesses } from "api/fetchBusinesses";
 
 import {
   Button,
   Toolbar,
   AppBar,
   withStyles,
-  Typography
+  Typography,
+  FormControl,
+  Input,
+  Select,
+  MenuItem
 } from "@material-ui/core";
 
 import {
@@ -36,27 +42,30 @@ const styles = theme => ({
     color: "white",
     fontWeight: 600,
     fontSize: "20px"
+  },
+  businessSelector: {
+    color: "white"
   }
 });
 
 class NavBar extends Component {
-  // componentDidMount = () => {
-  //   if (this.props.isLoggedIn) {
-  //     fetchTransactions("NAVBAR COMPONENT DID MOUNT");
-  //   }
-  // };
+  componentDidMount = () => {
+    fetchBusinesses();
+  };
 
-  // componentDidUpdate = prevProps => {
-  //   if (
-  //     prevProps.transactions.length !== this.props.transactions.length &&
-  //     this.props.isLoggedIn
-  //   ) {
-  //     fetchTransactions("NAVBAR COMPONENT DID UPDATE");
-  //   }
-  // };
+  handleChooseBusiness = (businesses, e) => {
+    let selectedBusiness = businesses.find(business => {
+      return business.name === e.target.value;
+    });
+
+    store.dispatch({
+      type: "SELECT_BUSINESS",
+      payload: selectedBusiness
+    });
+  };
 
   render() {
-    const { classes, isLoggedIn } = this.props;
+    const { classes, isLoggedIn, businesses, business } = this.props;
 
     let navBarLeft = "";
     let navBarRight = "";
@@ -105,10 +114,32 @@ class NavBar extends Component {
       );
 
       navBarRight = (
-        <Button href="/logout" color="inherit" variant="flat">
-          <PowerSettingsNew className={classes.leftIcon} />
-          Log out
-        </Button>
+        <Toolbar className={classes.businessSelector}>
+          <FormControl className={classes.businessSelector}>
+            {/* <InputLabel htmlFor="business">Business</InputLabel> */}
+            <Select
+              value={business.name ? business.name : ""}
+              onChange={this.handleChooseBusiness.bind(null, businesses)}
+              name="business"
+              renderValue={value => value}
+              input={<Input id="business" />}
+              className={classes.businessSelector}
+            >
+              {businesses.map(business => {
+                return (
+                  <MenuItem key={business.id} value={business.name}>
+                    {business.name}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+
+          <Button href="/logout" color="inherit" variant="flat">
+            <PowerSettingsNew className={classes.leftIcon} />
+            Log out
+          </Button>
+        </Toolbar>
       );
     }
     return (
@@ -129,6 +160,8 @@ NavBar.propTypes = {
     first_name: PropTypes.string,
     last_name: PropTypes.string
   }),
+  businesses: PropTypes.array.isRequired,
+  business: PropTypes.object.isRequired,
   isLoggedIn: PropTypes.bool,
   classes: PropTypes.object.isRequired,
   transactions: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
@@ -136,6 +169,8 @@ NavBar.propTypes = {
 
 export default connect(store => {
   return {
+    businesses: store.businesses.businesses,
+    business: store.user.business,
     user: store.user.user,
     isLoggedIn: store.user.isLoggedIn,
     transactions: store.transactions.transactions

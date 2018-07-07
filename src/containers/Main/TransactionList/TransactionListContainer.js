@@ -18,7 +18,18 @@ export class TransactionListContainer extends Component {
     selectedTransactions: []
   };
   componentDidMount = () => {
-    fetchTransactions();
+    this.fetchData();
+  };
+
+  componentDidUpdate = prevProps => {
+    if (prevProps.business !== this.props.business) {
+      this.fetchData();
+    }
+  };
+
+  fetchData = () => {
+    const { business } = this.props;
+    fetchTransactions(business.name);
   };
 
   handleDownloadPdf = (transactionId, transactionName, e) => {
@@ -68,10 +79,11 @@ export class TransactionListContainer extends Component {
   }
 
   handleDeleteTransactions = async () => {
+    const { business } = this.props;
     for (let transactionId of this.state.selectedTransactions) {
       await deleteTransaction(transactionId);
     }
-    await fetchTransactions("DELETE TRANSACTION LOGIC");
+    await fetchTransactions(business.name);
     await this.setState({ selectedTransactions: [] });
   };
 
@@ -113,12 +125,14 @@ export class TransactionListContainer extends Component {
 
 TransactionListContainer.propTypes = {
   transactions: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-  fetched: PropTypes.bool
+  fetched: PropTypes.bool,
+  business: PropTypes.object.isRequired
 };
 
 export default connect(store => {
   return {
     transactions: store.transactions.transactions,
-    fetched: store.transactions.fetched
+    fetched: store.transactions.fetched,
+    business: store.user.business
   };
 })(TransactionListContainer);

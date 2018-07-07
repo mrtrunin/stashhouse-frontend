@@ -54,7 +54,7 @@ export class CustomerEditor extends Component {
   };
 
   handleCreateOrUpdateCustomer = async () => {
-    const { merchant } = this.props;
+    const { merchant, business } = this.props;
 
     if (merchant.id) {
       await updateMerchant(
@@ -73,7 +73,8 @@ export class CustomerEditor extends Component {
         merchant.zip_code,
         merchant.city,
         merchant.country,
-        merchant.phone_number
+        merchant.phone_number,
+        business.name
       );
     }
     await fetchMerchants();
@@ -164,6 +165,7 @@ CustomerEditor.propTypes = {
 
 export default connect(store => {
   return {
-    merchant: store.merchant.merchant
+    merchant: store.merchant.merchant,
+    business: store.user.business
   };
 })(CustomerEditor);

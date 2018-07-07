@@ -37,13 +37,24 @@ export class WarehouseContainer extends Component {
   };
 
   componentDidMount = () => {
-    fetchProductsStock();
-    fetchWarehouses();
+    this.fetchData();
     this.showEditors();
   };
 
-  UNSAFE_componentWillReceiveProps = nextProps => {
-    this.showEditors(nextProps);
+  fetchData = () => {
+    const { business } = this.props;
+    fetchProductsStock(business.name);
+    fetchWarehouses(business.name);
+  };
+
+  componentDidUpdate = prevProps => {
+    if (prevProps !== this.props) {
+      this.showEditors(this.props);
+    }
+
+    if (prevProps.business !== this.props.business) {
+      this.fetchData();
+    }
   };
 
   showEditors = nextProps => {
@@ -152,13 +163,15 @@ WarehouseContainer.propTypes = {
       productId: PropTypes.string,
       warehouseId: PropTypes.string
     })
-  })
+  }),
+  business: PropTypes.object.isRequired
 };
 
 export default connect(store => {
   return {
     productsStock: store.productsStock.productsStock,
     warehouses: store.warehouses.warehouses,
-    fetched: store.productsStock.fetched
+    fetched: store.productsStock.fetched,
+    business: store.user.business
   };
 })(withStyles(style)(WarehouseContainer));

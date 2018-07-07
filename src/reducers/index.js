@@ -15,9 +15,11 @@ import transactions from "./TransactionsReducer";
 import invoices from "./InvoicesReducer";
 import productsStock from "./ProductsStockReducer";
 import snackBarMessage from "./SnackBarMessageReducer";
+import businesses from "./BusinessesReducer";
 
 const appReducer = combineReducers({
   user,
+  businesses,
   transaction,
   transactions,
   invoices,
