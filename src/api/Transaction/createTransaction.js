@@ -2,12 +2,12 @@ import store from "store";
 import axios from "axios";
 import Message from "components/Message";
 
-async function createTransaction(merchant, transactionType, business_name) {
+async function createTransaction(merchantId, transactionType, business_name) {
   let url = process.env.REACT_APP_SERVER_URL;
 
   let payload = {};
 
-  payload.merchant = merchant || null;
+  payload.merchant = merchantId || null;
   payload.type = transactionType;
   payload.business = {
     name: business_name

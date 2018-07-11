@@ -93,6 +93,9 @@ const TransactionListTable = props => {
         <TableCell padding="dense" name="Customer">
           {transaction.merchant}
         </TableCell>
+        <TableCell padding="dense" name="Warehouse">
+          {transaction.warehouse}
+        </TableCell>
         <TableCell padding="dense" name="Total Amount" numeric>
           {addCommas(transactionAmountWithTax.toFixed(2))}
           {showUnpaidAmount && (
@@ -139,6 +142,7 @@ const TransactionListTable = props => {
             <TableCell padding="dense">Date created</TableCell>
             <TableCell padding="dense">Date due</TableCell>
             <TableCell padding="dense">Customer</TableCell>
+            <TableCell padding="dense">Warehouse</TableCell>
             <TableCell padding="dense" numeric>
               Amount
             </TableCell>
