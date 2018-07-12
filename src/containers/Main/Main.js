@@ -43,11 +43,11 @@ const Main = props => {
 
   return (
     <Grid container className={[classes.root, classes.font].join(" ")}>
-      <Grid item md={2} />
-      <Grid item xs={12} md={8}>
+      <Grid item md={1} />
+      <Grid item xs={12} md={10}>
         {props.children}
       </Grid>
-      <Grid item md={2} />
+      <Grid item md={1} />
     </Grid>
   );
 };
