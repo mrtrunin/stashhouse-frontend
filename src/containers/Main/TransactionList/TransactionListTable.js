@@ -91,7 +91,7 @@ const TransactionListTable = props => {
           {date_due}
         </TableCell>
         <TableCell padding="dense" name="Customer">
-          {transaction.merchant}
+          {transaction.merchant || "-"}
         </TableCell>
         <TableCell padding="dense" name="Warehouse">
           {transaction.warehouse}
