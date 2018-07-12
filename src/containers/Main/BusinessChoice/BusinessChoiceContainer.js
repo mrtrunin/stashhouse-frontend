@@ -5,23 +5,39 @@ import BusinessChoiceTable from "./BusinessChoiceTable";
 
 import { connect } from "react-redux";
 import store from "store";
+import { Redirect } from "react-router-dom";
 
 export class BusinessChoiceContainer extends Component {
-  static propTypes = {};
+  state = {
+    redirect: false
+  };
 
   componentDidMount = async () => {
     await fetchBusinesses();
+    const { businesses } = this.props;
+    if (businesses.length === 1) {
+      await this.handleChooseBusiness(businesses[0]);
+    }
   };
 
-  handleChooseBusiness = business => {
-    store.dispatch({
+  handleChooseBusiness = async business => {
+    await store.dispatch({
       type: "SELECT_BUSINESS",
       payload: business
     });
+
+    await this.setState(() => ({
+      redirect: true
+    }));
   };
 
   render() {
     const { businesses } = this.props;
+    const { redirect } = this.state;
+
+    if (redirect) {
+      return <Redirect to="/warehouse/" />;
+    }
 
     return (
       <BusinessChoiceTable
