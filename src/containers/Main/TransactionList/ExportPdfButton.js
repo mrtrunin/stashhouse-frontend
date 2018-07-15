@@ -3,14 +3,15 @@ import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 
 const ExportPdfButton = props => {
-  let transactionId = props.transaction.id;
-  let transactionName = props.transaction.full_transaction_number;
+  const { transaction, onClick } = props;
+  let transactionId = transaction.id;
+  let transactionName = transaction.full_transaction_number;
 
   return (
     <Button
       variant="raised"
       color="default"
-      onClick={props.onClick.bind(props, transactionId, transactionName)}
+      onClick={onClick.bind(props, transactionId, transactionName)}
       size="small"
     >
       <span id={transactionId} name="hello">

@@ -1,12 +1,20 @@
 import axios from "axios";
 import Message from "components/Message";
 
-async function fetchTransactionPdf(transactionId, transactionName) {
+async function fetchTransactionPdf(
+  transactionId,
+  transactionName,
+  businessName
+) {
   let url = process.env.REACT_APP_SERVER_URL;
 
   try {
     const { data } = await axios.get(
-      url + "/transactions/" + transactionId + "/pdf",
+      url +
+        "/transactions/" +
+        transactionId +
+        "/pdf?business_name=" +
+        businessName,
       {
         headers: {
           Authorization: "Bearer " + localStorage.jwtToken
@@ -25,7 +33,7 @@ async function fetchTransactionPdf(transactionId, transactionName) {
     Message("PDF downloaded successfully!");
     return data;
   } catch (error) {
-    Message(error.response.data.detail, "error");
+    Message(error);
   }
 }
 

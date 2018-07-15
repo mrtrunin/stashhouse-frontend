@@ -34,7 +34,8 @@ export class TransactionListContainer extends Component {
 
   handleDownloadPdf = (transactionId, transactionName, e) => {
     e.preventDefault();
-    fetchTransactionPdf(transactionId, transactionName);
+    const { business } = this.props;
+    fetchTransactionPdf(transactionId, transactionName, business.name);
   };
 
   handleCheckbox = e => {

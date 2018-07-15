@@ -37,7 +37,13 @@ const styles = theme => ({
 });
 
 const TransactionListTable = props => {
-  const { classes, transactions, selectedTransactions } = props;
+  const {
+    classes,
+    transactions,
+    selectedTransactions,
+    onChange,
+    onClick
+  } = props;
 
   let linkTargetOptions = {
     INVOICE: "sell",
@@ -50,6 +56,7 @@ const TransactionListTable = props => {
     let date_due = moment(transaction.date_due).format("DD-MMM-YYYY");
 
     let showInvoiceAttribute = transaction.type === "INVOICE";
+    let showTransferAttribute = transaction.type === "TRANSFER";
     let linkTarget = linkTargetOptions[transaction.type];
 
     let transactionAmountWithTax = transaction.amount + transaction.tax;
@@ -64,7 +71,7 @@ const TransactionListTable = props => {
       <TableRow key={transaction.id}>
         <TableCell padding="dense" name="checkbox">
           <Checkbox
-            onChange={props.onChange}
+            onChange={onChange}
             id={transaction.id.toString()}
             checked={selectedTransactions.includes(transaction.id)}
           />
@@ -119,11 +126,8 @@ const TransactionListTable = props => {
           )}
         </TableCell>
         <TableCell padding="dense">
-          {showInvoiceAttribute && (
-            <ExportPdfButton
-              transaction={transaction}
-              onClick={props.onClick}
-            />
+          {(showInvoiceAttribute || showTransferAttribute) && (
+            <ExportPdfButton transaction={transaction} onClick={onClick} />
           )}
         </TableCell>
       </TableRow>
@@ -136,7 +140,7 @@ const TransactionListTable = props => {
         <TableHead>
           <TableRow>
             <TableCell padding="dense">
-              <Checkbox onChange={props.onChange} name="select_all" />
+              <Checkbox onChange={onChange} name="select_all" />
             </TableCell>
             <TableCell padding="dense">Transaction</TableCell>
             <TableCell padding="dense">Date created</TableCell>
