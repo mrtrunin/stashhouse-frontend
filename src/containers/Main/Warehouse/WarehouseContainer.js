@@ -172,6 +172,6 @@ export default connect(store => {
     productsStock: store.productsStock.productsStock,
     warehouses: store.warehouses.warehouses,
     fetched: store.productsStock.fetched,
-    business: store.user.business
+    business: store.business.business
   };
 })(withStyles(style)(WarehouseContainer));

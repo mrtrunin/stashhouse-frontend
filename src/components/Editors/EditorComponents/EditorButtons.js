@@ -19,7 +19,7 @@ const EditorButtons = props => {
   } = props;
   return (
     <CardActions>
-      {editedObject.id ? (
+      {editedObject.id && deleteAction ? (
         <Button
           variant="raised"
           color="secondary"

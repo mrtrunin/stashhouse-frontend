@@ -7,7 +7,9 @@ const MerchantSelector = props => {
   let defaultValue = "Select Customer";
   let label = "Customer";
 
-  let merchantOptions = props.merchants.map(merchant => {
+  const { merchants, selectedMerchant } = props;
+
+  let merchantOptions = merchants.map(merchant => {
     return (
       <MenuItem key={merchant.id} value={merchant.name}>
         {merchant.name}
@@ -15,15 +17,14 @@ const MerchantSelector = props => {
     );
   });
 
-  let selectedMerchant = props.selectedMerchant.name
-    ? props.selectedMerchant.name
-    : "";
+  let selectedMerchantName =
+    selectedMerchant && selectedMerchant.name ? selectedMerchant.name : "";
 
   return (
     <FormControl>
       <InputLabel htmlFor="merchantSelector">{label}</InputLabel>
       <Select
-        value={selectedMerchant}
+        value={selectedMerchantName}
         inputProps={{
           name: "merchantSelector",
           id: "merchantSelector"

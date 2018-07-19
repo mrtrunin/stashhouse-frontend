@@ -134,6 +134,6 @@ export default connect(store => {
   return {
     transactions: store.transactions.transactions,
     fetched: store.transactions.fetched,
-    business: store.user.business
+    business: store.business.business
   };
 })(TransactionListContainer);

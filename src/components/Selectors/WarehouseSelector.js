@@ -4,10 +4,9 @@ import PropTypes from "prop-types";
 import { MenuItem, Select, InputLabel, FormControl } from "@material-ui/core";
 
 const WarehouseSelector = props => {
-  let defaultValue = props.defaultValue;
-  let label = props.label;
+  const { defaultValue, label, warehouses, selectedWarehouse } = props;
 
-  let warehouseOptions = props.warehouses.map(warehouse => {
+  let warehouseOptions = warehouses.map(warehouse => {
     return (
       <MenuItem key={warehouse.id} value={warehouse.name}>
         {warehouse.name}
@@ -15,15 +14,14 @@ const WarehouseSelector = props => {
     );
   });
 
-  let selectedWarehouse = props.selectedWarehouse.name
-    ? props.selectedWarehouse.name
-    : "";
+  let selectedWarehouseName =
+    selectedWarehouse && selectedWarehouse.name ? selectedWarehouse.name : "";
 
   return (
     <FormControl>
       <InputLabel htmlFor="warehouseSelector">{label}</InputLabel>
       <Select
-        value={selectedWarehouse}
+        value={selectedWarehouseName}
         inputProps={{
           name: "warehouseSelector",
           id: "warehouseSelector"

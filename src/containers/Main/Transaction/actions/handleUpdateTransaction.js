@@ -6,7 +6,7 @@ import deleteStockFromTransaction from "api/deleteStockFromTransaction";
 const handleUpdateTransaction = async (transactionState, business) => {
   const {
     existingTransactionId,
-    merchant,
+    merchant = null,
     fromWarehouse,
     toWarehouse,
     products,
@@ -14,18 +14,22 @@ const handleUpdateTransaction = async (transactionState, business) => {
   } = transactionState;
 
   let hasNoProducts = Object.keys(products).length === 0;
-  let hasNoMerchants = Object.keys(merchant).length === 0;
   let hasNoFromWarehouse = Object.keys(fromWarehouse).length === 0;
   let hasNoToWarehouse = Object.keys(toWarehouse).length === 0;
 
+  let hasNoMerchants = merchant ? Object.keys(merchant).length === 0 : true;
+
   let fromWarehouseRequired = ["sell", "move"].includes(transactionType);
   let toWarehouseRequired = ["buy", "move"].includes(transactionType);
+  let merchantRequired = ["sell"].includes(transactionType);
+
+  let merchantId = hasNoMerchants ? null : merchant.id;
 
   if (hasNoProducts) {
     return Message("Product is missing!");
   }
 
-  if (hasNoMerchants) {
+  if (hasNoMerchants && merchantRequired) {
     return Message("Merchant is missing!");
   }
 
@@ -38,7 +42,7 @@ const handleUpdateTransaction = async (transactionState, business) => {
   }
 
   try {
-    await updateTransaction(existingTransactionId, merchant.id);
+    await updateTransaction(existingTransactionId, merchantId);
 
     await deleteStockFromTransaction(existingTransactionId);
 

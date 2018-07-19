@@ -151,6 +151,6 @@ ProductEditor.propTypes = {
 export default connect(store => {
   return {
     product: store.product.product,
-    business: store.user.business
+    business: store.business.business
   };
 })(ProductEditor);

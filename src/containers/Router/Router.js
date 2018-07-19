@@ -11,6 +11,7 @@ import TransactionList from "containers/Main/TransactionList";
 import PaymentList from "containers/Main/PaymentList";
 import CustomerList from "containers/Main/CustomerList";
 import Test from "containers/Main/Test";
+import Settings from "containers/Main/Settings";
 
 import LandingPage from "containers/LandingPage";
 import BusinessChoice from "containers/Main/BusinessChoice";
@@ -39,6 +40,7 @@ const Router = () => {
         <PrivateRoute exact path="/payment-list/" component={PaymentList} />
         <PrivateRoute path="/customer/:merchantId" component={CustomerList} />
         <PrivateRoute exact path="/customer-list/" component={CustomerList} />
+        <PrivateRoute exact path="/settings/" component={Settings} />
         <PrivateRoute
           exact
           path="/business-choice/"

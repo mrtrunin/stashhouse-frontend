@@ -12,22 +12,28 @@ const EditorHeader = props => {
     editedObjectSubheader
   } = props;
 
-  let label = "Add New " + editedObjectLabel;
+  let { label } = props;
 
-  if (editedObject && editedObject.name) {
-    label = editedObject.name;
-  }
+  if (!label) {
+    label = "Add New " + editedObjectLabel;
 
-  if (existsEditedObject) {
-    label = "Update " + editedObjectLabel;
+    if (editedObject && editedObject.name) {
+      label = editedObject.name;
+    }
+
+    if (existsEditedObject) {
+      label = "Update " + editedObjectLabel;
+    }
   }
 
   return (
     <CardHeader
       action={
-        <IconButton onClick={hideEditor}>
-          <ClearIcon />
-        </IconButton>
+        hideEditor && (
+          <IconButton onClick={hideEditor}>
+            <ClearIcon />
+          </IconButton>
+        )
       }
       title={<Typography variant="display1">{label}</Typography>}
       subheader={editedObjectSubheader}
@@ -36,9 +42,10 @@ const EditorHeader = props => {
 };
 
 EditorHeader.propTypes = {
+  label: PropTypes.string,
   editedObject: PropTypes.object,
-  editedObjectLabel: PropTypes.string.isRequired,
-  hideEditor: PropTypes.func.isRequired,
+  editedObjectLabel: PropTypes.string,
+  hideEditor: PropTypes.func,
   editedObjectSubheader: PropTypes.string,
   existsEditedObject: PropTypes.bool
 };

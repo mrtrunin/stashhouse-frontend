@@ -96,6 +96,6 @@ export default connect(store => {
   return {
     merchants: store.merchants.merchants,
     fetched: store.merchants.fetched,
-    business: store.user.business
+    business: store.business.business
   };
 })(CustomerListContainer);

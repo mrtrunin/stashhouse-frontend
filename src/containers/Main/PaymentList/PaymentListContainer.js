@@ -96,6 +96,6 @@ export default connect(store => {
   return {
     payments: store.payments.payments,
     fetched: store.payments.fetched,
-    business: store.user.business
+    business: store.business.business
   };
 })(PaymentListContainer);

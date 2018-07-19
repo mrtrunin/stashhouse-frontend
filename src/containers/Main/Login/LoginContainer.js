@@ -66,8 +66,7 @@ LoginContainer.propTypes = {
     first_name: PropTypes.string,
     last_name: PropTypes.string
   }),
-  isLoggedIn: PropTypes.bool,
-  classes: PropTypes.object.isRequired
+  isLoggedIn: PropTypes.bool
 };
 
 export default connect(store => {

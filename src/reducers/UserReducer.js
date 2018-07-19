@@ -1,7 +1,6 @@
 export default function reducer(
   state = {
     user: {},
-    business: {},
     isLoggedIn: false,
     fetching: false,
     fetched: false,
@@ -20,12 +19,6 @@ export default function reducer(
         fetched: true,
         isLoggedIn: true,
         user: action.payload
-      };
-    }
-    case "SELECT_BUSINESS": {
-      return {
-        ...state,
-        business: action.payload
       };
     }
     case "FETCH_USER_REJECTED": {

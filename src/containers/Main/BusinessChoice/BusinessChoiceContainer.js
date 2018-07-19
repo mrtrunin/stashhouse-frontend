@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { fetchBusinesses } from "api/fetchBusinesses";
+import fetchBusinesses from "api/fetchBusinesses";
 import BusinessChoiceTable from "./BusinessChoiceTable";
 
 import { connect } from "react-redux";
@@ -22,7 +22,7 @@ export class BusinessChoiceContainer extends Component {
 
   handleChooseBusiness = async business => {
     await store.dispatch({
-      type: "SELECT_BUSINESS",
+      type: "FETCH_BUSINESS_FULFILLED",
       payload: business
     });
 

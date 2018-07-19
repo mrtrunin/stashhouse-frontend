@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import store from "store";
-import { fetchBusinesses } from "api/fetchBusinesses";
+import fetchBusinesses from "api/fetchBusinesses";
 
 import {
   Button,
@@ -22,7 +22,8 @@ import {
   List,
   AttachMoney,
   People,
-  PowerSettingsNew
+  PowerSettingsNew,
+  Settings
 } from "@material-ui/icons";
 
 const styles = theme => ({
@@ -45,6 +46,10 @@ const styles = theme => ({
   },
   businessSelector: {
     color: "white"
+  },
+  smallButton: {
+    padding: theme.spacing.unit,
+    margin: theme.spacing.unit
   }
 });
 
@@ -59,7 +64,7 @@ class NavBar extends Component {
     });
 
     store.dispatch({
-      type: "SELECT_BUSINESS",
+      type: "FETCH_BUSINESS_FULFILLED",
       payload: selectedBusiness
     });
   };
@@ -114,26 +119,40 @@ class NavBar extends Component {
       );
 
       navBarRight = (
-        <Toolbar className={classes.businessSelector}>
-          <FormControl className={classes.businessSelector}>
-            {/* <InputLabel htmlFor="business">Business</InputLabel> */}
-            <Select
-              value={business.name ? business.name : ""}
-              onChange={this.handleChooseBusiness.bind(null, businesses)}
-              name="business"
-              renderValue={value => value}
-              input={<Input id="business" />}
-              className={classes.businessSelector}
-            >
-              {businesses.map(business => {
-                return (
-                  <MenuItem key={business.id} value={business.name}>
-                    {business.name}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
+        <Toolbar>
+          {business.name && (
+            <div>
+              <Button
+                href="/settings"
+                color="inherit"
+                variant="flat"
+                size="small"
+                mini
+              >
+                <Settings />
+              </Button>
+
+              <FormControl className={classes.businessSelector}>
+                {/* <InputLabel htmlFor="business">Business</InputLabel> */}
+                <Select
+                  value={business.name ? business.name : ""}
+                  onChange={this.handleChooseBusiness.bind(null, businesses)}
+                  name="business"
+                  renderValue={value => value}
+                  input={<Input id="business" />}
+                  className={classes.businessSelector}
+                >
+                  {businesses.map(business => {
+                    return (
+                      <MenuItem key={business.id} value={business.name}>
+                        {business.name}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            </div>
+          )}
 
           <Button href="/logout" color="inherit" variant="flat">
             <PowerSettingsNew className={classes.leftIcon} />
@@ -170,7 +189,7 @@ NavBar.propTypes = {
 export default connect(store => {
   return {
     businesses: store.businesses.businesses,
-    business: store.user.business,
+    business: store.business.business,
     user: store.user.user,
     isLoggedIn: store.user.isLoggedIn,
     transactions: store.transactions.transactions

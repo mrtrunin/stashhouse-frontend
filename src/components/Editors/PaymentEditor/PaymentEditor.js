@@ -141,7 +141,7 @@ export class PaymentEditor extends Component {
       return (
         <Editor>
           <EditorHeader
-            editedObjectLabel="Whoa! No invoices, no payments."
+            label="Whoa! No invoices, no payments."
             editedObjectSubheader="Please add at least one invoice to add payments"
             hideEditor={hidePaymentEditor}
           />
@@ -248,6 +248,6 @@ export default connect(store => {
   return {
     payment: store.payment.payment,
     invoices: store.invoices.invoices,
-    business: store.user.business
+    business: store.business.business
   };
 })(PaymentEditor);

@@ -2,7 +2,7 @@ import Message from "components/Message";
 import store from "store";
 import axios from "axios";
 
-export function fetchBusinesses() {
+async function fetchBusinesses() {
   return axios
     .get(process.env.REACT_APP_SERVER_URL + "/businesses/", {
       headers: {
@@ -23,3 +23,5 @@ export function fetchBusinesses() {
       Message(error);
     });
 }
+
+export default fetchBusinesses;

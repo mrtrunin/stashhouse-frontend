@@ -7,9 +7,9 @@ import store from "store";
 import Editor from "../EditorComponents/Editor";
 import EditorHeader from "../EditorComponents/EditorHeader";
 import EditorContent from "../EditorComponents/EditorContent";
+import EditorButtons from "../EditorComponents/EditorButtons";
 
 import { TextField } from "@material-ui/core";
-import EditorButtons from "../EditorComponents/EditorButtons";
 
 import updateMerchant from "api/Merchant/updateMerchant";
 import createMerchant from "api/Merchant/createMerchant";
@@ -166,6 +166,6 @@ CustomerEditor.propTypes = {
 export default connect(store => {
   return {
     merchant: store.merchant.merchant,
-    business: store.user.business
+    business: store.business.business
   };
 })(CustomerEditor);

@@ -106,6 +106,6 @@ WarehouseEditor.propTypes = {
 export default connect(store => {
   return {
     warehouse: store.warehouse.warehouse,
-    business: store.user.business
+    business: store.business.business
   };
 })(WarehouseEditor);

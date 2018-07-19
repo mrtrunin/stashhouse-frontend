@@ -285,6 +285,6 @@ export default connect(store => {
     products: store.products.products,
     productsFetched: store.products.fetched,
     transactionState: store.transactionState,
-    business: store.user.business
+    business: store.business.business
   };
 })(withStyles(styles)(TransactionForm));

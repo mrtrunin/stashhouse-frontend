@@ -15,10 +15,12 @@ import transactions from "./TransactionsReducer";
 import invoices from "./InvoicesReducer";
 import productsStock from "./ProductsStockReducer";
 import snackBarMessage from "./SnackBarMessageReducer";
+import business from "./BusinessReducer";
 import businesses from "./BusinessesReducer";
 
 const appReducer = combineReducers({
   user,
+  business,
   businesses,
   transaction,
   transactions,
