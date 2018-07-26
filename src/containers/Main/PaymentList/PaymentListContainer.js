@@ -4,15 +4,15 @@ import { connect } from "react-redux";
 
 import fetchPayments from "api/fetchPayments";
 
-import { Button } from "@material-ui/core";
-
 import PaymentListTable from "./PaymentListTable";
 import PaymentEditor from "components/Editors/PaymentEditor";
-import ButtonRow from "components/ButtonRow/ButtonRow";
+
+import { Redirect } from "react-router-dom";
 
 export class PaymentListContainer extends Component {
   state = {
-    showPaymentEditor: false
+    showPaymentEditor: false,
+    redirectToRoot: false
   };
 
   componentDidMount = () => {
@@ -28,6 +28,12 @@ export class PaymentListContainer extends Component {
     if (prevProps.business !== this.props.business) {
       this.fetchData();
     }
+
+    if (this.state.redirectToRoot) {
+      this.setState(() => ({
+        redirectToRoot: false
+      }));
+    }
   };
 
   fetchData = () => {
@@ -37,7 +43,9 @@ export class PaymentListContainer extends Component {
 
   showEditors = nextProps => {
     let props = nextProps ? nextProps : this.props;
-    if (props.match.params.paymentId) {
+    const { paymentId, invoiceId } = props.match.params;
+
+    if (paymentId || invoiceId) {
       this.showPaymentEditor();
     }
   };
@@ -46,36 +54,40 @@ export class PaymentListContainer extends Component {
     this.setState(() => ({ showPaymentEditor: true }));
   };
 
-  hidePaymentEditor = () => {
-    this.setState(() => ({ showPaymentEditor: false }));
+  hidePaymentEditor = async () => {
+    await this.setState(() => ({
+      showPaymentEditor: false,
+      redirectToRoot: true
+    }));
   };
 
   render() {
     const { payments, fetched } = this.props;
-    const { showPaymentEditor } = this.state;
+    const { showPaymentEditor, redirectToRoot } = this.state;
+
+    const isOnRootPath =
+      this.props.match.path === "/payment-list/" ||
+      this.props.match.path === "/payment-list";
 
     if (!fetched) {
       return <p>Loading...</p>;
+    }
+
+    if (redirectToRoot && !isOnRootPath) {
+      return <Redirect exact to="/payment-list/" />;
     }
 
     return (
       <div>
         <PaymentListTable payments={payments} />
 
-        <ButtonRow show={!showPaymentEditor}>
-          <Button
-            color="primary"
-            variant="raised"
-            onClick={this.showPaymentEditor}
-          >
-            Add payment
-          </Button>
-        </ButtonRow>
+        {/* TODO: Introduce delete option for payments */}
 
         {showPaymentEditor && (
           <PaymentEditor
             hidePaymentEditor={this.hidePaymentEditor}
             paymentId={this.props.match.params.paymentId}
+            invoiceId={this.props.match.params.invoiceId}
           />
         )}
       </div>
@@ -87,7 +99,11 @@ PaymentListContainer.propTypes = {
   payments: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   fetched: PropTypes.bool,
   match: PropTypes.shape({
-    params: PropTypes.shape({ paymentId: PropTypes.string })
+    params: PropTypes.shape({
+      paymentId: PropTypes.string,
+      invoiceId: PropTypes.string
+    }),
+    path: PropTypes.string
   }),
   business: PropTypes.object.isRequired
 };

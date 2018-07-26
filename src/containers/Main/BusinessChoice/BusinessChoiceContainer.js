@@ -6,6 +6,7 @@ import BusinessChoiceTable from "./BusinessChoiceTable";
 import { connect } from "react-redux";
 import store from "store";
 import { Redirect } from "react-router-dom";
+import BusinessEditor from "components/Editors/BusinessEditor";
 
 export class BusinessChoiceContainer extends Component {
   state = {
@@ -35,8 +36,14 @@ export class BusinessChoiceContainer extends Component {
     const { businesses } = this.props;
     const { redirect } = this.state;
 
+    const noBusinesses = businesses.length === 0;
+
     if (redirect) {
       return <Redirect to="/warehouse/" />;
+    }
+
+    if (noBusinesses) {
+      return <BusinessEditor />;
     }
 
     return (

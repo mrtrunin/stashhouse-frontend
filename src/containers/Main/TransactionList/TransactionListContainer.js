@@ -12,10 +12,14 @@ import { Button, Grid } from "@material-ui/core";
 import TransactionCreationButtons from "./TransactionCreationButtons";
 
 import ButtonRow from "components/ButtonRow/ButtonRow";
+import FilterControl from "./FilterControl";
 
 export class TransactionListContainer extends Component {
   state = {
-    selectedTransactions: []
+    selectedTransactions: [],
+    page: 0,
+    rowsPerPage: 5,
+    filteredTransactionType: "ALL"
   };
   componentDidMount = () => {
     this.fetchData();
@@ -27,9 +31,9 @@ export class TransactionListContainer extends Component {
     }
   };
 
-  fetchData = () => {
+  fetchData = async () => {
     const { business } = this.props;
-    fetchTransactions(business.name);
+    await fetchTransactions(business.name);
   };
 
   handleDownloadPdf = (transactionId, transactionName, e) => {
@@ -88,9 +92,29 @@ export class TransactionListContainer extends Component {
     await this.setState({ selectedTransactions: [] });
   };
 
+  handleChangePage = (e, page) => {
+    this.setState({ page });
+  };
+
+  handleChangeRowsPerPage = e => {
+    this.setState({ rowsPerPage: e.target.value });
+  };
+
+  handleFilterTransactionType = e => {
+    e.persist();
+    this.setState(() => ({
+      filteredTransactionType: e.target.value
+    }));
+  };
+
   render() {
-    const { fetched } = this.props;
-    const { selectedTransactions } = this.state;
+    const { fetched, transactions } = this.props;
+    const {
+      selectedTransactions,
+      page,
+      rowsPerPage,
+      filteredTransactionType
+    } = this.state;
     if (!fetched) {
       return <p>Loading...</p>;
     }
@@ -99,11 +123,23 @@ export class TransactionListContainer extends Component {
       <div>
         <Grid container>
           <Grid item xs={12}>
+            <FilterControl
+              filteredTransactionType={filteredTransactionType}
+              handleFilterTransactionType={this.handleFilterTransactionType}
+            />
+          </Grid>
+          <Grid item xs={12}>
             <TransactionListTable
-              transactions={this.props.transactions}
-              selectedTransactions={this.state.selectedTransactions}
+              transactions={transactions}
+              selectedTransactions={selectedTransactions}
               onClick={this.handleDownloadPdf}
               onChange={this.handleCheckbox}
+              handleChangePage={this.handleChangePage}
+              handleChangeRowsPerPage={this.handleChangeRowsPerPage}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              filteredTransactionType={filteredTransactionType}
+              handleFilterTransactionType={this.handleFilterTransactionType}
             />
           </Grid>
         </Grid>

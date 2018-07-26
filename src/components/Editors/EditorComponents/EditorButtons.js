@@ -19,7 +19,7 @@ const EditorButtons = props => {
   } = props;
   return (
     <CardActions>
-      {editedObject.id && deleteAction ? (
+      {editedObject && editedObject.id && deleteAction ? (
         <Button
           variant="raised"
           color="secondary"
@@ -31,7 +31,7 @@ const EditorButtons = props => {
       ) : (
         ""
       )}
-      {editedObject.id ? (
+      {editedObject && editedObject.id ? (
         <Button
           variant="raised"
           color="primary"
@@ -56,7 +56,7 @@ const EditorButtons = props => {
 
 EditorButtons.propTypes = {
   classes: PropTypes.object.isRequired,
-  deleteAction: PropTypes.func.isRequired,
+  deleteAction: PropTypes.func,
   updateAction: PropTypes.func.isRequired,
   createAction: PropTypes.func.isRequired,
   editedObject: PropTypes.object,

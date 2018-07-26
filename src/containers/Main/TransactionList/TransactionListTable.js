@@ -11,7 +11,8 @@ import {
   TableHead,
   TableRow,
   TableCell,
-  TableBody
+  TableBody,
+  TablePagination
 } from "@material-ui/core";
 
 import {
@@ -24,7 +25,6 @@ import {
 
 const styles = theme => ({
   root: {
-    marginTop: theme.spacing.unit * 2,
     overflowX: "auto"
   },
   unpaidAmount: {
@@ -33,6 +33,12 @@ const styles = theme => ({
   },
   overpaidAmount: {
     color: "blue"
+  },
+  formControl: {
+    margin: theme.spacing.unit * 3
+  },
+  group: {
+    margin: theme.spacing.unit
   }
 });
 
@@ -42,7 +48,12 @@ const TransactionListTable = props => {
     transactions,
     selectedTransactions,
     onChange,
-    onClick
+    onClick,
+    handleChangePage,
+    handleChangeRowsPerPage,
+    rowsPerPage,
+    page,
+    filteredTransactionType
   } = props;
 
   let linkTargetOptions = {
@@ -51,95 +62,109 @@ const TransactionListTable = props => {
     TRANSFER: "move"
   };
 
-  let transactionRows = transactions.map(transaction => {
-    let date_created = moment(transaction.date_created).format("DD-MMM-YYYY");
-    let date_due = moment(transaction.date_due).format("DD-MMM-YYYY");
+  let transactionRows = transactions
+    .filter(transaction => {
+      if (filteredTransactionType === "ALL") {
+        return true;
+      }
+      return transaction.type === filteredTransactionType;
+    })
+    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+    .map(transaction => {
+      let date_created = moment(transaction.date_created).format("DD-MMM-YYYY");
+      let date_due = moment(transaction.date_due).format("DD-MMM-YYYY");
 
-    let showInvoiceAttribute = transaction.type === "INVOICE";
-    let showTransferAttribute = transaction.type === "TRANSFER";
-    let linkTarget = linkTargetOptions[transaction.type];
+      let showInvoiceAttribute = transaction.type === "INVOICE";
+      let showTransferAttribute = transaction.type === "TRANSFER";
+      let linkTarget = linkTargetOptions[transaction.type];
 
-    let transactionAmountWithTax = transaction.amount + transaction.tax;
+      let transactionAmountWithTax = transaction.amount + transaction.tax;
 
-    let paidAmount = transaction.paid_amount;
-    let unpaidAmount = transactionAmountWithTax - paidAmount;
-    let absUnpaidAmount = Math.abs(unpaidAmount);
-    let showUnpaidAmount =
-      transactionAmountWithTax !== paidAmount && showInvoiceAttribute;
+      let paidAmount = transaction.paid_amount;
+      let unpaidAmount = transactionAmountWithTax - paidAmount;
+      let absUnpaidAmount = Math.abs(unpaidAmount);
+      let showUnpaidAmount =
+        transactionAmountWithTax !== paidAmount && showInvoiceAttribute;
 
-    return (
-      <TableRow key={transaction.id}>
-        <TableCell padding="dense" name="checkbox">
-          <Checkbox
-            onChange={onChange}
-            id={transaction.id.toString()}
-            checked={selectedTransactions.includes(transaction.id)}
-          />
-        </TableCell>
-        <TableCell padding="dense" name="ID">
-          <Typography
-            align="center"
-            noWrap
-            color="secondary"
-            style={{
-              textDecoration: "none",
-              display: "inline"
-            }}
-            component={Link}
-            to={linkTarget + "/" + transaction.id}
-          >
-            {transaction.full_transaction_number}
-          </Typography>
-        </TableCell>
-        <TableCell padding="dense" name="Date created">
-          {date_created}
-        </TableCell>
-        <TableCell padding="dense" name="Date due">
-          {date_due}
-        </TableCell>
-        <TableCell padding="dense" name="Customer">
-          {transaction.merchant || "-"}
-        </TableCell>
-        <TableCell padding="dense" name="Warehouse">
-          {transaction.warehouse}
-        </TableCell>
-        <TableCell padding="dense" name="Total Amount" numeric>
-          {addCommas(transactionAmountWithTax.toFixed(2))}
-          {showUnpaidAmount && (
+      return (
+        <TableRow key={transaction.id}>
+          <TableCell padding="checkbox" name="checkbox">
+            <Checkbox
+              onChange={onChange}
+              id={transaction.id.toString()}
+              checked={selectedTransactions.includes(transaction.id)}
+            />
+          </TableCell>
+          <TableCell padding="dense" name="ID">
             <Typography
-              variant="caption"
-              className={
-                unpaidAmount > 0
-                  ? classes.unpaidAmount
-                  : unpaidAmount < 0
-                    ? classes.overpaidAmount
-                    : ""
-              }
+              align="center"
+              noWrap
+              color="secondary"
+              style={{
+                textDecoration: "none",
+                display: "inline"
+              }}
+              component={Link}
+              to={linkTarget + "/" + transaction.id}
             >
-              {unpaidAmount > 0
-                ? "Unpaid: "
-                : unpaidAmount < 0
-                  ? "Overpaid: "
-                  : ""}
-              {addCommas(absUnpaidAmount.toFixed(2))}
+              {transaction.full_transaction_number}
             </Typography>
-          )}
-        </TableCell>
-        <TableCell padding="dense">
-          {(showInvoiceAttribute || showTransferAttribute) && (
-            <ExportPdfButton transaction={transaction} onClick={onClick} />
-          )}
-        </TableCell>
-      </TableRow>
-    );
-  });
+          </TableCell>
+          <TableCell padding="dense" name="Date created">
+            {date_created}
+          </TableCell>
+          <TableCell padding="dense" name="Date due">
+            {date_due}
+          </TableCell>
+          <TableCell padding="dense" name="Customer">
+            {transaction.merchant || "-"}
+          </TableCell>
+          <TableCell padding="dense" name="Warehouse">
+            {transaction.warehouse}
+          </TableCell>
+          <TableCell padding="dense" name="Total Amount" numeric>
+            {addCommas(transactionAmountWithTax.toFixed(2))}
+            {showUnpaidAmount && (
+              <Typography
+                variant="caption"
+                component={Link}
+                to={
+                  "/payment-list/invoice/" +
+                  transaction.full_transaction_number +
+                  "/"
+                }
+                className={
+                  unpaidAmount > 0
+                    ? classes.unpaidAmount
+                    : unpaidAmount < 0
+                      ? classes.overpaidAmount
+                      : ""
+                }
+              >
+                {unpaidAmount > 0
+                  ? "Unpaid: "
+                  : unpaidAmount < 0
+                    ? "Overpaid: "
+                    : ""}
+                {addCommas(absUnpaidAmount.toFixed(2))}
+              </Typography>
+            )}
+          </TableCell>
+          <TableCell padding="dense">
+            {(showInvoiceAttribute || showTransferAttribute) && (
+              <ExportPdfButton transaction={transaction} onClick={onClick} />
+            )}
+          </TableCell>
+        </TableRow>
+      );
+    });
 
   return (
     <Paper className={classes.root}>
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell padding="dense">
+            <TableCell padding="checkbox">
               <Checkbox onChange={onChange} name="select_all" />
             </TableCell>
             <TableCell padding="dense">Transaction</TableCell>
@@ -155,6 +180,21 @@ const TransactionListTable = props => {
         </TableHead>
         <TableBody>{transactionRows}</TableBody>
       </Table>
+
+      <TablePagination
+        component="div"
+        count={10}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        backIconButtonProps={{
+          "aria-label": "Previous Page"
+        }}
+        nextIconButtonProps={{
+          "aria-label": "Next Page"
+        }}
+        onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+      />
     </Paper>
   );
 };
@@ -163,8 +203,15 @@ TransactionListTable.propTypes = {
   transactions: PropTypes.array,
   onClick: PropTypes.func,
   onChange: PropTypes.func.isRequired,
+  handleChangePage: PropTypes.func.isRequired,
+  handleChangeRowsPerPage: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
-  selectedTransactions: PropTypes.array
+  selectedTransactions: PropTypes.array,
+  rowsPerPage: PropTypes.number,
+  page: PropTypes.number,
+  data: PropTypes.object,
+  filteredTransactionType: PropTypes.string,
+  handleFilterTransactionType: PropTypes.func
 };
 
 export default withTheme()(withStyles(styles)(TransactionListTable));

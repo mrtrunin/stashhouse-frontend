@@ -5,7 +5,14 @@ import { connect } from "react-redux";
 
 class PrivateRoute extends Component {
   render() {
-    let isLoggedIn = this.props.isLoggedIn;
+    const { isLoggedIn, business, path } = this.props;
+
+    const noBusinessSelected = Object.keys(business).length === 0;
+    const onBusinessChoicePage = path === "/business-choice/";
+
+    if (isLoggedIn && noBusinessSelected && !onBusinessChoicePage) {
+      return <Redirect to="/business-choice/" />;
+    }
 
     if (isLoggedIn) {
       return <Route {...this.props} />;
@@ -17,12 +24,15 @@ class PrivateRoute extends Component {
 
 PrivateRoute.propTypes = {
   isLoggedIn: PropTypes.bool,
-  render: PropTypes.func
+  render: PropTypes.func,
+  business: PropTypes.object,
+  path: PropTypes.string
 };
 
 export default connect(store => {
   return {
     user: store.user.user,
-    isLoggedIn: store.user.isLoggedIn
+    isLoggedIn: store.user.isLoggedIn,
+    business: store.business.business
   };
 })(PrivateRoute);

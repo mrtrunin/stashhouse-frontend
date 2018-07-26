@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { TextField } from "@material-ui/core";
+import { connect } from "react-redux";
 
 import store from "store";
 
@@ -9,8 +10,8 @@ import EditorHeader from "../EditorComponents/EditorHeader";
 import EditorContent from "../EditorComponents/EditorContent";
 import EditorButtons from "../EditorComponents/EditorButtons";
 
+import createBusiness from "api/Business/createBusiness";
 import updateBusiness from "api/Business/updateBusiness";
-import fetchBusiness from "api/Business/fetchBusiness";
 import fetchBusinesses from "api/fetchBusinesses";
 
 export class BusinessEditor extends Component {
@@ -24,26 +25,42 @@ export class BusinessEditor extends Component {
     });
   };
 
-  handleUpdateBusiness = async () => {
+  handleCreateOrUpdateBusiness = async () => {
     const { business } = this.props;
 
-    await updateBusiness(
-      business.id,
-      business.name,
-      business.address,
-      business.zip_code,
-      business.city,
-      business.country,
-      business.phone_number,
-      business.registry_number,
-      business.vat_number,
-      business.email,
-      business.website,
-      business.primary_bank,
-      business.primary_account_number
-    );
+    if (business.id !== undefined) {
+      await updateBusiness(
+        business.id,
+        business.name,
+        business.address,
+        business.zip_code,
+        business.city,
+        business.country,
+        business.phone_number,
+        business.registry_number,
+        business.vat_number,
+        business.email,
+        business.website,
+        business.primary_bank,
+        business.primary_account_number
+      );
+    } else {
+      await createBusiness(
+        business.name,
+        business.address,
+        business.zip_code,
+        business.city,
+        business.country,
+        business.phone_number,
+        business.registry_number,
+        business.vat_number,
+        business.email,
+        business.website,
+        business.primary_bank,
+        business.primary_account_number
+      );
+    }
 
-    await fetchBusiness(business.id);
     await fetchBusinesses();
   };
 
@@ -162,7 +179,8 @@ export class BusinessEditor extends Component {
         <EditorButtons
           editedObjectLabel="Business"
           editedObject={business}
-          updateAction={this.handleUpdateBusiness}
+          createAction={this.handleCreateOrUpdateBusiness}
+          updateAction={this.handleCreateOrUpdateBusiness}
         />
       </Editor>
     );
@@ -170,7 +188,11 @@ export class BusinessEditor extends Component {
 }
 
 BusinessEditor.propTypes = {
-  business: PropTypes.object.isRequired
+  business: PropTypes.object
 };
 
-export default BusinessEditor;
+export default connect(store => {
+  return {
+    business: store.business.business
+  };
+})(BusinessEditor);

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import store from "store";
-// import { Redirect } from "react-router-dom";
 
 import DatePicker from "material-ui-pickers/DatePicker";
 
@@ -28,19 +27,20 @@ import Editor from "../EditorComponents/Editor";
 import EditorHeader from "../EditorComponents/EditorHeader";
 import EditorContent from "../EditorComponents/EditorContent";
 
-export class PaymentEditor extends Component {
-  // state = {
-  //   redirectToRoot: false
-  // };
-  //
-  // TODO IMPLEMENT REDIRECT TO ROOT
+import addCommas from "functions/addCommas";
 
+export class PaymentEditor extends Component {
   componentDidMount = async () => {
+    const invoiceId = this.props.invoiceId;
     await store.dispatch({
       type: "RESET_PAYMENT"
     });
     await fetchInvoices();
     await this.fetchPayment();
+
+    if (invoiceId) {
+      await this.handleInvoiceChange(invoiceId);
+    }
   };
 
   componentDidUpdate = async prevProps => {
@@ -56,22 +56,26 @@ export class PaymentEditor extends Component {
     }
   };
 
+  handleInvoiceChange = async invoiceId => {
+    this.handlePaymentChangeStore("transaction", invoiceId);
+  };
+
   handleDateChange = async date => {
-    this.handlePaymentChangeRedux("date_payment", moment(date).format());
+    this.handlePaymentChangeStore("date_payment", moment(date).format());
   };
 
   handlePaymentChange = e => {
     let field = e.target.name;
     let value = e.target.value;
 
-    this.handlePaymentChangeRedux(field, value);
+    this.handlePaymentChangeStore(field, value);
 
     if (field === "date_payment") {
       value = moment(e.target.value).format();
     }
   };
 
-  handlePaymentChangeRedux = (field, value) => {
+  handlePaymentChangeStore = (field, value) => {
     store.dispatch({
       type: "PAYMENT_UPDATE_FIELD",
       payload: value,
@@ -117,11 +121,14 @@ export class PaymentEditor extends Component {
   };
 
   render() {
-    const { payment, invoices, hidePaymentEditor } = this.props;
-    // const { redirectToRoot } = this.state;
+    const { payment, invoices, hidePaymentEditor, invoiceId } = this.props;
 
     let existsPayment = Object.keys(payment).length !== 0 && payment.id;
     let existsInvoices = Object.keys(invoices).length !== 0;
+
+    let invoice = invoices.find(invoice => {
+      return invoice.full_transaction_number === invoiceId;
+    });
 
     const invoicesList = existsInvoices
       ? invoices.map((invoice, index) => {
@@ -132,10 +139,6 @@ export class PaymentEditor extends Component {
           );
         })
       : "Loading";
-
-    // if (redirectToRoot) {
-    //   <Redirect to="/payment-list" />;
-    // }
 
     if (!existsInvoices) {
       return (
@@ -153,11 +156,36 @@ export class PaymentEditor extends Component {
       <Editor>
         <EditorHeader
           existsEditedObject={existsPayment}
-          editedObjectLabel="Payment"
+          editedObjectLabel={invoiceId ? "Payment for " + invoiceId : "Payment"}
           hideEditor={hidePaymentEditor}
+          editedObjectSubheader={
+            invoice
+              ? "Invoice amount: " +
+                addCommas(invoice.amount + invoice.tax) +
+                " " +
+                (payment.currency ? payment.currency : "EUR")
+              : ""
+          }
         />
 
         <EditorContent>
+          {invoiceId ? (
+            ""
+          ) : (
+            <FormControl>
+              <InputLabel htmlFor="transaction">Invoice</InputLabel>
+              <Select
+                value={payment.transaction ? payment.transaction : ""}
+                onChange={this.handlePaymentChange}
+                name="transaction"
+                renderValue={value => value}
+                input={<Input id="transaction" />}
+              >
+                {invoicesList}
+              </Select>
+            </FormControl>
+          )}
+
           <DatePicker
             name="date_payment"
             label="Payment Date"
@@ -210,19 +238,6 @@ export class PaymentEditor extends Component {
             margin="dense"
             onChange={this.handlePaymentChange}
           />
-
-          <FormControl>
-            <InputLabel htmlFor="transaction">Invoice</InputLabel>
-            <Select
-              value={payment.transaction ? payment.transaction : ""}
-              onChange={this.handlePaymentChange}
-              name="transaction"
-              renderValue={value => value}
-              input={<Input id="transaction" />}
-            >
-              {invoicesList}
-            </Select>
-          </FormControl>
         </EditorContent>
 
         <EditorButtons
@@ -241,7 +256,8 @@ PaymentEditor.propTypes = {
   hidePaymentEditor: PropTypes.func.isRequired,
   payment: PropTypes.object,
   invoices: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
-  paymentId: PropTypes.string
+  paymentId: PropTypes.string,
+  invoiceId: PropTypes.string
 };
 
 export default connect(store => {

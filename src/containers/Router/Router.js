@@ -38,6 +38,11 @@ const Router = () => {
         />
         <PrivateRoute path="/payment/:paymentId" component={PaymentList} />
         <PrivateRoute exact path="/payment-list/" component={PaymentList} />
+        <PrivateRoute
+          exact
+          path="/payment-list/invoice/:invoiceId"
+          component={PaymentList}
+        />
         <PrivateRoute path="/customer/:merchantId" component={CustomerList} />
         <PrivateRoute exact path="/customer-list/" component={CustomerList} />
         <PrivateRoute exact path="/settings/" component={Settings} />
