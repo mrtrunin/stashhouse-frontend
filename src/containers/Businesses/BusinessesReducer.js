@@ -1,3 +1,9 @@
+import {
+  FETCH_BUSINESSES,
+  FETCH_BUSINESSES_FULFILLED,
+  FETCH_BUSINESSES_REJECTED
+} from "./BusinessesActions";
+
 export default function reducer(
   state = {
     businesses: [],
@@ -8,10 +14,10 @@ export default function reducer(
   action
 ) {
   switch (action.type) {
-    case "FETCH_BUSINESSES": {
+    case FETCH_BUSINESSES: {
       return { ...state, fetching: true };
     }
-    case "FETCH_BUSINESSES_FULFILLED": {
+    case FETCH_BUSINESSES_FULFILLED: {
       return {
         ...state,
         fetching: false,
@@ -19,7 +25,7 @@ export default function reducer(
         businesses: action.payload
       };
     }
-    case "FETCH_BUSINESSES_REJECTED": {
+    case FETCH_BUSINESSES_REJECTED: {
       return { ...state, fetching: false, error: action.payload };
     }
     default:

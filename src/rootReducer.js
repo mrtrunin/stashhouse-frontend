@@ -16,7 +16,7 @@ import invoices from "reducers/InvoicesReducer";
 import productsStock from "reducers/ProductsStockReducer";
 import snackBarMessage from "reducers/SnackBarMessageReducer";
 import business from "reducers/BusinessReducer";
-import businesses from "reducers/BusinessesReducer";
+import businesses from "containers/Businesses/BusinessesReducer";
 import { USER_LOGOUT } from "containers/Logout/LogoutActions";
 
 const appReducer = combineReducers({

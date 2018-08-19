@@ -5,14 +5,16 @@ import { connect } from "react-redux";
 
 import store from "store";
 
-import Editor from "../EditorComponents/Editor";
-import EditorHeader from "../EditorComponents/EditorHeader";
-import EditorContent from "../EditorComponents/EditorContent";
-import EditorButtons from "../EditorComponents/EditorButtons";
+import Editor from "components/Editors/EditorComponents/Editor";
+import EditorHeader from "components/Editors/EditorComponents/EditorHeader";
+import EditorContent from "components/Editors/EditorComponents/EditorContent";
+import EditorButtons from "components/Editors/EditorComponents/EditorButtons";
 
 import createBusiness from "api/Business/createBusiness";
 import updateBusiness from "api/Business/updateBusiness";
-import fetchBusinesses from "api/fetchBusinesses";
+
+import * as actions from "containers/Businesses/BusinessesActions";
+import { bindActionCreators } from "redux";
 
 export class BusinessEditor extends Component {
   handleBusinessChange = e => {
@@ -26,7 +28,10 @@ export class BusinessEditor extends Component {
   };
 
   handleCreateOrUpdateBusiness = async () => {
-    const { business } = this.props;
+    const {
+      business,
+      actions: { fetchBusinesses }
+    } = this.props;
 
     if (business.id !== undefined) {
       await updateBusiness(
@@ -191,8 +196,16 @@ BusinessEditor.propTypes = {
   business: PropTypes.object
 };
 
-export default connect(store => {
+const mapStateToProps = state => {
   return {
-    business: store.business.business
+    business: state.business.business
   };
-})(BusinessEditor);
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    actions: bindActionCreators({ ...actions }, dispatch)
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(BusinessEditor);

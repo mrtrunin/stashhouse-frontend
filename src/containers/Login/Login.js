@@ -48,7 +48,7 @@ class Login extends Component {
     const { isLoggedIn } = this.props;
 
     if (isLoggedIn) {
-      return <Redirect push exact to="/business-choice" />;
+      return <Redirect push exact to="/businesses" />;
     }
 
     return (

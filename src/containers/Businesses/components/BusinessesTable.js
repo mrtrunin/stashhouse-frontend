@@ -9,7 +9,7 @@ import {
   TableCell
 } from "@material-ui/core";
 
-const BusinessChoiceTable = props => {
+const BusinessesTable = props => {
   const { businesses, chooseBusiness } = props;
 
   const tableContents = businesses.map((business, i) => {
@@ -41,9 +41,9 @@ const BusinessChoiceTable = props => {
   );
 };
 
-BusinessChoiceTable.propTypes = {
+BusinessesTable.propTypes = {
   businesses: PropTypes.array.isRequired,
   chooseBusiness: PropTypes.func.isRequired
 };
 
-export default BusinessChoiceTable;
+export default BusinessesTable;

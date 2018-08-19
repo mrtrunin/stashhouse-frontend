@@ -24,24 +24,7 @@ import {
   Typography
 } from "@material-ui/core";
 
-const styles = theme => ({
-  root: {
-    overflowX: "auto"
-  },
-  unpaidAmount: {
-    color: "red",
-    textDecoration: "none"
-  },
-  overpaidAmount: {
-    color: "blue"
-  },
-  formControl: {
-    margin: theme.spacing.unit * 3
-  },
-  group: {
-    margin: theme.spacing.unit
-  }
-});
+import { TransactionsTableStyle } from "./TransactionsTableStyle";
 
 const TransactionsTable = props => {
   const {
@@ -226,4 +209,6 @@ TransactionsTable.propTypes = {
   handleSendEmail: PropTypes.func.isRequired
 };
 
-export default withTheme()(withStyles(styles)(TransactionsTable));
+export default withTheme()(
+  withStyles(TransactionsTableStyle)(TransactionsTable)
+);

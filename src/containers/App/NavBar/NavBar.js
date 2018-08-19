@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import store from "store";
-import fetchBusinesses from "api/fetchBusinesses";
+import * as actions from "containers/Businesses/BusinessesActions";
 
 import {
   Button,
@@ -25,6 +25,7 @@ import {
   PowerSettingsNew,
   Settings
 } from "@material-ui/icons";
+import { bindActionCreators } from "redux";
 
 const styles = theme => ({
   root: {
@@ -55,6 +56,9 @@ const styles = theme => ({
 
 class NavBar extends Component {
   componentDidUpdate = prevProps => {
+    const {
+      actions: { fetchBusinesses }
+    } = this.props;
     if (
       prevProps.isLoggedIn !== this.props.isLoggedIn &&
       this.props.isLoggedIn
@@ -179,6 +183,7 @@ class NavBar extends Component {
   }
 }
 NavBar.propTypes = {
+  actions: PropTypes.object.isRequired,
   user: PropTypes.shape({
     username: PropTypes.string,
     first_name: PropTypes.string,
@@ -191,7 +196,7 @@ NavBar.propTypes = {
   transactions: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
 };
 
-function mapStateToProps(state) {
+const mapStateToProps = state => {
   return {
     businesses: state.businesses.businesses,
     business: state.business.business,
@@ -199,6 +204,14 @@ function mapStateToProps(state) {
     isLoggedIn: state.user.isLoggedIn,
     transactions: state.transactions.transactions
   };
-}
+};
 
-export default connect(mapStateToProps)(withStyles(styles)(NavBar));
+const mapDispatchToProps = dispatch => {
+  return {
+    actions: bindActionCreators({ ...actions }, dispatch)
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  withStyles(styles)(NavBar)
+);

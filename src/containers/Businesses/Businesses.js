@@ -1,19 +1,24 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import fetchBusinesses from "api/fetchBusinesses";
-import BusinessChoiceTable from "./BusinessChoiceTable";
+import BusinessesTable from "./components/BusinessesTable";
 
 import { connect } from "react-redux";
 import store from "store";
 import { Redirect } from "react-router-dom";
-import BusinessEditor from "components/Editors/BusinessEditor";
+import BusinessEditor from "./containers/BusinessEditor";
+import { bindActionCreators } from "redux";
 
-export class BusinessChoiceContainer extends Component {
+import * as actions from "./BusinessesActions";
+
+export class Businesses extends Component {
   state = {
     redirect: false
   };
 
   componentDidMount = async () => {
+    const {
+      actions: { fetchBusinesses }
+    } = this.props;
     await fetchBusinesses();
     const { businesses } = this.props;
     if (businesses.length === 1) {
@@ -47,7 +52,7 @@ export class BusinessChoiceContainer extends Component {
     }
 
     return (
-      <BusinessChoiceTable
+      <BusinessesTable
         businesses={businesses}
         chooseBusiness={this.handleChooseBusiness}
       />
@@ -55,12 +60,20 @@ export class BusinessChoiceContainer extends Component {
   }
 }
 
-BusinessChoiceContainer.propTypes = {
+Businesses.propTypes = {
   businesses: PropTypes.array.isRequired
 };
 
-export default connect(store => {
+const mapStateToProps = state => {
   return {
-    businesses: store.businesses.businesses
+    businesses: state.businesses.businesses
   };
-})(BusinessChoiceContainer);
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    actions: bindActionCreators({ ...actions }, dispatch)
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Businesses);

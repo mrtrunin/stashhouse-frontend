@@ -8,10 +8,10 @@ class PrivateRoute extends Component {
     const { isLoggedIn, business, path } = this.props;
 
     const noBusinessSelected = Object.keys(business).length === 0;
-    const onBusinessChoicePage = path === "/business-choice/";
+    const onBusinessesPage = path === "/businesses/";
 
-    if (isLoggedIn && noBusinessSelected && !onBusinessChoicePage) {
-      return <Redirect to="/business-choice/" />;
+    if (isLoggedIn && noBusinessSelected && !onBusinessesPage) {
+      return <Redirect to="/businesses/" />;
     }
 
     if (isLoggedIn) {

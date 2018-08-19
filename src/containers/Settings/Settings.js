@@ -1,16 +1,16 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { BusinessEditor } from "components/Editors/BusinessEditor/BusinessEditor";
+import { BusinessEditor } from "containers/Businesses/containers/BusinessEditor";
 
-export class SettingsContainer extends Component {
+export class Settings extends Component {
   render() {
     const { business } = this.props;
     return <BusinessEditor business={business} />;
   }
 }
 
-SettingsContainer.propTypes = {
+Settings.propTypes = {
   business: PropTypes.object.isRequired
 };
 
@@ -18,4 +18,4 @@ export default connect(store => {
   return {
     business: store.business.business
   };
-})(SettingsContainer);
+})(Settings);
