@@ -10,7 +10,8 @@ const Message = message => {
     ) {
       message = message.response.status + ": " + message.response.statusText;
     }
-    return showMessage(message);
+    console.log(message);
+    // return showMessage(message);
   } catch (error) {
     console.error("MESSAGE ERROR WITH Message.js");
     console.error(error);
