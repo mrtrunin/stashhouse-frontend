@@ -16,14 +16,14 @@ class Login extends Component {
     redirect: false
   };
 
-  onSubmit = e => {
+  onSubmit = async e => {
     e.preventDefault();
     const { login, fetchUserData } = this.props.actions;
 
     try {
-      this.setState({ isLoading: true });
-      login(this.state);
-      fetchUserData();
+      await this.setState({ isLoading: true });
+      await login(this.state);
+      await fetchUserData();
     } catch (error) {
       Message(error);
     }

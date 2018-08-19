@@ -10,7 +10,7 @@ export const FETCH_AUTH_TOKEN_FULFILLED = "FETCH_AUTH_TOKEN_FULFILLED";
 export const FETCH_AUTH_TOKEN_REJECTED = "FETCH_AUTH_TOKEN_REJECTED";
 
 export function login(data) {
-  return async dispatch => {
+  return dispatch => {
     let client_id = process.env.REACT_APP_CLIENT_ID;
     let client_secret = process.env.REACT_APP_CLIENT_SECRET;
     let url = process.env.REACT_APP_SERVER_URL;
@@ -24,13 +24,13 @@ export function login(data) {
 
     dispatch({ type: FETCH_AUTH_TOKEN });
     try {
-      const { data } = await axios.post(url + "/auth/token/", formdata, {
+      const { data } = axios.post(url + "/auth/token/", formdata, {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded"
         }
       });
 
-      await handleLoginSuccess(dispatch, data);
+      handleLoginSuccess(dispatch, data);
     } catch (error) {
       handleLoginFailure(dispatch, error);
     }
