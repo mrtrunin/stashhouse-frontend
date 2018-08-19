@@ -4,12 +4,9 @@ import PropTypes from "prop-types";
 import store from "store";
 import { connect } from "react-redux";
 
-import fetchWarehouse from "api/Warehouse/fetchWarehouse";
-import createWarehouse from "api/Warehouse/createWarehouse";
-import updateWarehouse from "api/Warehouse/updateWarehouse";
-import deleteWarehouse from "api/Warehouse/deleteWarehouse";
 import fetchProductsStock from "api/fetchProductsStock";
-import fetchWarehouses from "api/fetchWarehouses";
+import * as warehouseActions from "containers/Warehouse/WarehouseActions";
+import * as warehousesActions from "containers/Warehouse/WarehousesActions";
 
 import { TextField } from "@material-ui/core";
 import EditorButtons from "../EditorComponents/EditorButtons";
@@ -17,7 +14,14 @@ import Editor from "../EditorComponents/Editor";
 import EditorHeader from "../EditorComponents/EditorHeader";
 import EditorContent from "../EditorComponents/EditorContent";
 
+import { bindActionCreators } from "redux";
+import { Redirect } from "react-router-dom";
+
 export class WarehouseEditor extends Component {
+  state = {
+    redirectToRoot: false
+  };
+
   componentDidMount = async () => {
     await store.dispatch({
       type: "RESET_WAREHOUSE"
@@ -32,13 +36,28 @@ export class WarehouseEditor extends Component {
   };
 
   fetchWarehouse = async () => {
-    let warehouseId = this.props.warehouseId;
+    const {
+      warehouseId,
+      warehouse,
+      actions: { fetchWarehouse }
+    } = this.props;
+
     if (warehouseId) {
       await fetchWarehouse(warehouseId);
+      if (!warehouse.id) {
+        this.setState({
+          redirectToRoot: true
+        });
+      }
+    } else {
+      this.setState({
+        redirectToRoot: true
+      });
     }
   };
 
   handleWarehouseChange = e => {
+    // TODO: Extract to action
     store.dispatch({
       type: "WAREHOUSE_UPDATE_FIELD",
       payload: e.target.value,
@@ -47,7 +66,11 @@ export class WarehouseEditor extends Component {
   };
 
   handleCreateOrUpdateWarehouse = async () => {
-    const { warehouse, business } = this.props;
+    const {
+      warehouse,
+      business,
+      actions: { fetchWarehouses, updateWarehouse, createWarehouse }
+    } = this.props;
 
     if (warehouse.id) {
       await updateWarehouse(warehouse.name, warehouse.id);
@@ -59,7 +82,11 @@ export class WarehouseEditor extends Component {
   };
 
   handleDeleteWarehouse = async () => {
-    const { warehouse, business } = this.props;
+    const {
+      warehouse,
+      business,
+      actions: { fetchWarehouses, deleteWarehouse }
+    } = this.props;
     await deleteWarehouse(warehouse.id);
     await fetchProductsStock(business.name);
     await fetchWarehouses(business.name);
@@ -67,6 +94,12 @@ export class WarehouseEditor extends Component {
 
   render() {
     const { warehouse, hideWarehouseEditor } = this.props;
+    const { redirectToRoot } = this.state;
+
+    if (redirectToRoot) {
+      return <Redirect to="/warehouse" />;
+    }
+
     return (
       <Editor>
         <EditorHeader
@@ -103,9 +136,20 @@ WarehouseEditor.propTypes = {
   hideWarehouseEditor: PropTypes.func.isRequired
 };
 
-export default connect(store => {
+const mapStateToProps = state => {
   return {
-    warehouse: store.warehouse.warehouse,
-    business: store.business.business
+    warehouse: state.warehouse.warehouse,
+    business: state.business.business
   };
-})(WarehouseEditor);
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    actions: bindActionCreators(
+      { ...warehouseActions, ...warehousesActions },
+      dispatch
+    )
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(WarehouseEditor);

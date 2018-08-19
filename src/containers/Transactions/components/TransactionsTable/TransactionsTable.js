@@ -194,7 +194,7 @@ const TransactionsTable = props => {
 
       <TablePagination
         component="div"
-        count={10}
+        count={transactions.length}
         rowsPerPage={rowsPerPage}
         page={page}
         backIconButtonProps={{

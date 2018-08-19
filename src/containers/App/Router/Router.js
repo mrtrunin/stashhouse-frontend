@@ -2,10 +2,10 @@ import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import Main from "containers/App/Main/Main";
 import PrivateRoute from "./PrivateRoute";
-import Warehouse from "containers/Warehouse";
+import Warehouse from "containers/Warehouse/Warehouse";
 import Login from "containers/Login/Login";
 import Logout from "containers/Logout/Logout";
-import Transaction from "containers/Transaction";
+import Transaction from "containers/Transaction/Transaction";
 import Transactions from "containers/Transactions/Transactions";
 
 import PaymentList from "containers/PaymentList";

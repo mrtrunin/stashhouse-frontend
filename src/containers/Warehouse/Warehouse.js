@@ -3,34 +3,20 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import fetchProductsStock from "api/fetchProductsStock";
-import fetchWarehouses from "api/fetchWarehouses";
 
-import WarehouseTable from "./WarehouseTable";
+import WarehouseTable from "./components/WarehouseTable";
 import ProductEditor from "components/Editors/ProductEditor";
 import WarehouseEditor from "components/Editors/WarehouseEditor";
 
 import { withStyles, Button, Grid } from "@material-ui/core";
 
 import { Link } from "react-router-dom";
+import { WarehouseStyle } from "./WarehouseStyle";
+import { bindActionCreators } from "redux";
 
-const style = theme => ({
-  root: {
-    width: "100%",
-    marginTop: theme.spacing.unit * 2,
-    overflowX: "auto"
-  },
-  flex: {
-    flex: 1
-  },
-  buttons: {
-    padding: theme.spacing.unit * 2
-  },
-  button: {
-    marginLeft: theme.spacing.unit
-  }
-});
+import * as actions from "./WarehousesActions";
 
-export class WarehouseContainer extends Component {
+export class Warehouse extends Component {
   state = {
     showProductEditor: false,
     showWarehouseEditor: false
@@ -42,7 +28,10 @@ export class WarehouseContainer extends Component {
   };
 
   fetchData = () => {
-    const { business } = this.props;
+    const {
+      business,
+      actions: { fetchWarehouses }
+    } = this.props;
     fetchProductsStock(business.name);
     fetchWarehouses(business.name);
   };
@@ -153,7 +142,8 @@ export class WarehouseContainer extends Component {
   }
 }
 
-WarehouseContainer.propTypes = {
+Warehouse.propTypes = {
+  actions: PropTypes.object.isRequired,
   productsStock: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   warehouses: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   fetched: PropTypes.bool,
@@ -167,11 +157,21 @@ WarehouseContainer.propTypes = {
   business: PropTypes.object.isRequired
 };
 
-export default connect(store => {
+const mapStateToProps = state => {
   return {
-    productsStock: store.productsStock.productsStock,
-    warehouses: store.warehouses.warehouses,
-    fetched: store.productsStock.fetched,
-    business: store.business.business
+    productsStock: state.productsStock.productsStock,
+    warehouses: state.warehouses.warehouses,
+    fetched: state.productsStock.fetched,
+    business: state.business.business
   };
-})(withStyles(style)(WarehouseContainer));
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    actions: bindActionCreators({ ...actions }, dispatch)
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  withStyles(WarehouseStyle)(Warehouse)
+);

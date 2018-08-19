@@ -1,3 +1,9 @@
+import {
+  FETCH_WAREHOUSES,
+  FETCH_WAREHOUSES_FULFILLED,
+  FETCH_WAREHOUSES_REJECTED
+} from "./WarehousesActions";
+
 export default function reducer(
   state = {
     warehouses: {},
@@ -8,10 +14,10 @@ export default function reducer(
   action
 ) {
   switch (action.type) {
-    case "FETCH_WAREHOUSES": {
+    case FETCH_WAREHOUSES: {
       return { ...state, fetching: true };
     }
-    case "FETCH_WAREHOUSES_FULFILLED": {
+    case FETCH_WAREHOUSES_FULFILLED: {
       return {
         ...state,
         fetching: false,
@@ -19,7 +25,7 @@ export default function reducer(
         warehouses: action.payload
       };
     }
-    case "FETCH_WAREHOUSES_REJECTED": {
+    case FETCH_WAREHOUSES_REJECTED: {
       return { ...state, fetching: false, error: action.payload };
     }
     default:

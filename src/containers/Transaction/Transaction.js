@@ -7,8 +7,8 @@ import { Redirect } from "react-router-dom";
 import { withStyles, Grid, Paper, Button } from "@material-ui/core";
 
 // API calls
-import * as actions from "containers/Customers/CustomersActions";
-import fetchWarehouses from "api/fetchWarehouses";
+import * as customersActions from "containers/Customers/CustomersActions";
+import * as warehousesActions from "containers/Warehouse/WarehousesActions";
 import fetchProducts from "api/fetchProducts";
 
 // Stashhouse components
@@ -17,7 +17,7 @@ import WarehouseSelector from "components/Selectors/WarehouseSelector";
 import TransactionProductTable from "components/Tables/TransactionProductTable";
 import GrandTotalCalculator from "components/Calculators/GrandTotalCalculator";
 
-// TransactionForm actions
+// Transaction actions
 import calculateTotals from "./actions/calculateTotals";
 import setTransactionType from "./actions/setTransactionType";
 import handleCustomerSelect from "./actions/handleCustomerSelect";
@@ -53,7 +53,7 @@ const styles = theme => ({
   }
 });
 
-export class TransactionForm extends Component {
+export class Transaction extends Component {
   state = {
     redirect: false
   };
@@ -61,7 +61,7 @@ export class TransactionForm extends Component {
   componentDidMount = async () => {
     const {
       business,
-      actions: { fetchCustomers }
+      actions: { fetchCustomers, fetchWarehouses }
     } = this.props;
     await fetchCustomers(business.name);
     await fetchWarehouses(business.name);
@@ -261,7 +261,7 @@ export class TransactionForm extends Component {
   }
 }
 
-TransactionForm.propTypes = {
+Transaction.propTypes = {
   actions: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
   title: PropTypes.string,
@@ -296,10 +296,13 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    actions: bindActionCreators({ ...actions }, dispatch)
+    actions: bindActionCreators(
+      { ...customersActions, ...warehousesActions },
+      dispatch
+    )
   };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  withStyles(styles)(TransactionForm)
+  withStyles(styles)(Transaction)
 );
