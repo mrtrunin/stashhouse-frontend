@@ -13,11 +13,14 @@ const DEBUG = process.env.NODE_ENV === "development";
 const compose = (f, g) => a => (g ? f(g(a)) : f(a));
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const middleware = DEBUG
-  ? composeEnhancers(
-      applyMiddleware(createLogger(), apiMiddleware, thunkMiddleware)
-    )
-  : undefined;
+
+const middlewares = [
+  apiMiddleware,
+  thunkMiddleware,
+  DEBUG && createLogger()
+].filter(Boolean);
+
+const middleware = composeEnhancers(applyMiddleware(...middlewares));
 
 const store = createStore(reducer, persistedState, middleware);
 
