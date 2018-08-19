@@ -9,6 +9,7 @@ import { withStyles, Grid, Paper, Button } from "@material-ui/core";
 // API calls
 import * as customersActions from "containers/Customers/CustomersActions";
 import * as warehousesActions from "containers/Warehouse/WarehousesActions";
+import * as transactionActions from "containers/Transaction/TransactionActions";
 import fetchProducts from "api/fetchProducts";
 
 // Stashhouse components
@@ -17,19 +18,19 @@ import WarehouseSelector from "components/Selectors/WarehouseSelector";
 import TransactionProductTable from "components/Tables/TransactionProductTable";
 import GrandTotalCalculator from "components/Calculators/GrandTotalCalculator";
 
-// Transaction actions
-import calculateTotals from "./actions/calculateTotals";
-import setTransactionType from "./actions/setTransactionType";
-import handleCustomerSelect from "./actions/handleCustomerSelect";
-import handleWarehouseSelect from "./actions/handleWarehouseSelect";
-import handleProductSelect from "./actions/handleProductSelect";
-import handleProductAttributeChange from "./actions/handleProductAttributeChange";
-import handleProductRemove from "./actions/handleProductRemove";
-import handleReset from "./actions/handleReset";
-import handleDelete from "./actions/handleDelete";
-import handleCreateTransaction from "./actions/handleCreateTransaction";
-import loadExistingTransaction from "./actions/loadExistingTransaction";
-import handleUpdateTransaction from "./actions/handleUpdateTransaction";
+// Transaction functions
+import calculateTotals from "./functions/calculateTotals";
+import setTransactionType from "./functions/setTransactionType";
+import handleCustomerSelect from "./functions/handleCustomerSelect";
+import handleWarehouseSelect from "./functions/handleWarehouseSelect";
+import handleProductSelect from "./functions/handleProductSelect";
+import handleProductAttributeChange from "./functions/handleProductAttributeChange";
+import handleProductRemove from "./functions/handleProductRemove";
+import handleReset from "./functions/handleReset";
+import handleDelete from "./functions/handleDelete";
+import handleCreateTransaction from "./functions/handleCreateTransaction";
+import loadExistingTransaction from "./functions/loadExistingTransaction";
+import handleUpdateTransaction from "./functions/handleUpdateTransaction";
 import { bindActionCreators } from "redux";
 
 const styles = theme => ({
@@ -61,12 +62,12 @@ export class Transaction extends Component {
   componentDidMount = async () => {
     const {
       business,
-      actions: { fetchCustomers, fetchWarehouses }
+      actions: { fetchCustomers, fetchWarehouses, fetchTransaction }
     } = this.props;
     await fetchCustomers(business.name);
     await fetchWarehouses(business.name);
     await fetchProducts(business.name);
-    await loadExistingTransaction(this.props, this.redirect);
+    await loadExistingTransaction(this.props, this.redirect, fetchTransaction);
     await setTransactionType(this.props.match.params.transactionType);
   };
 
@@ -75,7 +76,10 @@ export class Transaction extends Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const {
+      classes,
+      actions: { deleteTransaction, createTransaction, updateTransaction }
+    } = this.props;
 
     let customersFetched = this.props.customersFetched;
     let warehousesFetched = this.props.warehousesFetched;
@@ -206,7 +210,8 @@ export class Transaction extends Component {
                     onClick={handleDelete.bind(
                       null,
                       existingTransactionId,
-                      this.redirect
+                      this.redirect,
+                      deleteTransaction
                     )}
                   >
                     Delete
@@ -232,7 +237,8 @@ export class Transaction extends Component {
                     onClick={handleUpdateTransaction.bind(
                       null,
                       this.props.transactionState,
-                      this.props.business
+                      this.props.business,
+                      updateTransaction
                     )}
                   >
                     Update
@@ -246,7 +252,8 @@ export class Transaction extends Component {
                     onClick={handleCreateTransaction.bind(
                       null,
                       this.props.transactionState,
-                      this.props.business
+                      this.props.business,
+                      createTransaction
                     )}
                   >
                     {this.props.transactionState.transactionType}
@@ -297,7 +304,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     actions: bindActionCreators(
-      { ...customersActions, ...warehousesActions },
+      { ...customersActions, ...warehousesActions, ...transactionActions },
       dispatch
     )
   };

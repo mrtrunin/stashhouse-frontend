@@ -2,11 +2,12 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as actions from "./TransactionsActions";
+
+import * as transactionActions from "containers/Transaction/TransactionActions";
+import * as transactionsActions from "./TransactionsActions";
 
 import TransactionsTable from "./components/TransactionsTable/TransactionsTable";
 import fetchTransactionPdf from "api/fetchTransactionPdf";
-import deleteTransaction from "api/Transaction/deleteTransaction";
 
 import { Button, Grid } from "@material-ui/core";
 import TransactionCreationButtons from "./components/TransactionCreationButtons";
@@ -92,7 +93,7 @@ export class Transactions extends Component {
   handleDeleteTransactions = async () => {
     const {
       business,
-      actions: { fetchTransactions }
+      actions: { fetchTransactions, deleteTransaction }
     } = this.props;
     for (let transactionId of this.state.selectedTransactions) {
       await deleteTransaction(transactionId);
@@ -199,7 +200,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    actions: bindActionCreators({ ...actions }, dispatch)
+    actions: bindActionCreators(
+      { ...transactionActions, ...transactionsActions },
+      dispatch
+    )
   };
 };
 

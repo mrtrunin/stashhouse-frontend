@@ -1,3 +1,17 @@
+import {
+  TRANSACTION_STATE_SET_TRANSACTION_TYPE,
+  TRANSACTION_STATE_ADD_EXISTING_TRANSACTION,
+  TRANSACTION_STATE_CHANGE_CUSTOMER,
+  TRANSACTION_STATE_CHANGE_FROM_WAREHOUSE,
+  TRANSACTION_STATE_CHANGE_TO_WAREHOUSE,
+  TRANSACTION_STATE_ADD_PRODUCT,
+  TRANSACTION_STATE_REMOVE_PRODUCT,
+  TRANSACTION_STATE_CHANGE_PRODUCT_ATTRIBUTE,
+  TRANSACTION_STATE_FETCHING,
+  TRANSACTION_STATE_FETCHED,
+  TRANSACTION_STATE_RESET
+} from "./TransactionActions";
+
 export default function reducer(
   state = {
     transactionType: "",
@@ -12,44 +26,44 @@ export default function reducer(
   action
 ) {
   switch (action.type) {
-    case "TRANSACTION_STATE_SET_TRANSACTION_TYPE": {
+    case TRANSACTION_STATE_SET_TRANSACTION_TYPE: {
       return {
         ...state,
         transactionType: action.payload
       };
     }
-    case "TRANSACTION_STATE_ADD_EXISTING_TRANSACTION": {
+    case TRANSACTION_STATE_ADD_EXISTING_TRANSACTION: {
       return {
         ...state,
         existingTransactionId: action.payload
       };
     }
-    case "TRANSACTION_STATE_CHANGE_CUSTOMER": {
+    case TRANSACTION_STATE_CHANGE_CUSTOMER: {
       return {
         ...state,
         customer: action.payload
       };
     }
-    case "TRANSACTION_STATE_CHANGE_FROM_WAREHOUSE": {
+    case TRANSACTION_STATE_CHANGE_FROM_WAREHOUSE: {
       return {
         ...state,
         fromWarehouse: action.payload
       };
     }
-    case "TRANSACTION_STATE_CHANGE_TO_WAREHOUSE": {
+    case TRANSACTION_STATE_CHANGE_TO_WAREHOUSE: {
       return {
         ...state,
         toWarehouse: action.payload
       };
     }
-    case "TRANSACTION_STATE_ADD_PRODUCT": {
+    case TRANSACTION_STATE_ADD_PRODUCT: {
       return {
         ...state,
         products: [...state.products, action.payload]
       };
     }
 
-    case "TRANSACTION_STATE_REMOVE_PRODUCT": {
+    case TRANSACTION_STATE_REMOVE_PRODUCT: {
       return {
         ...state,
         products: [
@@ -59,7 +73,7 @@ export default function reducer(
       };
     }
 
-    case "TRANSACTION_STATE_CHANGE_PRODUCT_ATTRIBUTE": {
+    case TRANSACTION_STATE_CHANGE_PRODUCT_ATTRIBUTE: {
       let attributeToChange = Object.keys(action).filter(attribute => {
         return !["type", "id"].includes(attribute);
       });
@@ -79,21 +93,21 @@ export default function reducer(
       };
     }
 
-    case "TRANSACTION_STATE_FETCHING": {
+    case TRANSACTION_STATE_FETCHING: {
       return {
         ...state,
         fetching: true
       };
     }
 
-    case "TRANSACTION_STATE_FETCHED": {
+    case TRANSACTION_STATE_FETCHED: {
       return {
         ...state,
         fetching: false
       };
     }
 
-    case "TRANSACTION_STATE_RESET": {
+    case TRANSACTION_STATE_RESET: {
       return {
         ...state,
         customer: {},

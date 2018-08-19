@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import transaction from "reducers/TransactionReducer";
+import transaction from "containers/Transaction/TransactionReducer";
 import auth from "containers/Login/AuthReducer";
 import user from "containers/Login/UserReducer";
 import customer from "reducers/CustomerReducer";
@@ -10,7 +10,7 @@ import product from "reducers/ProductReducer";
 import products from "reducers/ProductsReducer";
 import payment from "reducers/PaymentReducer";
 import payments from "reducers/PaymentsReducer";
-import transactionState from "reducers/TransactionStateReducer";
+import transactionState from "containers/Transaction/TransactionStateReducer";
 import { transactions } from "containers/Transactions/TransactionsReducer";
 import invoices from "reducers/InvoicesReducer";
 import productsStock from "reducers/ProductsStockReducer";

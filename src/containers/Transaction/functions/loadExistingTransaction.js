@@ -1,11 +1,10 @@
 import PropTypes from "prop-types";
-import fetchTransaction from "api/Transaction/fetchTransaction";
 import fetchStock from "api/fetchStock";
 import store from "store";
 import transformSelectedProduct from "./transformSelectedProduct";
 import Message from "components/Message";
 
-const loadExistingTransaction = async (props, redirect) => {
+const loadExistingTransaction = async (props, redirect, fetchTransaction) => {
   let transactionId = props.match.params.transactionId;
 
   if (!transactionId) {
@@ -98,6 +97,7 @@ const loadExistingTransaction = async (props, redirect) => {
 };
 
 loadExistingTransaction.propTypes = {
+  fetchTransaction: PropTypes.func.isRequired,
   transactionId: PropTypes.string
 };
 
