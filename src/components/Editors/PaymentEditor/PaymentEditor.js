@@ -27,7 +27,7 @@ import Editor from "../EditorComponents/Editor";
 import EditorHeader from "../EditorComponents/EditorHeader";
 import EditorContent from "../EditorComponents/EditorContent";
 
-import addCommas from "functions/addCommas";
+import { addCommas } from "services/functions";
 
 export class PaymentEditor extends Component {
   componentDidMount = async () => {

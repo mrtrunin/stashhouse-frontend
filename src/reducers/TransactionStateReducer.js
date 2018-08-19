@@ -2,7 +2,7 @@ export default function reducer(
   state = {
     transactionType: "",
     existingTransactionId: "",
-    merchant: {},
+    customer: {},
     fromWarehouse: {},
     toWarehouse: {},
     products: [],
@@ -24,10 +24,10 @@ export default function reducer(
         existingTransactionId: action.payload
       };
     }
-    case "TRANSACTION_STATE_CHANGE_MERCHANT": {
+    case "TRANSACTION_STATE_CHANGE_CUSTOMER": {
       return {
         ...state,
-        merchant: action.payload
+        customer: action.payload
       };
     }
     case "TRANSACTION_STATE_CHANGE_FROM_WAREHOUSE": {
@@ -96,7 +96,7 @@ export default function reducer(
     case "TRANSACTION_STATE_RESET": {
       return {
         ...state,
-        merchant: {},
+        customer: {},
         fromWarehouse: {},
         toWarehouse: {},
         products: []

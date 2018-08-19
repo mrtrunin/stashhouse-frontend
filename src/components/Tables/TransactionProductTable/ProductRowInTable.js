@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import addCommas from "functions/addCommas";
+import { addCommas } from "services/functions";
 import { TableRow, TableCell } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Remove from "@material-ui/icons/Remove";

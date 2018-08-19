@@ -34,7 +34,7 @@ const refreshToken = async () => {
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("jwtToken");
     localStorage.removeItem("jwtToken_expiration_time");
-    localStorage.removeItem("reduxState");
+    localStorage.removeItem("state");
   }
 };
 

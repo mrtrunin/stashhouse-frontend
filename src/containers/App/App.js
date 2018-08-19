@@ -1,41 +1,21 @@
 import React, { Component } from "react";
-import Router from "containers/Router";
-import Nav from "containers/Nav";
+import Router from "containers/App/Router";
+import NavBar from "containers/App/NavBar/NavBar";
+import { AppTheme } from "./AppTheme";
 
 import MuiPickersUtilsProvider from "material-ui-pickers/utils/MuiPickersUtilsProvider";
 import MomentUtils from "material-ui-pickers/utils/moment-utils";
 
 import { CssBaseline } from "@material-ui/core";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { MuiThemeProvider } from "@material-ui/core/styles";
 
 import SnackBar from "components/SnackBar";
 import Message from "components/Message";
 
 import refreshToken from "api/UserAuth/RefreshTokenAction";
-import { logout } from "api/UserAuth/LogoutAction";
 
 import axios from "axios";
 import store from "store";
-
-const theme = createMuiTheme({
-  typography: {
-    fontFamily:
-      '-apple-system,BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;',
-    fontWeight: 400,
-    fontSize: 14
-  },
-  palette: {
-    primary: {
-      light: "#757ce8",
-      main: "#3f50b5",
-      dark: "#002884",
-      contrastText: "#fff"
-    },
-    google: {
-      light: "#ffffff"
-    }
-  }
-});
 
 class App extends Component {
   componentDidMount = () => {
@@ -63,14 +43,7 @@ class App extends Component {
         }
 
         if (hasRefreshTokenExpired) {
-          return new Promise(async () => {
-            await store.dispatch({ type: "USER_LOGOUT" });
-            await localStorage.removeItem("refresh_token");
-            await localStorage.removeItem("jwtToken");
-            await localStorage.removeItem("jwtToken_expiration_time");
-            await localStorage.removeItem("reduxState");
-            return await (document.location = "/");
-          });
+          this.hardLogout();
         }
 
         if (hasAuthTokenExpired) {
@@ -97,17 +70,27 @@ class App extends Component {
         await refreshToken();
       } catch (error) {
         Message(error);
-        logout();
+        this.logout();
       }
     }
+  };
+
+  logout = () => {
+    return new Promise(async () => {
+      await store.dispatch({ type: "USER_LOGOUT" });
+      await localStorage.removeItem("refresh_token");
+      await localStorage.removeItem("jwtToken");
+      await localStorage.removeItem("jwtToken_expiration_time");
+      await localStorage.removeItem("state");
+    });
   };
 
   render() {
     return (
       <React.Fragment>
-        <MuiThemeProvider theme={theme}>
+        <MuiThemeProvider theme={AppTheme}>
           <CssBaseline />
-          <Nav />
+          <NavBar />
           <MuiPickersUtilsProvider utils={MomentUtils}>
             <Router />
           </MuiPickersUtilsProvider>

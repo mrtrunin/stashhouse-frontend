@@ -7,8 +7,8 @@ const Message = message => {
     }
     return showMessage(message);
   } catch (error) {
-    console.log("MESSAGE ERROR WITH Message.js");
-    console.log(error);
+    console.error("MESSAGE ERROR WITH Message.js");
+    console.error(error);
   }
 };
 

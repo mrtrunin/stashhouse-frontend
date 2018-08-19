@@ -2,12 +2,12 @@ import store from "store";
 import axios from "axios";
 import Message from "components/Message";
 
-async function updateTransaction(transactionId, merchantId) {
+async function updateTransaction(transactionId, customerId) {
   let url = process.env.REACT_APP_SERVER_URL;
 
   let payload = {};
 
-  payload.merchant = merchantId;
+  payload.customer = customerId;
 
   store.dispatch({
     type: "TRANSACTION_STATE_FETCHING"

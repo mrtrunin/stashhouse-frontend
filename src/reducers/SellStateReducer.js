@@ -1,6 +1,6 @@
 export default function reducer(
   state = {
-    merchant: {},
+    customer: {},
     warehouse: {},
     products: [],
     error: null,
@@ -9,10 +9,10 @@ export default function reducer(
   action
 ) {
   switch (action.type) {
-    case "SELL_STATE_CHANGE_MERCHANT": {
+    case "SELL_STATE_CHANGE_CUSTOMER": {
       return {
         ...state,
-        merchant: action.payload
+        customer: action.payload
       };
     }
     case "SELL_STATE_CHANGE_FROM_WAREHOUSE": {
@@ -75,7 +75,7 @@ export default function reducer(
     case "SELL_STATE_RESET": {
       return {
         ...state,
-        merchant: {},
+        customer: {},
         warehouse: {},
         products: []
       };

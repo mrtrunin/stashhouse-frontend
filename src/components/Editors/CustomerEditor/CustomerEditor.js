@@ -11,34 +11,34 @@ import EditorButtons from "../EditorComponents/EditorButtons";
 
 import { TextField } from "@material-ui/core";
 
-import updateMerchant from "api/Merchant/updateMerchant";
-import createMerchant from "api/Merchant/createMerchant";
-import fetchMerchant from "api/Merchant/fetchMerchant";
-import deleteMerchant from "api/Merchant/deleteMerchant";
-import fetchMerchants from "api/fetchMerchants";
+import updateCustomer from "api/Customer/updateCustomer";
+import createCustomer from "api/Customer/createCustomer";
+import fetchCustomer from "api/Customer/fetchCustomer";
+import deleteCustomer from "api/Customer/deleteCustomer";
+import fetchCustomers from "api/fetchCustomers";
 
 export class CustomerEditor extends Component {
   // TODO: Handling of existing customer
-  // TODO: Rename all but labels from customer to merchant
+  // TODO: Rename all but labels from customer to customer
 
   componentDidMount = async () => {
     await store.dispatch({
-      type: "RESET_MERCHANT"
+      type: "RESET_CUSTOMER"
     });
-    await fetchMerchants();
-    await this.fetchMerchant();
+    await fetchCustomers();
+    await this.fetchCustomer();
   };
 
   componentDidUpdate = async prevProps => {
-    if (prevProps.merchantId !== this.props.merchantId) {
-      await this.fetchMerchant();
+    if (prevProps.customerId !== this.props.customerId) {
+      await this.fetchCustomer();
     }
   };
 
-  fetchMerchant = async () => {
-    let merchantId = this.props.merchantId;
-    if (merchantId) {
-      await fetchMerchant(merchantId);
+  fetchCustomer = async () => {
+    let customerId = this.props.customerId;
+    if (customerId) {
+      await fetchCustomer(customerId);
     }
   };
 
@@ -47,52 +47,52 @@ export class CustomerEditor extends Component {
     let value = e.target.value;
 
     store.dispatch({
-      type: "MERCHANT_UPDATE_FIELD",
+      type: "CUSTOMER_UPDATE_FIELD",
       payload: value,
       field: field
     });
   };
 
   handleCreateOrUpdateCustomer = async () => {
-    const { merchant, business } = this.props;
+    const { customer, business } = this.props;
 
-    if (merchant.id) {
-      await updateMerchant(
-        merchant.name,
-        merchant.address,
-        merchant.zip_code,
-        merchant.city,
-        merchant.country,
-        merchant.phone_number,
-        merchant.id
+    if (customer.id) {
+      await updateCustomer(
+        customer.name,
+        customer.address,
+        customer.zip_code,
+        customer.city,
+        customer.country,
+        customer.phone_number,
+        customer.id
       );
     } else {
-      await createMerchant(
-        merchant.name,
-        merchant.address,
-        merchant.zip_code,
-        merchant.city,
-        merchant.country,
-        merchant.phone_number,
+      await createCustomer(
+        customer.name,
+        customer.address,
+        customer.zip_code,
+        customer.city,
+        customer.country,
+        customer.phone_number,
         business.name
       );
     }
-    await fetchMerchants();
+    await fetchCustomers();
   };
 
   handleDeleteCustomer = async () => {
-    let merchantId = this.props.merchant.id;
-    await deleteMerchant(merchantId);
-    await fetchMerchants();
+    let customerId = this.props.customer.id;
+    await deleteCustomer(customerId);
+    await fetchCustomers();
   };
 
   render() {
-    const { hideCustomerEditor, merchant } = this.props;
+    const { hideCustomerEditor, customer } = this.props;
 
     return (
       <Editor>
         <EditorHeader
-          editedObject={merchant}
+          editedObject={customer}
           editedObjectLabel="Customer"
           hideEditor={hideCustomerEditor}
         />
@@ -100,7 +100,7 @@ export class CustomerEditor extends Component {
         <EditorContent>
           <TextField
             name="name"
-            value={merchant.name ? merchant.name : ""}
+            value={customer.name ? customer.name : ""}
             label="Name"
             margin="dense"
             onChange={this.handleCustomerChange}
@@ -108,7 +108,7 @@ export class CustomerEditor extends Component {
 
           <TextField
             name="address"
-            value={merchant.address ? merchant.address : ""}
+            value={customer.address ? customer.address : ""}
             label="Address"
             margin="dense"
             onChange={this.handleCustomerChange}
@@ -116,7 +116,7 @@ export class CustomerEditor extends Component {
 
           <TextField
             name="zip_code"
-            value={merchant.zip_code ? merchant.zip_code : ""}
+            value={customer.zip_code ? customer.zip_code : ""}
             label="Zip code"
             margin="dense"
             onChange={this.handleCustomerChange}
@@ -124,21 +124,21 @@ export class CustomerEditor extends Component {
 
           <TextField
             name="city"
-            value={merchant.city ? merchant.city : ""}
+            value={customer.city ? customer.city : ""}
             label="City"
             margin="dense"
             onChange={this.handleCustomerChange}
           />
           <TextField
             name="country"
-            value={merchant.country ? merchant.country : ""}
+            value={customer.country ? customer.country : ""}
             label="Country"
             margin="dense"
             onChange={this.handleCustomerChange}
           />
           <TextField
             name="phone_number"
-            value={merchant.phone_number ? merchant.phone_number : ""}
+            value={customer.phone_number ? customer.phone_number : ""}
             label="Phone number"
             margin="dense"
             onChange={this.handleCustomerChange}
@@ -147,7 +147,7 @@ export class CustomerEditor extends Component {
 
         <EditorButtons
           editedObjectLabel="Customer"
-          editedObject={merchant}
+          editedObject={customer}
           deleteAction={this.handleDeleteCustomer}
           updateAction={this.handleCreateOrUpdateCustomer}
           createAction={this.handleCreateOrUpdateCustomer}
@@ -158,14 +158,14 @@ export class CustomerEditor extends Component {
 }
 
 CustomerEditor.propTypes = {
-  merchant: PropTypes.object,
+  customer: PropTypes.object,
   hideCustomerEditor: PropTypes.func.isRequired,
-  merchantId: PropTypes.string
+  customerId: PropTypes.string
 };
 
 export default connect(store => {
   return {
-    merchant: store.merchant.merchant,
+    customer: store.customer.customer,
     business: store.business.business
   };
 })(CustomerEditor);

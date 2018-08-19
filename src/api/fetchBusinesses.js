@@ -3,25 +3,23 @@ import store from "store";
 import axios from "axios";
 
 async function fetchBusinesses() {
-  return axios
-    .get(process.env.REACT_APP_SERVER_URL + "/businesses/", {
+  const { data } = await axios.get(
+    process.env.REACT_APP_SERVER_URL + "/businesses/",
+    {
       headers: {
         Authorization: "Bearer " + localStorage.jwtToken
       }
-    })
-    .then(results => {
-      return results.data;
-    })
-    .then(results => {
-      store.dispatch({
-        type: "FETCH_BUSINESSES_FULFILLED",
-        payload: results
-      });
-      return results;
-    })
-    .catch(error => {
-      Message(error);
+    }
+  );
+
+  try {
+    store.dispatch({
+      type: "FETCH_BUSINESSES_FULFILLED",
+      payload: data
     });
+  } catch (error) {
+    Message(error);
+  }
 }
 
 export default fetchBusinesses;

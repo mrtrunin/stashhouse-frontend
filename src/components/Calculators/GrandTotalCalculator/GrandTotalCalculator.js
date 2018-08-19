@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import addCommas from "functions/addCommas";
+import { addCommas } from "services/functions";
 import { Grid } from "@material-ui/core";
 
 const GrandTotalCalculator = props => {
