@@ -2,7 +2,12 @@ import showMessage from "./SnackBar/actions/showMessage";
 
 const Message = message => {
   try {
-    if (typeof message === "object") {
+    if (
+      typeof message === "object" &&
+      message.response &&
+      message.response.status &&
+      message.response.statusText
+    ) {
       message = message.response.status + ": " + message.response.statusText;
     }
     return showMessage(message);
