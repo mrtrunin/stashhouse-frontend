@@ -93,11 +93,9 @@ export class Transactions extends Component {
   handleDeleteTransactions = async () => {
     const {
       business,
-      actions: { fetchTransactions, deleteTransaction }
+      actions: { fetchTransactions, deleteTransactions }
     } = this.props;
-    for (let transactionId of this.state.selectedTransactions) {
-      await deleteTransaction(transactionId);
-    }
+    await deleteTransactions(this.state.selectedTransactions);
     await fetchTransactions(business.name);
     await this.setState({ selectedTransactions: [] });
   };
