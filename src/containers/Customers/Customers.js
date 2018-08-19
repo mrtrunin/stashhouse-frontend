@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import CustomersTable from "./components/CustomersTable";
-import fetchCustomers from "api/fetchCustomers";
 import { connect } from "react-redux";
 import { Button } from "@material-ui/core";
 import TableContainerComponent from "components/Tables/TableContainerComponent/TableContainerComponent";
 import ButtonRow from "components/ButtonRow";
 import CustomerEditor from "components/Editors/CustomerEditor";
+import { bindActionCreators } from "redux";
+import * as actions from "./CustomersActions";
 
 export class Customers extends Component {
   state = {
@@ -29,7 +30,10 @@ export class Customers extends Component {
   };
 
   fetchData = () => {
-    const { business } = this.props;
+    const {
+      business,
+      actions: { fetchCustomers }
+    } = this.props;
     fetchCustomers(business.name);
   };
 
@@ -89,13 +93,22 @@ Customers.propTypes = {
     params: PropTypes.shape({ customerId: PropTypes.string })
   }),
   fetched: PropTypes.bool.isRequired,
-  business: PropTypes.object.isRequired
+  business: PropTypes.object.isRequired,
+  actions: PropTypes.object.isRequired
 };
 
-export default connect(store => {
+const mapStateToProps = state => {
   return {
-    customers: store.customers.customers,
-    fetched: store.customers.fetched,
-    business: store.business.business
+    customers: state.customers.customers,
+    fetched: state.customers.fetched,
+    business: state.business.business
   };
-})(Customers);
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    actions: bindActionCreators({ ...actions }, dispatch)
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Customers);

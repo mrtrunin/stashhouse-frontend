@@ -7,7 +7,7 @@ import { Redirect } from "react-router-dom";
 import { withStyles, Grid, Paper, Button } from "@material-ui/core";
 
 // API calls
-import fetchCustomers from "api/fetchCustomers";
+import * as actions from "containers/Customers/CustomersActions";
 import fetchWarehouses from "api/fetchWarehouses";
 import fetchProducts from "api/fetchProducts";
 
@@ -30,6 +30,7 @@ import handleDelete from "./actions/handleDelete";
 import handleCreateTransaction from "./actions/handleCreateTransaction";
 import loadExistingTransaction from "./actions/loadExistingTransaction";
 import handleUpdateTransaction from "./actions/handleUpdateTransaction";
+import { bindActionCreators } from "redux";
 
 const styles = theme => ({
   topAttributes: {
@@ -58,7 +59,10 @@ export class TransactionForm extends Component {
   };
 
   componentDidMount = async () => {
-    const { business } = this.props;
+    const {
+      business,
+      actions: { fetchCustomers }
+    } = this.props;
     await fetchCustomers(business.name);
     await fetchWarehouses(business.name);
     await fetchProducts(business.name);
@@ -258,6 +262,7 @@ export class TransactionForm extends Component {
 }
 
 TransactionForm.propTypes = {
+  actions: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
   title: PropTypes.string,
   customers: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
@@ -276,15 +281,25 @@ TransactionForm.propTypes = {
   })
 };
 
-export default connect(store => {
+const mapStateToProps = state => {
   return {
-    customers: store.customers.customers,
-    customersFetched: store.customers.fetched,
-    warehouses: store.warehouses.warehouses,
-    warehousesFetched: store.warehouses.fetched,
-    products: store.products.products,
-    productsFetched: store.products.fetched,
-    transactionState: store.transactionState,
-    business: store.business.business
+    customers: state.customers.customers,
+    customersFetched: state.customers.fetched,
+    warehouses: state.warehouses.warehouses,
+    warehousesFetched: state.warehouses.fetched,
+    products: state.products.products,
+    productsFetched: state.products.fetched,
+    transactionState: state.transactionState,
+    business: state.business.business
   };
-})(withStyles(styles)(TransactionForm));
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    actions: bindActionCreators({ ...actions }, dispatch)
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  withStyles(styles)(TransactionForm)
+);

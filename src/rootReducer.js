@@ -3,7 +3,7 @@ import transaction from "reducers/TransactionReducer";
 import auth from "containers/Login/AuthReducer";
 import user from "containers/Login/UserReducer";
 import customer from "reducers/CustomerReducer";
-import customers from "reducers/CustomersReducer";
+import customers from "containers/Customers/CustomersReducer";
 import warehouse from "reducers/WarehouseReducer";
 import warehouses from "reducers/WarehousesReducer";
 import product from "reducers/ProductReducer";

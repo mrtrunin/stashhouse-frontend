@@ -15,13 +15,17 @@ import updateCustomer from "api/Customer/updateCustomer";
 import createCustomer from "api/Customer/createCustomer";
 import fetchCustomer from "api/Customer/fetchCustomer";
 import deleteCustomer from "api/Customer/deleteCustomer";
-import fetchCustomers from "api/fetchCustomers";
+import * as actions from "containers/Customers/CustomersActions";
+import { bindActionCreators } from "redux";
 
 export class CustomerEditor extends Component {
   // TODO: Handling of existing customer
   // TODO: Rename all but labels from customer to customer
 
   componentDidMount = async () => {
+    const {
+      actions: { fetchCustomers }
+    } = this.props;
     await store.dispatch({
       type: "RESET_CUSTOMER"
     });
@@ -54,7 +58,11 @@ export class CustomerEditor extends Component {
   };
 
   handleCreateOrUpdateCustomer = async () => {
-    const { customer, business } = this.props;
+    const {
+      customer,
+      business,
+      actions: { fetchCustomers }
+    } = this.props;
 
     if (customer.id) {
       await updateCustomer(
@@ -81,8 +89,11 @@ export class CustomerEditor extends Component {
   };
 
   handleDeleteCustomer = async () => {
-    let customerId = this.props.customer.id;
-    await deleteCustomer(customerId);
+    const {
+      customer,
+      actions: { fetchCustomers }
+    } = this.props;
+    await deleteCustomer(customer.id);
     await fetchCustomers();
   };
 
@@ -158,14 +169,23 @@ export class CustomerEditor extends Component {
 }
 
 CustomerEditor.propTypes = {
+  actions: PropTypes.object.isRequired,
   customer: PropTypes.object,
   hideCustomerEditor: PropTypes.func.isRequired,
   customerId: PropTypes.string
 };
 
-export default connect(store => {
+const mapStateToProps = state => {
   return {
-    customer: store.customer.customer,
-    business: store.business.business
+    customer: state.customer.customer,
+    business: state.business.business
   };
-})(CustomerEditor);
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    actions: bindActionCreators({ ...actions }, dispatch)
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CustomerEditor);
