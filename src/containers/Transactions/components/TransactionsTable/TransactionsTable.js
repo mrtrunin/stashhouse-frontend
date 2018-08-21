@@ -114,7 +114,7 @@ const TransactionsTable = props => {
                 variant="caption"
                 component={Link}
                 to={
-                  "/payment-list/invoice/" +
+                  "/payments/invoice/" +
                   transaction.full_transaction_number +
                   "/"
                 }

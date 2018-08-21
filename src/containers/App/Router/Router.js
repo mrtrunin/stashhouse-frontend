@@ -8,7 +8,7 @@ import Logout from "containers/Logout/Logout";
 import Transaction from "containers/Transaction/Transaction";
 import Transactions from "containers/Transactions/Transactions";
 
-import PaymentList from "containers/PaymentList";
+import Payments from "containers/Payments/Payments";
 import Customers from "containers/Customers/Customers";
 import Settings from "containers/Settings/Settings";
 
@@ -31,12 +31,12 @@ const Router = () => {
           component={Transaction}
         />
         <PrivateRoute exact path="/transactions/" component={Transactions} />
-        <PrivateRoute path="/payment/:paymentId" component={PaymentList} />
-        <PrivateRoute exact path="/payment-list/" component={PaymentList} />
+        <PrivateRoute path="/payment/:paymentId" component={Payments} />
+        <PrivateRoute exact path="/payments/" component={Payments} />
         <PrivateRoute
           exact
-          path="/payment-list/invoice/:invoiceId"
-          component={PaymentList}
+          path="/payments/invoice/:invoiceId"
+          component={Payments}
         />
         <PrivateRoute path="/customer/:customerId" component={Customers} />
         <PrivateRoute exact path="/customers/" component={Customers} />

@@ -33,7 +33,7 @@ const style = theme => ({
   }
 });
 
-const PaymentListTable = props => {
+const PaymentsTable = props => {
   const { classes, payments } = props;
 
   let paymentsBody = payments.map((payment, index) => {
@@ -87,9 +87,9 @@ const PaymentListTable = props => {
   );
 };
 
-PaymentListTable.propTypes = {
+PaymentsTable.propTypes = {
   classes: PropTypes.object.isRequired,
   payments: PropTypes.array.isRequired
 };
 
-export default withStyles(style)(PaymentListTable);
+export default withStyles(style)(PaymentsTable);

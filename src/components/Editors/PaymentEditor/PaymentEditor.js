@@ -18,7 +18,6 @@ import fetchPayment from "api/Payment/fetchPayment";
 import updatePayment from "api/Payment/updatePayment";
 import deletePayment from "api/Payment/deletePayment";
 import createPayment from "api/Payment/createPayment";
-import fetchPayments from "api/fetchPayments";
 import fetchInvoices from "api/fetchInvoices";
 
 import moment from "moment";
@@ -28,13 +27,18 @@ import EditorHeader from "../EditorComponents/EditorHeader";
 import EditorContent from "../EditorComponents/EditorContent";
 
 import { addCommas } from "services/functions";
+import { bindActionCreators } from "redux";
+
+import * as actions from "containers/Payments/PaymentsActions";
 
 export class PaymentEditor extends Component {
   componentDidMount = async () => {
+    console.log("GETTING HERE?");
     const invoiceId = this.props.invoiceId;
     await store.dispatch({
       type: "RESET_PAYMENT"
     });
+
     await fetchInvoices();
     await this.fetchPayment();
 
@@ -84,7 +88,12 @@ export class PaymentEditor extends Component {
   };
 
   handleCreateOrUpdatePayment = async () => {
-    const { payment, invoices, business } = this.props;
+    const {
+      payment,
+      invoices,
+      business,
+      actions: { fetchPayments }
+    } = this.props;
 
     let relatedInvoice = invoices.find(invoice => {
       return invoice.full_transaction_number === payment.transaction;
@@ -115,7 +124,11 @@ export class PaymentEditor extends Component {
   };
 
   handleDeletePayment = async () => {
-    const { payment, business } = this.props;
+    const {
+      payment,
+      business,
+      actions: { fetchPayments }
+    } = this.props;
     await deletePayment(payment.id);
     await fetchPayments(business.name);
   };
@@ -126,9 +139,12 @@ export class PaymentEditor extends Component {
     let existsPayment = Object.keys(payment).length !== 0 && payment.id;
     let existsInvoices = Object.keys(invoices).length !== 0;
 
-    let invoice = invoices.find(invoice => {
-      return invoice.full_transaction_number === invoiceId;
-    });
+    let invoice = null;
+    if (existsInvoices) {
+      invoice = invoices.find(invoice => {
+        return invoice.full_transaction_number === invoiceId;
+      });
+    }
 
     const invoicesList = existsInvoices
       ? invoices.map((invoice, index) => {
@@ -253,6 +269,7 @@ export class PaymentEditor extends Component {
 }
 
 PaymentEditor.propTypes = {
+  actions: PropTypes.object.isRequired,
   hidePaymentEditor: PropTypes.func.isRequired,
   payment: PropTypes.object,
   invoices: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
@@ -260,10 +277,18 @@ PaymentEditor.propTypes = {
   invoiceId: PropTypes.string
 };
 
-export default connect(store => {
+const mapStateToProps = state => {
   return {
-    payment: store.payment.payment,
-    invoices: store.invoices.invoices,
-    business: store.business.business
+    payment: state.payment.payment,
+    invoices: state.invoices.invoices,
+    business: state.business.business
   };
-})(PaymentEditor);
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    actions: bindActionCreators({ ...actions }, dispatch)
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PaymentEditor);

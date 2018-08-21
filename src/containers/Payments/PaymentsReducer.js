@@ -1,3 +1,9 @@
+import {
+  FETCH_PAYMENTS,
+  FETCH_PAYMENTS_FULFILLED,
+  FETCH_PAYMENTS_REJECTED
+} from "./PaymentsActions";
+
 export default function reducer(
   state = {
     payments: {},
@@ -8,10 +14,10 @@ export default function reducer(
   action
 ) {
   switch (action.type) {
-    case "FETCH_PAYMENTS": {
+    case FETCH_PAYMENTS: {
       return { ...state, fetching: true };
     }
-    case "FETCH_PAYMENTS_FULFILLED": {
+    case FETCH_PAYMENTS_FULFILLED: {
       return {
         ...state,
         fetching: false,
@@ -19,7 +25,7 @@ export default function reducer(
         payments: action.payload
       };
     }
-    case "FETCH_PAYMENTS_REJECTED": {
+    case FETCH_PAYMENTS_REJECTED: {
       return { ...state, fetching: false, error: action.payload };
     }
     default:

@@ -9,7 +9,7 @@ import warehouses from "containers/Warehouse/WarehousesReducer";
 import product from "reducers/ProductReducer";
 import products from "containers/Products/ProductsReducer";
 import payment from "reducers/PaymentReducer";
-import payments from "reducers/PaymentsReducer";
+import payments from "containers/Payments/PaymentsReducer";
 import transactionState from "containers/Transaction/TransactionStateReducer";
 import { transactions } from "containers/Transactions/TransactionsReducer";
 import invoices from "reducers/InvoicesReducer";

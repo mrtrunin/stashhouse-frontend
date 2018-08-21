@@ -2,14 +2,15 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import fetchPayments from "api/fetchPayments";
-
-import PaymentListTable from "./PaymentListTable";
+import PaymentsTable from "./components/PaymentsTable";
 import PaymentEditor from "components/Editors/PaymentEditor";
 
 import { Redirect } from "react-router-dom";
+import { bindActionCreators } from "redux";
 
-export class PaymentListContainer extends Component {
+import * as actions from "./PaymentsActions";
+
+export class Payments extends Component {
   state = {
     showPaymentEditor: false,
     redirectToRoot: false
@@ -37,7 +38,10 @@ export class PaymentListContainer extends Component {
   };
 
   fetchData = () => {
-    const { business } = this.props;
+    const {
+      business,
+      actions: { fetchPayments }
+    } = this.props;
     fetchPayments(business.name);
   };
 
@@ -66,20 +70,20 @@ export class PaymentListContainer extends Component {
     const { showPaymentEditor, redirectToRoot } = this.state;
 
     const isOnRootPath =
-      this.props.match.path === "/payment-list/" ||
-      this.props.match.path === "/payment-list";
+      this.props.match.path === "/payments/" ||
+      this.props.match.path === "/payments";
 
     if (!fetched) {
       return <p>Loading...</p>;
     }
 
     if (redirectToRoot && !isOnRootPath) {
-      return <Redirect exact to="/payment-list/" />;
+      return <Redirect exact to="/payments/" />;
     }
 
     return (
       <div>
-        <PaymentListTable payments={payments} />
+        <PaymentsTable payments={payments} />
 
         {/* TODO: Introduce delete option for payments */}
 
@@ -95,7 +99,8 @@ export class PaymentListContainer extends Component {
   }
 }
 
-PaymentListContainer.propTypes = {
+Payments.propTypes = {
+  actions: PropTypes.object.isRequired,
   payments: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   fetched: PropTypes.bool,
   match: PropTypes.shape({
@@ -108,10 +113,18 @@ PaymentListContainer.propTypes = {
   business: PropTypes.object.isRequired
 };
 
-export default connect(store => {
+const mapStateToProps = state => {
   return {
-    payments: store.payments.payments,
-    fetched: store.payments.fetched,
-    business: store.business.business
+    payments: state.payments.payments,
+    fetched: state.payments.fetched,
+    business: state.business.business
   };
-})(PaymentListContainer);
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    actions: bindActionCreators({ ...actions }, dispatch)
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Payments);

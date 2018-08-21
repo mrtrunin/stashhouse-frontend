@@ -115,7 +115,7 @@ class NavBar extends Component {
             Transactions
           </Button>
 
-          <Button href="/payment-list" color="inherit" variant="flat">
+          <Button href="/payments" color="inherit" variant="flat">
             <AttachMoney className={classes.leftIcon} />
             Payments
           </Button>
