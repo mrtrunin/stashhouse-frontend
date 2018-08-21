@@ -1,3 +1,11 @@
+import {
+  FETCH_CUSTOMER,
+  FETCH_CUSTOMER_FULFILLED,
+  CUSTOMER_UPDATE_FIELD,
+  FETCH_CUSTOMER_REJECTED,
+  RESET_CUSTOMER
+} from "./CustomerActions";
+
 export default function reducer(
   state = {
     customer: {},
@@ -8,10 +16,10 @@ export default function reducer(
   action
 ) {
   switch (action.type) {
-    case "FETCH_CUSTOMER": {
+    case FETCH_CUSTOMER: {
       return { ...state, fetching: true };
     }
-    case "FETCH_CUSTOMER_FULFILLED": {
+    case FETCH_CUSTOMER_FULFILLED: {
       return {
         ...state,
         fetching: false,
@@ -19,7 +27,7 @@ export default function reducer(
         customer: action.payload
       };
     }
-    case "CUSTOMER_UPDATE_FIELD": {
+    case CUSTOMER_UPDATE_FIELD: {
       return {
         ...state,
         customer: {
@@ -28,10 +36,10 @@ export default function reducer(
         }
       };
     }
-    case "FETCH_CUSTOMER_REJECTED": {
+    case FETCH_CUSTOMER_REJECTED: {
       return { ...state, fetching: false, error: action.payload };
     }
-    case "RESET_CUSTOMER": {
+    case RESET_CUSTOMER: {
       return { ...state, customer: {} };
     }
     default:

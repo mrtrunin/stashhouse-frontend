@@ -2,20 +2,17 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import { connect } from "react-redux";
-import store from "store";
 
-import Editor from "../EditorComponents/Editor";
-import EditorHeader from "../EditorComponents/EditorHeader";
-import EditorContent from "../EditorComponents/EditorContent";
-import EditorButtons from "../EditorComponents/EditorButtons";
+import Editor from "components/Editors/EditorComponents/Editor";
+import EditorHeader from "components/Editors/EditorComponents/EditorHeader";
+import EditorContent from "components/Editors/EditorComponents/EditorContent";
+import EditorButtons from "components/Editors/EditorComponents/EditorButtons";
 
 import { TextField } from "@material-ui/core";
 
-import updateCustomer from "api/Customer/updateCustomer";
-import createCustomer from "api/Customer/createCustomer";
-import fetchCustomer from "api/Customer/fetchCustomer";
-import deleteCustomer from "api/Customer/deleteCustomer";
-import * as actions from "containers/Customers/CustomersActions";
+import * as customerActions from "containers/Customers/CustomerActions";
+import * as customersActions from "containers/Customers/CustomersActions";
+
 import { bindActionCreators } from "redux";
 
 export class CustomerEditor extends Component {
@@ -24,11 +21,9 @@ export class CustomerEditor extends Component {
 
   componentDidMount = async () => {
     const {
-      actions: { fetchCustomers }
+      actions: { fetchCustomers, resetCustomer }
     } = this.props;
-    await store.dispatch({
-      type: "RESET_CUSTOMER"
-    });
+    await resetCustomer();
     await fetchCustomers();
     await this.fetchCustomer();
   };
@@ -40,7 +35,11 @@ export class CustomerEditor extends Component {
   };
 
   fetchCustomer = async () => {
-    let customerId = this.props.customerId;
+    const {
+      customerId,
+      actions: { fetchCustomer }
+    } = this.props;
+
     if (customerId) {
       await fetchCustomer(customerId);
     }
@@ -50,18 +49,18 @@ export class CustomerEditor extends Component {
     let field = e.target.name;
     let value = e.target.value;
 
-    store.dispatch({
-      type: "CUSTOMER_UPDATE_FIELD",
-      payload: value,
-      field: field
-    });
+    const {
+      actions: { updateCustomerField }
+    } = this.props;
+
+    updateCustomerField(value, field);
   };
 
   handleCreateOrUpdateCustomer = async () => {
     const {
       customer,
       business,
-      actions: { fetchCustomers }
+      actions: { fetchCustomers, updateCustomer, createCustomer }
     } = this.props;
 
     if (customer.id) {
@@ -91,7 +90,7 @@ export class CustomerEditor extends Component {
   handleDeleteCustomer = async () => {
     const {
       customer,
-      actions: { fetchCustomers }
+      actions: { fetchCustomers, deleteCustomer }
     } = this.props;
     await deleteCustomer(customer.id);
     await fetchCustomers();
@@ -184,7 +183,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    actions: bindActionCreators({ ...actions }, dispatch)
+    actions: bindActionCreators(
+      { ...customerActions, ...customersActions },
+      dispatch
+    )
   };
 };
 

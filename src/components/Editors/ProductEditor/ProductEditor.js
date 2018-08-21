@@ -16,12 +16,14 @@ import fetchProduct from "api/Product/fetchProduct";
 import createProduct from "api/Product/createProduct";
 import updateProduct from "api/Product/updateProduct";
 import deleteProduct from "api/Product/deleteProduct";
-import fetchProductsStock from "api/fetchProductsStock";
+
+import * as actions from "containers/Products/ProductsActions";
 
 import EditorButtons from "../EditorComponents/EditorButtons";
 import Editor from "../EditorComponents/Editor";
 import EditorHeader from "../EditorComponents/EditorHeader";
 import EditorContent from "../EditorComponents/EditorContent";
+import { bindActionCreators } from "redux";
 
 export class ProductEditor extends Component {
   componentDidMount = async () => {
@@ -53,7 +55,11 @@ export class ProductEditor extends Component {
   };
 
   handleCreateOrUpdateProduct = async () => {
-    const { product, business } = this.props;
+    const {
+      product,
+      business,
+      actions: { fetchProductsStock }
+    } = this.props;
 
     if (product.id) {
       await updateProduct(
@@ -76,7 +82,11 @@ export class ProductEditor extends Component {
   };
 
   handleDeleteProduct = async () => {
-    const { product, business } = this.props;
+    const {
+      product,
+      business,
+      actions: { fetchProductsStock }
+    } = this.props;
     await deleteProduct(product.id);
     await fetchProductsStock(business.name);
   };
@@ -143,14 +153,23 @@ export class ProductEditor extends Component {
 }
 
 ProductEditor.propTypes = {
+  actions: PropTypes.object.isRequired,
   productId: PropTypes.string,
   product: PropTypes.object,
   hideProductEditor: PropTypes.func.isRequired
 };
 
-export default connect(store => {
+const mapStateToProps = state => {
   return {
-    product: store.product.product,
-    business: store.business.business
+    product: state.product.product,
+    business: state.business.business
   };
-})(ProductEditor);
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    actions: bindActionCreators({ ...actions }, dispatch)
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductEditor);

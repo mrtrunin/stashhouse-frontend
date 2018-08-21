@@ -10,7 +10,7 @@ import { withStyles, Grid, Paper, Button } from "@material-ui/core";
 import * as customersActions from "containers/Customers/CustomersActions";
 import * as warehousesActions from "containers/Warehouse/WarehousesActions";
 import * as transactionActions from "containers/Transaction/TransactionActions";
-import fetchProducts from "api/fetchProducts";
+import * as productsActions from "containers/Products/ProductsActions";
 
 // Stashhouse components
 import CustomerSelector from "components/Selectors/CustomerSelector";
@@ -62,7 +62,12 @@ export class Transaction extends Component {
   componentDidMount = async () => {
     const {
       business,
-      actions: { fetchCustomers, fetchWarehouses, fetchTransaction }
+      actions: {
+        fetchCustomers,
+        fetchWarehouses,
+        fetchTransaction,
+        fetchProducts
+      }
     } = this.props;
     await fetchCustomers(business.name);
     await fetchWarehouses(business.name);
@@ -304,7 +309,12 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     actions: bindActionCreators(
-      { ...customersActions, ...warehousesActions, ...transactionActions },
+      {
+        ...customersActions,
+        ...warehousesActions,
+        ...transactionActions,
+        ...productsActions
+      },
       dispatch
     )
   };

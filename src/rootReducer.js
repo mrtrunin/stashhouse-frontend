@@ -2,18 +2,17 @@ import { combineReducers } from "redux";
 import transaction from "containers/Transaction/TransactionReducer";
 import auth from "containers/Login/AuthReducer";
 import user from "containers/Login/UserReducer";
-import customer from "reducers/CustomerReducer";
+import customer from "containers/Customers/CustomerReducer";
 import customers from "containers/Customers/CustomersReducer";
 import warehouse from "containers/Warehouse/WarehouseReducer";
 import warehouses from "containers/Warehouse/WarehousesReducer";
 import product from "reducers/ProductReducer";
-import products from "reducers/ProductsReducer";
+import products from "containers/Products/ProductsReducer";
 import payment from "reducers/PaymentReducer";
 import payments from "reducers/PaymentsReducer";
 import transactionState from "containers/Transaction/TransactionStateReducer";
 import { transactions } from "containers/Transactions/TransactionsReducer";
 import invoices from "reducers/InvoicesReducer";
-import productsStock from "reducers/ProductsStockReducer";
 import snackBarMessage from "reducers/SnackBarMessageReducer";
 import business from "reducers/BusinessReducer";
 import businesses from "containers/Businesses/BusinessesReducer";
@@ -36,7 +35,6 @@ const appReducer = combineReducers({
   product,
   products,
   transactionState,
-  productsStock,
   snackBarMessage
 });
 

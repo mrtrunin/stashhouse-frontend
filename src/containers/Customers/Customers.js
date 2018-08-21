@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { Button } from "@material-ui/core";
 import TableContainerComponent from "components/Tables/TableContainerComponent/TableContainerComponent";
 import ButtonRow from "components/ButtonRow";
-import CustomerEditor from "components/Editors/CustomerEditor";
+import CustomerEditor from "./containers/CustomerEditor/CustomerEditor";
 import { bindActionCreators } from "redux";
 import * as actions from "./CustomersActions";
 

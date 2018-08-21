@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import fetchProductsStock from "api/fetchProductsStock";
-
 import WarehouseTable from "./components/WarehouseTable";
 import ProductEditor from "components/Editors/ProductEditor";
 import WarehouseEditor from "components/Editors/WarehouseEditor";
@@ -14,7 +12,8 @@ import { Link } from "react-router-dom";
 import { WarehouseStyle } from "./WarehouseStyle";
 import { bindActionCreators } from "redux";
 
-import * as actions from "./WarehousesActions";
+import * as warehousesActions from "./WarehousesActions";
+import * as productsActions from "containers/Products/ProductsActions";
 
 export class Warehouse extends Component {
   state = {
@@ -22,21 +21,25 @@ export class Warehouse extends Component {
     showWarehouseEditor: false
   };
 
-  componentDidMount = () => {
-    this.fetchData();
-    this.showEditors();
+  componentDidMount = async () => {
+    await this.fetchData();
+    await this.showEditors();
   };
 
-  fetchData = () => {
+  fetchData = async () => {
     const {
       business,
-      actions: { fetchWarehouses }
+      actions: { fetchWarehouses, fetchProductsStock }
     } = this.props;
-    fetchProductsStock(business.name);
-    fetchWarehouses(business.name);
+    await fetchProductsStock(business.name);
+    await fetchWarehouses(business.name);
   };
 
   componentDidUpdate = prevProps => {
+    if (!this.props.products[0].stock) {
+      this.fetchData();
+    }
+
     if (prevProps !== this.props) {
       this.showEditors(this.props);
     }
@@ -82,7 +85,7 @@ export class Warehouse extends Component {
   };
 
   render() {
-    const { classes, productsStock, warehouses } = this.props;
+    const { classes, products, warehouses } = this.props;
     const { showProductEditor, showWarehouseEditor } = this.state;
 
     if (!this.props.fetched) {
@@ -91,7 +94,7 @@ export class Warehouse extends Component {
 
     return (
       <div>
-        <WarehouseTable productsStock={productsStock} warehouses={warehouses} />
+        <WarehouseTable products={products} warehouses={warehouses} />
 
         {!showProductEditor &&
           !showWarehouseEditor && (
@@ -144,7 +147,7 @@ export class Warehouse extends Component {
 
 Warehouse.propTypes = {
   actions: PropTypes.object.isRequired,
-  productsStock: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  products: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   warehouses: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   fetched: PropTypes.bool,
   classes: PropTypes.object.isRequired,
@@ -159,16 +162,19 @@ Warehouse.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    productsStock: state.productsStock.productsStock,
+    products: state.products.products,
     warehouses: state.warehouses.warehouses,
-    fetched: state.productsStock.fetched,
+    fetched: state.products.fetched,
     business: state.business.business
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    actions: bindActionCreators({ ...actions }, dispatch)
+    actions: bindActionCreators(
+      { ...warehousesActions, ...productsActions },
+      dispatch
+    )
   };
 };
 

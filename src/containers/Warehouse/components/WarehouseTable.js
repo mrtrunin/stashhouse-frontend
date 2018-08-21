@@ -22,7 +22,7 @@ const styles = theme => ({
 });
 
 const WarehouseTable = props => {
-  const { classes, productsStock, warehouses } = props;
+  const { classes, products, warehouses } = props;
 
   const hasWarehouses = warehouses.length > 0;
 
@@ -63,11 +63,15 @@ const WarehouseTable = props => {
   // End
 
   // The following creates the content for the table. Sorry for the messy code!
-  let productRow = productsStock.map(productStock => {
+  let productRow = products.map(product => {
     let totalQuantity = 0;
 
+    if (!product.stock) {
+      return <TableRow key={product.id}>Loading</TableRow>;
+    }
+
     return (
-      <TableRow key={productStock.id}>
+      <TableRow key={product.id}>
         <TableCell padding="dense">
           <Typography
             align="center"
@@ -78,15 +82,15 @@ const WarehouseTable = props => {
               display: "inline"
             }}
             component={Link}
-            to={"/product/" + productStock.id}
+            to={"/product/" + product.id}
           >
-            {productStock.name}
+            {product.name}
           </Typography>
         </TableCell>
-        <TableCell padding="dense">{productStock.ean}</TableCell>
-        {Object.keys(productStock.stock).map(warehouse => {
-          let stockQuantityForWarehouse =
-            productStock.stock[warehouse].quantity;
+        <TableCell padding="dense">{product.ean}</TableCell>
+
+        {Object.keys(product.stock).map(warehouse => {
+          let stockQuantityForWarehouse = product.stock[warehouse].quantity;
           totalQuantity += stockQuantityForWarehouse;
 
           return (
@@ -124,7 +128,7 @@ const WarehouseTable = props => {
 
 WarehouseTable.propTypes = {
   warehouses: PropTypes.array.isRequired,
-  productsStock: PropTypes.array.isRequired,
+  products: PropTypes.array.isRequired,
   classes: PropTypes.object.isRequired
 };
 

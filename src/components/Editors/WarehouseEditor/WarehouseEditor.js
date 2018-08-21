@@ -4,9 +4,9 @@ import PropTypes from "prop-types";
 import store from "store";
 import { connect } from "react-redux";
 
-import fetchProductsStock from "api/fetchProductsStock";
 import * as warehouseActions from "containers/Warehouse/WarehouseActions";
 import * as warehousesActions from "containers/Warehouse/WarehousesActions";
+import * as productsActions from "containers/Products/ProductsActions";
 
 import { TextField } from "@material-ui/core";
 import EditorButtons from "../EditorComponents/EditorButtons";
@@ -23,6 +23,7 @@ export class WarehouseEditor extends Component {
   };
 
   componentDidMount = async () => {
+    // TODO: Extract to action
     await store.dispatch({
       type: "RESET_WAREHOUSE"
     });
@@ -49,10 +50,6 @@ export class WarehouseEditor extends Component {
           redirectToRoot: true
         });
       }
-    } else {
-      this.setState({
-        redirectToRoot: true
-      });
     }
   };
 
@@ -69,7 +66,12 @@ export class WarehouseEditor extends Component {
     const {
       warehouse,
       business,
-      actions: { fetchWarehouses, updateWarehouse, createWarehouse }
+      actions: {
+        fetchWarehouses,
+        updateWarehouse,
+        createWarehouse,
+        fetchProductsStock
+      }
     } = this.props;
 
     if (warehouse.id) {
@@ -85,7 +87,7 @@ export class WarehouseEditor extends Component {
     const {
       warehouse,
       business,
-      actions: { fetchWarehouses, deleteWarehouse }
+      actions: { fetchWarehouses, deleteWarehouse, fetchProductsStock }
     } = this.props;
     await deleteWarehouse(warehouse.id);
     await fetchProductsStock(business.name);
@@ -146,7 +148,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     actions: bindActionCreators(
-      { ...warehouseActions, ...warehousesActions },
+      { ...warehouseActions, ...warehousesActions, ...productsActions },
       dispatch
     )
   };

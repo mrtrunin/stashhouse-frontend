@@ -80,6 +80,7 @@ export function deleteWarehouse(id) {
 
 export function fetchWarehouse(warehouseId) {
   return async dispatch => {
+    console.log("HERE?");
     dispatch({
       type: FETCH_WAREHOUSE
     });

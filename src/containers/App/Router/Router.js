@@ -39,7 +39,7 @@ const Router = () => {
           component={PaymentList}
         />
         <PrivateRoute path="/customer/:customerId" component={Customers} />
-        <PrivateRoute exact path="/customer-list/" component={Customers} />
+        <PrivateRoute exact path="/customers/" component={Customers} />
         <PrivateRoute exact path="/settings/" component={Settings} />
         <PrivateRoute exact path="/businesses/" component={Businesses} />
         <Route exact path="/logout/" component={Logout} />

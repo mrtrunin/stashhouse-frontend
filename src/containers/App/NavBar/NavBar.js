@@ -120,7 +120,7 @@ class NavBar extends Component {
             Payments
           </Button>
 
-          <Button href="/customer-list" color="inherit" variant="flat">
+          <Button href="/customers" color="inherit" variant="flat">
             <People className={classes.leftIcon} />
             Customers
           </Button>
