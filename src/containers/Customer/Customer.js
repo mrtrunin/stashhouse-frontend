@@ -10,12 +10,12 @@ import EditorButtons from "components/Editors/EditorComponents/EditorButtons";
 
 import { TextField } from "@material-ui/core";
 
-import * as customerActions from "containers/Customers/CustomerActions";
+import * as customerActions from "./CustomerActions";
 import * as customersActions from "containers/Customers/CustomersActions";
 
 import { bindActionCreators } from "redux";
 
-export class CustomerEditor extends Component {
+export class Customer extends Component {
   // TODO: Handling of existing customer
   // TODO: Rename all but labels from customer to customer
 
@@ -167,7 +167,7 @@ export class CustomerEditor extends Component {
   }
 }
 
-CustomerEditor.propTypes = {
+Customer.propTypes = {
   actions: PropTypes.object.isRequired,
   customer: PropTypes.object,
   hideCustomerEditor: PropTypes.func.isRequired,
@@ -190,4 +190,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CustomerEditor);
+export default connect(mapStateToProps, mapDispatchToProps)(Customer);

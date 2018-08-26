@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { Button } from "@material-ui/core";
 import TableContainerComponent from "components/Tables/TableContainerComponent/TableContainerComponent";
 import ButtonRow from "components/ButtonRow";
-import CustomerEditor from "./containers/CustomerEditor/CustomerEditor";
+import Customer from "containers/Customer/Customer";
 import { bindActionCreators } from "redux";
 import * as actions from "./CustomersActions";
 
@@ -77,7 +77,7 @@ export class Customers extends Component {
         </ButtonRow>
 
         {this.state.showCustomerEditor && (
-          <CustomerEditor
+          <Customer
             hideCustomerEditor={this.hideCustomerEditor}
             customerId={this.props.match.params.customerId}
           />

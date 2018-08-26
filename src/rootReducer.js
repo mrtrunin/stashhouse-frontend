@@ -2,7 +2,7 @@ import { combineReducers } from "redux";
 import transaction from "containers/Transaction/TransactionReducer";
 import auth from "containers/Login/AuthReducer";
 import user from "containers/Login/UserReducer";
-import customer from "containers/Customers/CustomerReducer";
+import customer from "containers/Customer/CustomerReducer";
 import customers from "containers/Customers/CustomersReducer";
 import warehouse from "containers/Warehouse/WarehouseReducer";
 import warehouses from "containers/Warehouse/WarehousesReducer";
@@ -14,7 +14,7 @@ import transactionState from "containers/Transaction/TransactionStateReducer";
 import { transactions } from "containers/Transactions/TransactionsReducer";
 import invoices from "reducers/InvoicesReducer";
 import snackBarMessage from "reducers/SnackBarMessageReducer";
-import business from "reducers/BusinessReducer";
+import business from "containers/Business/BusinessReducer";
 import businesses from "containers/Businesses/BusinessesReducer";
 import { USER_LOGOUT } from "containers/Logout/LogoutActions";
 

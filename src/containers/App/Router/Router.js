@@ -10,7 +10,7 @@ import Transactions from "containers/Transactions/Transactions";
 
 import Payments from "containers/Payments/Payments";
 import Customers from "containers/Customers/Customers";
-import Settings from "containers/Settings/Settings";
+import Business from "containers/Business/Business";
 
 import LandingPage from "containers/LandingPage/LandingPage";
 import Businesses from "containers/Businesses/Businesses";
@@ -40,7 +40,7 @@ const Router = () => {
         />
         <PrivateRoute path="/customer/:customerId" component={Customers} />
         <PrivateRoute exact path="/customers/" component={Customers} />
-        <PrivateRoute exact path="/settings/" component={Settings} />
+        <PrivateRoute exact path="/settings/" component={Business} />
         <PrivateRoute exact path="/businesses/" component={Businesses} />
         <Route exact path="/logout/" component={Logout} />
         <Route exact path="/login/" component={Login} />

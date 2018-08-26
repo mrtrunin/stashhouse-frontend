@@ -5,7 +5,7 @@ import BusinessesTable from "./components/BusinessesTable";
 import { connect } from "react-redux";
 import store from "store";
 import { Redirect } from "react-router-dom";
-import BusinessEditor from "./containers/BusinessEditor";
+import Business from "containers/Business/Business";
 import { bindActionCreators } from "redux";
 
 import * as actions from "./BusinessesActions";
@@ -48,7 +48,7 @@ export class Businesses extends Component {
     }
 
     if (noBusinesses) {
-      return <BusinessEditor />;
+      return <Business />;
     }
 
     return (

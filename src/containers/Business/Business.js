@@ -3,34 +3,29 @@ import PropTypes from "prop-types";
 import { TextField } from "@material-ui/core";
 import { connect } from "react-redux";
 
-import store from "store";
-
 import Editor from "components/Editors/EditorComponents/Editor";
 import EditorHeader from "components/Editors/EditorComponents/EditorHeader";
 import EditorContent from "components/Editors/EditorComponents/EditorContent";
 import EditorButtons from "components/Editors/EditorComponents/EditorButtons";
 
-import createBusiness from "api/Business/createBusiness";
-import updateBusiness from "api/Business/updateBusiness";
-
-import * as actions from "containers/Businesses/BusinessesActions";
+import * as businessActions from "./BusinessActions";
+import * as businessesActions from "containers/Businesses/BusinessesActions";
 import { bindActionCreators } from "redux";
 
-export class BusinessEditor extends Component {
+export class Business extends Component {
   handleBusinessChange = e => {
     const { name, value } = e.target;
+    const {
+      actions: { updateBusinessField }
+    } = this.props;
 
-    store.dispatch({
-      type: "BUSINESS_UPDATE_FIELD",
-      payload: value,
-      field: name
-    });
+    updateBusinessField(value, name);
   };
 
   handleCreateOrUpdateBusiness = async () => {
     const {
       business,
-      actions: { fetchBusinesses }
+      actions: { fetchBusinesses, createBusiness, updateBusiness }
     } = this.props;
 
     if (business.id !== undefined) {
@@ -192,7 +187,8 @@ export class BusinessEditor extends Component {
   }
 }
 
-BusinessEditor.propTypes = {
+Business.propTypes = {
+  actions: PropTypes.object,
   business: PropTypes.object
 };
 
@@ -204,8 +200,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    actions: bindActionCreators({ ...actions }, dispatch)
+    actions: bindActionCreators(
+      {
+        ...businessActions,
+        ...businessesActions
+      },
+      dispatch
+    )
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(BusinessEditor);
+export default connect(mapStateToProps, mapDispatchToProps)(Business);
