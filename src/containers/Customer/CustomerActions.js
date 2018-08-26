@@ -1,5 +1,5 @@
 import axios from "axios";
-import Message from "components/Message";
+import Message from "components/Message/Message";
 
 export const FETCH_CUSTOMER = "FETCH_CUSTOMER";
 export const FETCH_CUSTOMER_FULFILLED = "FETCH_CUSTOMER_FULFILLED";
@@ -40,11 +40,11 @@ export function createCustomer(
         }
       });
 
-      Message("Customer Created!");
+      Message("Customer Created!", "success");
 
       return data;
     } catch (error) {
-      Message(error, "error");
+      Message("Could not create customer: " + error, "error");
     }
   };
 }
@@ -84,11 +84,10 @@ export function deleteCustomer(id) {
         }
       });
 
-      Message("Customer " + id + " deleted successfully!");
+      Message("Customer " + id + " deleted successfully!", "success");
       return data;
     } catch (error) {
-      Message("Could not delete Customer " + id);
-      Message(error);
+      Message("Could not delete Customer " + id + ": " + error, "error");
     }
   };
 }
@@ -125,11 +124,11 @@ export function updateCustomer(
         }
       );
 
-      Message("Customer Updated Successfully!");
+      Message("Customer Updated Successfully!", "success");
 
       return data;
     } catch (error) {
-      Message(error, "error");
+      Message("Could not update customer: " + error, "error");
     }
   };
 }

@@ -1,4 +1,4 @@
-import Message from "components/Message";
+import Message from "components/Message/Message";
 import addProductToTransaction from "api/addProductToTransaction";
 import deleteStockFromTransaction from "api/deleteStockFromTransaction";
 
@@ -29,19 +29,19 @@ const handleUpdateTransaction = async (
   let customerId = hasNoCustomers ? null : customer.id;
 
   if (hasNoProducts) {
-    return Message("Product is missing!");
+    return Message("Product is missing!", "warning");
   }
 
   if (hasNoCustomers && customerRequired) {
-    return Message("Customer is missing!");
+    return Message("Customer is missing!", "warning");
   }
 
   if (hasNoFromWarehouse && fromWarehouseRequired) {
-    return Message("From warehouse is missing!");
+    return Message("From warehouse is missing!", "warning");
   }
 
   if (hasNoToWarehouse && toWarehouseRequired) {
-    return Message("To Warehouse is missing!");
+    return Message("To Warehouse is missing!", "warning");
   }
 
   try {
@@ -64,13 +64,13 @@ const handleUpdateTransaction = async (
           product.tax_rate,
           business.name
         );
-        await Message("Product successfully added to Transaction!");
+        await Message("Product successfully added to Transaction!", "success");
       } catch (error) {
         Message("Something went wrong with " + product.name, "error");
       }
     });
   } catch (error) {
-    Message(error);
+    Message("Could not update transaction: " + error, "error");
   }
 };
 

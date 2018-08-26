@@ -8,14 +8,14 @@ import warehouse from "containers/Warehouse/WarehouseReducer";
 import warehouses from "containers/Warehouses/WarehousesReducer";
 import product from "containers/Product/ProductReducer";
 import products from "containers/Products/ProductsReducer";
-import payment from "reducers/PaymentReducer";
+import payment from "containers/Payment/PaymentReducer";
 import payments from "containers/Payments/PaymentsReducer";
 import transactionState from "containers/Transaction/TransactionStateReducer";
 import { transactions } from "containers/Transactions/TransactionsReducer";
 import invoices from "reducers/InvoicesReducer";
-import snackBarMessage from "reducers/SnackBarMessageReducer";
 import business from "containers/Business/BusinessReducer";
 import businesses from "containers/Businesses/BusinessesReducer";
+import message from "components/Message/MessageReducer";
 import { USER_LOGOUT } from "containers/Logout/LogoutActions";
 
 const appReducer = combineReducers({
@@ -35,7 +35,7 @@ const appReducer = combineReducers({
   product,
   products,
   transactionState,
-  snackBarMessage
+  message
 });
 
 const rootReducer = (state, action) => {

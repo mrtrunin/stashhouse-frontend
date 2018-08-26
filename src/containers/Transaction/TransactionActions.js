@@ -1,5 +1,5 @@
 import axios from "axios";
-import Message from "components/Message";
+import Message from "components/Message/Message";
 
 export const FETCH_TRANSACTION = "FETCH_TRANSACTION";
 export const FETCH_TRANSACTION_FULFILLED = "FETCH_TRANSACTION_FULFILLED";
@@ -55,11 +55,11 @@ export function createTransaction(customerId, transactionType, business_name) {
         type: TRANSACTION_STATE_RESET
       });
 
-      Message("Transaction Created!");
+      Message("Transaction Created!", "success");
 
       return data;
     } catch (error) {
-      Message(error, "error");
+      Message("Could not create transaction: " + error, "error");
     }
   };
 }
@@ -93,11 +93,11 @@ export function updateTransaction(transactionId, customerId) {
         type: TRANSACTION_STATE_RESET
       });
 
-      Message("Transaction Updated!");
+      Message("Transaction Updated!", "success");
 
       return data;
     } catch (error) {
-      Message(error);
+      Message("Could not update transaction: " + error, "error");
     }
   };
 }
@@ -114,7 +114,7 @@ export function deleteTransaction(id) {
       Message("Transaction " + id + " deleted successfully!");
       return data;
     } catch (error) {
-      Message(error);
+      Message("Could not delete transaction: " + error, "error");
     }
   };
 }
@@ -130,8 +130,10 @@ export function fetchTransaction(id) {
 
       return data;
     } catch (error) {
-      Message("Transaction " + id + ": " + error.response.data.detail);
-      return error.response;
+      Message(
+        "Could not fetch transaction " + id + ": " + error.response.data.detail,
+        "error"
+      );
     }
   };
 }

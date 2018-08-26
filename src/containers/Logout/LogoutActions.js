@@ -1,5 +1,5 @@
 import axios from "axios";
-import Message from "components/Message";
+import Message from "components/Message/Message";
 
 export const USER_LOGOUT = "USER_LOGOUT";
 
@@ -30,9 +30,9 @@ export function logout() {
       localStorage.removeItem("jwtToken_expiration_time");
       localStorage.removeItem("state");
 
-      Message("Logged out successfully");
+      Message("Logged out successfully", "success");
     } catch (error) {
-      Message(error, "error");
+      Message("Could not log out: " + error, "error");
       dispatch({ type: USER_LOGOUT });
       localStorage.removeItem("refresh_token");
       localStorage.removeItem("jwtToken");

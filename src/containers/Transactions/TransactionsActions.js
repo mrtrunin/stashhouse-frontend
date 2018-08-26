@@ -1,5 +1,5 @@
 import axios from "axios";
-import Message from "components/Message";
+import Message from "components/Message/Message";
 
 export const FETCH_TRANSACTIONS = "FETCH_TRANSACTIONS";
 export const FETCH_TRANSACTIONS_FULFILLED = "FETCH_TRANSACTIONS_FULFILLED";
@@ -42,9 +42,12 @@ export function deleteTransactions(transactionIds) {
           }
         });
 
-        Message("Transaction " + transactionId + " deleted successfully!");
+        Message(
+          "Transaction " + transactionId + " deleted successfully!",
+          "success"
+        );
       } catch (error) {
-        Message(error);
+        Message("Could not delete transactions: " + error, "error");
       }
     }
   };

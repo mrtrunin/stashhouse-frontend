@@ -1,5 +1,5 @@
 import axios from "axios";
-import Message from "components/Message";
+import Message from "components/Message/Message";
 
 async function fetchTransactionPdf(
   transactionId,
@@ -33,7 +33,7 @@ async function fetchTransactionPdf(
     Message("PDF downloaded successfully!");
     return data;
   } catch (error) {
-    Message(error);
+    Message("Could not download PDF: " + error, "error");
   }
 }
 

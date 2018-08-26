@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import fetchStock from "api/fetchStock";
 import store from "store";
 import transformSelectedProduct from "./transformSelectedProduct";
-import Message from "components/Message";
+import Message from "components/Message/Message";
 
 const loadExistingTransaction = async (props, redirect, fetchTransaction) => {
   let transactionId = props.match.params.transactionId;
@@ -92,7 +92,7 @@ const loadExistingTransaction = async (props, redirect, fetchTransaction) => {
       });
     });
   } catch (error) {
-    Message(error);
+    Message("Could not load transaction: " + error, "error");
   }
 };
 

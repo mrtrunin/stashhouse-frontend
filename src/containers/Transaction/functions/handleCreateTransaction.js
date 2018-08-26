@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import Message from "components/Message";
+import Message from "components/Message/Message";
 
 import addProductToTransaction from "api/addProductToTransaction";
 
@@ -84,13 +84,17 @@ const handleCreateTransaction = async (
           product.tax_rate,
           business.name
         );
-        Message("Product successfully added to Transaction!");
       } catch (error) {
-        Message("Something went wrong with " + product.name, "error");
+        Message(
+          "Something went wrong with adding product " +
+            product.name +
+            " to transaction",
+          "error"
+        );
       }
     });
   } catch (error) {
-    return Message(error);
+    return Message("Could not create transaction: " + error);
   }
 };
 

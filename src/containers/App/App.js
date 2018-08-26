@@ -9,8 +9,7 @@ import MomentUtils from "material-ui-pickers/utils/moment-utils";
 import { CssBaseline } from "@material-ui/core";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 
-import SnackBar from "components/SnackBar";
-import Message from "components/Message";
+import Message from "components/Message/Message";
 
 import refreshToken from "api/UserAuth/RefreshTokenAction";
 
@@ -39,7 +38,8 @@ class App extends Component {
         const isBadRequest = error.response.status === 400;
 
         if (isBadRequest) {
-          Message("Bad request!");
+          Message("Bad request!", "error", 400);
+          return Promise.reject(error);
         }
 
         if (hasRefreshTokenExpired) {
@@ -69,7 +69,7 @@ class App extends Component {
       try {
         await refreshToken();
       } catch (error) {
-        Message(error);
+        Message("Could not refresh token: " + error, "error");
         this.logout();
       }
     }
@@ -94,7 +94,6 @@ class App extends Component {
           <MuiPickersUtilsProvider utils={MomentUtils}>
             <Router />
           </MuiPickersUtilsProvider>
-          <SnackBar />
         </MuiThemeProvider>
       </React.Fragment>
     );

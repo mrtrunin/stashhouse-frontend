@@ -1,5 +1,5 @@
 import axios from "axios";
-import Message from "components/Message";
+import Message from "components/Message/Message";
 
 export const FETCH_PRODUCT = "FETCH_PRODUCT";
 export const FETCH_PRODUCT_FULFILLED = "FETCH_PRODUCT_FULFILLED";
@@ -34,11 +34,11 @@ export function createProduct(
         }
       });
 
-      Message("Product Created!");
+      Message("Product Created!", "success");
 
       return data;
     } catch (error) {
-      Message(error, "error");
+      Message("Could not create product: " + error, "error");
     }
   };
 }
@@ -52,11 +52,10 @@ export function deleteProduct(id) {
         }
       });
 
-      Message("Product " + id + " deleted successfully!");
+      Message("Product " + id + " deleted successfully!", "success");
       return data;
     } catch (error) {
-      Message("Could not delete Product " + id);
-      Message(error);
+      Message("Could not delete Product " + id + ": " + error, "error");
     }
   };
 }
@@ -107,11 +106,11 @@ export function updateProduct(name, ean, default_price, tax_rate, productId) {
         }
       );
 
-      Message("Product Updated Successfully!");
+      Message("Product Updated Successfully!", "success");
 
       return data;
     } catch (error) {
-      Message(error, "error");
+      Message("Could not update product: " + error, "error");
     }
   };
 }

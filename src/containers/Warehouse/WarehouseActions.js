@@ -1,5 +1,5 @@
 import axios from "axios";
-import Message from "components/Message";
+import Message from "components/Message/Message";
 
 export const FETCH_WAREHOUSE = "FETCH_WAREHOUSE";
 export const FETCH_WAREHOUSE_FULFILLED = "FETCH_WAREHOUSE_FULFILLED";
@@ -25,11 +25,11 @@ export function createWarehouse(name, business_name) {
         }
       });
 
-      Message("Warehouse Created!");
+      Message("Warehouse Created!", "success");
 
       return data;
     } catch (error) {
-      Message(error, "error");
+      Message("Could not create warehouse: " + error, "error");
     }
   };
 }
@@ -51,11 +51,11 @@ export function updateWarehouse(name, warehouseId) {
         }
       );
 
-      Message("Warehouse Updated Successfully!");
+      Message("Warehouse Updated Successfully!", "success");
 
       return data;
     } catch (error) {
-      Message(error, "error");
+      Message("Could not update warehouse: " + error, "error");
     }
   };
 }
@@ -69,11 +69,10 @@ export function deleteWarehouse(id) {
         }
       });
 
-      Message("Warehouse " + id + " deleted successfully!");
+      Message("Warehouse " + id + " deleted successfully!", "success");
       return data;
     } catch (error) {
-      Message("Could not delete Warehouse " + id);
-      Message(error);
+      Message("Could not delete Warehouse " + id + ": " + error, "error");
     }
   };
 }

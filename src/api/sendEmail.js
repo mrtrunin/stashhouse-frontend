@@ -1,5 +1,5 @@
 import axios from "axios";
-import Message from "components/Message";
+import Message from "components/Message/Message";
 // import qs from "qs";
 
 async function sendEmail(
@@ -30,10 +30,10 @@ async function sendEmail(
         }
       }
     );
-    Message("Email sent successfully!");
+    Message("Email sent successfully!", "success");
     return data;
   } catch (error) {
-    Message("Sending email failed " + error, "error");
+    Message("Sending email failed: " + error, "error");
   }
 }
 

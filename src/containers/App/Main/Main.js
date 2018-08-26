@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import { withStyles, Grid } from "@material-ui/core";
+import MessageBox from "components/Message/MessageBox";
 
 const styles = theme => ({
   root: {
@@ -21,8 +22,9 @@ const styles = theme => ({
 });
 
 const Main = props => {
-  let { classes } = props;
-  let isLandingPage = window.location.pathname === "/";
+  const { classes } = props;
+
+  const isLandingPage = window.location.pathname === "/";
 
   if (isLandingPage) {
     return (
@@ -45,6 +47,7 @@ const Main = props => {
         {props.children}
       </Grid>
       <Grid item md={1} />
+      <MessageBox />
     </Grid>
   );
 };

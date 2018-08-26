@@ -1,5 +1,5 @@
 import axios from "axios";
-import Message from "components/Message";
+import Message from "components/Message/Message";
 
 export const FETCH_USER = "FETCH_USER";
 export const FETCH_USER_FULFILLED = "FETCH_USER_FULFILLED";
@@ -82,6 +82,7 @@ export function fetchUserData() {
           }
         }
       );
+
       await dispatch({
         type: FETCH_USER_FULFILLED,
         payload: data
@@ -119,7 +120,7 @@ const handleLoginSuccess = (dispatch, data) => {
     Date.now() + expiresIn * 1000
   );
 
-  Message("Welcome to Stashhouse!");
+  Message("Welcome to Stashhouse!", 200);
 };
 
 const handleLoginFailure = (dispatch, error) => {
@@ -127,4 +128,5 @@ const handleLoginFailure = (dispatch, error) => {
     type: FETCH_AUTH_TOKEN_REJECTED,
     payload: error
   });
+  Message("Could not login with Google: " + error, "error");
 };

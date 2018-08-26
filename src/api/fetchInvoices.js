@@ -1,6 +1,6 @@
 import store from "store";
 import axios from "axios";
-import Message from "components/Message";
+import Message from "components/Message/Message";
 
 async function fetchInvoices() {
   let url = process.env.REACT_APP_SERVER_URL;
@@ -23,7 +23,7 @@ async function fetchInvoices() {
 
     return data;
   } catch (error) {
-    Message(error);
+    Message("Could not fetch invoices: " + error, "error");
   }
 }
 

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import store from "store";
 
 import DatePicker from "material-ui-pickers/DatePicker";
 
@@ -14,31 +13,28 @@ import {
   Select
 } from "@material-ui/core";
 
-import fetchPayment from "api/Payment/fetchPayment";
-import updatePayment from "api/Payment/updatePayment";
-import deletePayment from "api/Payment/deletePayment";
-import createPayment from "api/Payment/createPayment";
 import fetchInvoices from "api/fetchInvoices";
 
 import moment from "moment";
-import EditorButtons from "../EditorComponents/EditorButtons";
-import Editor from "../EditorComponents/Editor";
-import EditorHeader from "../EditorComponents/EditorHeader";
-import EditorContent from "../EditorComponents/EditorContent";
+import EditorButtons from "components/Editors/EditorComponents/EditorButtons";
+import Editor from "components/Editors/EditorComponents/Editor";
+import EditorHeader from "components/Editors/EditorComponents/EditorHeader";
+import EditorContent from "components/Editors/EditorComponents/EditorContent";
+
+import * as paymentActions from "./PaymentActions";
+import * as paymentsActions from "containers/Payments/PaymentsActions";
 
 import { addCommas } from "services/functions";
 import { bindActionCreators } from "redux";
 
-import * as actions from "containers/Payments/PaymentsActions";
-
-export class PaymentEditor extends Component {
+export class Payment extends Component {
   componentDidMount = async () => {
-    console.log("GETTING HERE?");
-    const invoiceId = this.props.invoiceId;
-    await store.dispatch({
-      type: "RESET_PAYMENT"
-    });
+    const {
+      invoiceId,
+      actions: { resetPayment }
+    } = this.props;
 
+    resetPayment();
     await fetchInvoices();
     await this.fetchPayment();
 
@@ -54,7 +50,11 @@ export class PaymentEditor extends Component {
   };
 
   fetchPayment = async () => {
-    let paymentId = this.props.paymentId;
+    const {
+      paymentId,
+      actions: { fetchPayment }
+    } = this.props;
+
     if (paymentId) {
       await fetchPayment(paymentId);
     }
@@ -80,11 +80,11 @@ export class PaymentEditor extends Component {
   };
 
   handlePaymentChangeStore = (field, value) => {
-    store.dispatch({
-      type: "PAYMENT_UPDATE_FIELD",
-      payload: value,
-      field: field
-    });
+    const {
+      actions: { updatePaymentField }
+    } = this.props;
+
+    updatePaymentField(field, value);
   };
 
   handleCreateOrUpdatePayment = async () => {
@@ -92,7 +92,7 @@ export class PaymentEditor extends Component {
       payment,
       invoices,
       business,
-      actions: { fetchPayments }
+      actions: { fetchPayments, updatePayment, createPayment }
     } = this.props;
 
     let relatedInvoice = invoices.find(invoice => {
@@ -127,14 +127,14 @@ export class PaymentEditor extends Component {
     const {
       payment,
       business,
-      actions: { fetchPayments }
+      actions: { fetchPayments, deletePayment }
     } = this.props;
     await deletePayment(payment.id);
     await fetchPayments(business.name);
   };
 
   render() {
-    const { payment, invoices, hidePaymentEditor, invoiceId } = this.props;
+    const { payment, invoices, hidePayment, invoiceId } = this.props;
 
     let existsPayment = Object.keys(payment).length !== 0 && payment.id;
     let existsInvoices = Object.keys(invoices).length !== 0;
@@ -162,7 +162,7 @@ export class PaymentEditor extends Component {
           <EditorHeader
             label="Whoa! No invoices, no payments."
             editedObjectSubheader="Please add at least one invoice to add payments"
-            hideEditor={hidePaymentEditor}
+            hideEditor={hidePayment}
           />
         </Editor>
       );
@@ -173,7 +173,7 @@ export class PaymentEditor extends Component {
         <EditorHeader
           existsEditedObject={existsPayment}
           editedObjectLabel={invoiceId ? "Payment for " + invoiceId : "Payment"}
-          hideEditor={hidePaymentEditor}
+          hideEditor={hidePayment}
           editedObjectSubheader={
             invoice
               ? "Invoice amount: " +
@@ -268,9 +268,9 @@ export class PaymentEditor extends Component {
   }
 }
 
-PaymentEditor.propTypes = {
+Payment.propTypes = {
   actions: PropTypes.object.isRequired,
-  hidePaymentEditor: PropTypes.func.isRequired,
+  hidePayment: PropTypes.func.isRequired,
   payment: PropTypes.object,
   invoices: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
   paymentId: PropTypes.string,
@@ -287,8 +287,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    actions: bindActionCreators({ ...actions }, dispatch)
+    actions: bindActionCreators(
+      { ...paymentActions, ...paymentsActions },
+      dispatch
+    )
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PaymentEditor);
+export default connect(mapStateToProps, mapDispatchToProps)(Payment);

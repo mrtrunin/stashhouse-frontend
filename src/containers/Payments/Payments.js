@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import PaymentsTable from "./components/PaymentsTable";
-import PaymentEditor from "components/Editors/PaymentEditor";
+import Payment from "containers/Payment/Payment";
 
 import { Redirect } from "react-router-dom";
 import { bindActionCreators } from "redux";
@@ -88,7 +88,7 @@ export class Payments extends Component {
         {/* TODO: Introduce delete option for payments */}
 
         {showPaymentEditor && (
-          <PaymentEditor
+          <Payment
             hidePaymentEditor={this.hidePaymentEditor}
             paymentId={this.props.match.params.paymentId}
             invoiceId={this.props.match.params.invoiceId}

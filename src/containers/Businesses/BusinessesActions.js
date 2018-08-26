@@ -1,4 +1,4 @@
-import Message from "components/Message";
+import Message from "components/Message/Message";
 import axios from "axios";
 
 export const FETCH_BUSINESSES = "FETCH_BUSINESSES";
@@ -26,7 +26,7 @@ export function fetchBusinesses() {
         type: FETCH_BUSINESSES_REJECTED,
         payload: error
       });
-      Message(error);
+      Message("Could not fetch businesses: " + error);
     }
   };
 }

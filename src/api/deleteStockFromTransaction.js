@@ -1,5 +1,5 @@
 import axios from "axios";
-import Message from "components/Message";
+import Message from "components/Message/Message";
 
 async function deleteStockFromTransaction(transactionId) {
   let url = process.env.REACT_APP_SERVER_URL;
@@ -14,12 +14,11 @@ async function deleteStockFromTransaction(transactionId) {
       }
     );
 
-    Message("Stock deleted!");
+    Message("Stock deleted!", "success");
 
     return data;
   } catch (error) {
-    console.log(error);
-    // Message(error, "error");
+    Message("Could not delete stock: " + error, "error");
   }
 }
 

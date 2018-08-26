@@ -5,7 +5,7 @@ import { Redirect } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import * as actions from "./LoginActions";
 
-import Message from "components/Message";
+import Message from "components/Message/Message";
 import LoginBox from "./components/LoginBox";
 
 class Login extends Component {
@@ -18,14 +18,16 @@ class Login extends Component {
 
   onSubmit = async e => {
     e.preventDefault();
-    const { login, fetchUserData } = this.props.actions;
+    const {
+      actions: { login, fetchUserData }
+    } = this.props;
 
     try {
       await this.setState({ isLoading: true });
       await login(this.state);
       await fetchUserData();
     } catch (error) {
-      Message(error);
+      Message("Could not submit login: " + error, "error");
     }
   };
 
@@ -35,12 +37,16 @@ class Login extends Component {
   };
 
   googleLogin = async props => {
-    const { loginWithGoogle, fetchUserData } = this.props.actions;
-    try {
-      await loginWithGoogle(props);
+    const {
+      actions: { loginWithGoogle, fetchUserData }
+    } = this.props;
+
+    await loginWithGoogle(props);
+
+    const { accessToken } = this.props;
+
+    if (accessToken) {
       await fetchUserData();
-    } catch (error) {
-      Message(error);
     }
   };
 
@@ -74,7 +80,8 @@ Login.propTypes = {
 const mapStateToProps = state => {
   return {
     user: state.user.user,
-    isLoggedIn: state.user.isLoggedIn
+    isLoggedIn: state.user.isLoggedIn,
+    accessToken: state.auth.authToken.accessToken
   };
 };
 

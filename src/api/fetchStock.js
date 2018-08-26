@@ -1,5 +1,5 @@
 import axios from "axios";
-import Message from "components/Message";
+import Message from "components/Message/Message";
 
 async function fetchStock(id) {
   let url = process.env.REACT_APP_SERVER_URL;
@@ -13,7 +13,7 @@ async function fetchStock(id) {
 
     return data;
   } catch (error) {
-    Message(error);
+    Message("Could not fetch stock: " + error);
   }
 }
 

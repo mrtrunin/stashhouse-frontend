@@ -1,5 +1,6 @@
 import axios from "axios";
 import store from "store";
+import Message from "components/Message/Message";
 
 const refreshToken = async () => {
   let client_id = process.env.REACT_APP_CLIENT_ID;
@@ -26,9 +27,8 @@ const refreshToken = async () => {
     localStorage.setItem("jwtToken", access_token);
     localStorage.setItem("refresh_token", refresh_token);
     localStorage.setItem("jwtToken_expiration_time", expiration_time);
-    // Message("Token refreshed successfully");
   } catch (error) {
-    // Message(error);
+    Message("Token expired", "info");
 
     store.dispatch({ type: "USER_LOGOUT" });
     localStorage.removeItem("refresh_token");
