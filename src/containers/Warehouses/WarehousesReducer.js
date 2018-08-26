@@ -2,7 +2,7 @@ import {
   FETCH_WAREHOUSES,
   FETCH_WAREHOUSES_FULFILLED,
   FETCH_WAREHOUSES_REJECTED
-} from "./WarehousesActions";
+} from "../Warehouses/WarehousesActions";
 
 export default function reducer(
   state = {

@@ -39,7 +39,7 @@ const WarehouseTable = props => {
               fontSize: 13
             }}
             component={Link}
-            to={"/warehouse/" + warehouse.id}
+            to={"/warehouses/" + warehouse.id}
           >
             {warehouse.name}
           </Typography>

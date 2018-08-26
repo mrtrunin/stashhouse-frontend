@@ -13,7 +13,7 @@ export class LandingPage extends Component {
     const { classes, isLoggedIn } = this.props;
 
     if (isLoggedIn) {
-      return <Redirect to="/warehouse" />;
+      return <Redirect to="/warehouses" />;
     }
 
     return (

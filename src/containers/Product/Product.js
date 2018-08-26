@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import store from "store";
 
 import {
   TextField,
@@ -12,25 +11,22 @@ import {
   FormControl
 } from "@material-ui/core";
 
-import fetchProduct from "api/Product/fetchProduct";
-import createProduct from "api/Product/createProduct";
-import updateProduct from "api/Product/updateProduct";
-import deleteProduct from "api/Product/deleteProduct";
+import * as productActions from "containers/Product/ProductActions";
+import * as productsActions from "containers/Products/ProductsActions";
 
-import * as actions from "containers/Products/ProductsActions";
-
-import EditorButtons from "../EditorComponents/EditorButtons";
-import Editor from "../EditorComponents/Editor";
-import EditorHeader from "../EditorComponents/EditorHeader";
-import EditorContent from "../EditorComponents/EditorContent";
+import EditorButtons from "components/Editors/EditorComponents/EditorButtons";
+import Editor from "components/Editors/EditorComponents/Editor";
+import EditorHeader from "components/Editors/EditorComponents/EditorHeader";
+import EditorContent from "components/Editors/EditorComponents/EditorContent";
 import { bindActionCreators } from "redux";
 
-export class ProductEditor extends Component {
+export class Product extends Component {
   componentDidMount = async () => {
-    await store.dispatch({
-      type: "RESET_PRODUCT"
-    });
-    await this.fetchProduct();
+    const {
+      actions: { resetProduct }
+    } = this.props;
+    resetProduct();
+    this.fetchProduct();
   };
 
   componentDidUpdate = async prevProps => {
@@ -40,25 +36,28 @@ export class ProductEditor extends Component {
   };
 
   fetchProduct = async () => {
-    let productId = this.props.productId;
+    const {
+      productId,
+      actions: { fetchProduct }
+    } = this.props;
+
     if (productId) {
       await fetchProduct(productId);
     }
   };
 
   handleProductChange = e => {
-    store.dispatch({
-      type: "PRODUCT_UPDATE_FIELD",
-      payload: e.target.value,
-      field: e.target.name
-    });
+    const {
+      actions: { updateProductField }
+    } = this.props;
+    updateProductField(e.target.name, e.target.value);
   };
 
   handleCreateOrUpdateProduct = async () => {
     const {
       product,
       business,
-      actions: { fetchProductsStock }
+      actions: { fetchProductsStock, createProduct, updateProduct }
     } = this.props;
 
     if (product.id) {
@@ -85,8 +84,9 @@ export class ProductEditor extends Component {
     const {
       product,
       business,
-      actions: { fetchProductsStock }
+      actions: { fetchProductsStock, deleteProduct }
     } = this.props;
+
     await deleteProduct(product.id);
     await fetchProductsStock(business.name);
   };
@@ -152,7 +152,7 @@ export class ProductEditor extends Component {
   }
 }
 
-ProductEditor.propTypes = {
+Product.propTypes = {
   actions: PropTypes.object.isRequired,
   productId: PropTypes.string,
   product: PropTypes.object,
@@ -168,8 +168,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    actions: bindActionCreators({ ...actions }, dispatch)
+    actions: bindActionCreators(
+      { ...productActions, ...productsActions },
+      dispatch
+    )
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductEditor);
+export default connect(mapStateToProps, mapDispatchToProps)(Product);

@@ -1,183 +1,143 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import WarehouseTable from "./components/WarehouseTable";
-import ProductEditor from "components/Editors/ProductEditor";
-import WarehouseEditor from "components/Editors/WarehouseEditor";
+import store from "store";
+import { connect } from "react-redux";
 
-import { withStyles, Button, Grid } from "@material-ui/core";
-
-import { Link } from "react-router-dom";
-import { WarehouseStyle } from "./WarehouseStyle";
-import { bindActionCreators } from "redux";
-
-import * as warehousesActions from "./WarehousesActions";
+import * as warehouseActions from "containers/Warehouse/WarehouseActions";
+import * as warehousesActions from "containers/Warehouses/WarehousesActions";
 import * as productsActions from "containers/Products/ProductsActions";
 
+import { TextField } from "@material-ui/core";
+import EditorButtons from "components/Editors/EditorComponents/EditorButtons";
+import Editor from "components/Editors/EditorComponents/Editor";
+import EditorHeader from "components/Editors/EditorComponents/EditorHeader";
+import EditorContent from "components/Editors/EditorComponents/EditorContent";
+
+import { bindActionCreators } from "redux";
+
 export class Warehouse extends Component {
-  state = {
-    showProductEditor: false,
-    showWarehouseEditor: false
-  };
-
-  componentDidMount = async () => {
-    await this.fetchData();
-    await this.showEditors();
-  };
-
-  fetchData = async () => {
+  componentDidMount = () => {
     const {
-      business,
-      actions: { fetchWarehouses, fetchProductsStock }
+      actions: { resetWarehouse }
     } = this.props;
+    resetWarehouse();
+    this.fetchWarehouse();
+  };
+
+  componentDidUpdate = async prevProps => {
+    if (prevProps.warehouseId !== this.props.warehouseId) {
+      await this.fetchWarehouse();
+    }
+  };
+
+  fetchWarehouse = async () => {
+    const {
+      warehouseId,
+      actions: { fetchWarehouse }
+    } = this.props;
+
+    if (warehouseId) {
+      fetchWarehouse(warehouseId);
+    }
+  };
+
+  handleWarehouseChange = e => {
+    // TODO: Extract to action
+    store.dispatch({
+      type: "WAREHOUSE_UPDATE_FIELD",
+      payload: e.target.value,
+      field: e.target.name
+    });
+  };
+
+  handleCreateOrUpdateWarehouse = async () => {
+    const {
+      warehouse,
+      business,
+      actions: {
+        fetchWarehouses,
+        updateWarehouse,
+        createWarehouse,
+        fetchProductsStock
+      }
+    } = this.props;
+
+    if (warehouse.id) {
+      await updateWarehouse(warehouse.name, warehouse.id);
+    } else {
+      await createWarehouse(warehouse.name, business.name);
+    }
     await fetchProductsStock(business.name);
     await fetchWarehouses(business.name);
   };
 
-  componentDidUpdate = prevProps => {
-    if (!this.props.products[0].stock) {
-      this.fetchData();
-    }
-
-    if (prevProps !== this.props) {
-      this.showEditors(this.props);
-    }
-
-    if (prevProps.business !== this.props.business) {
-      this.fetchData();
-    }
-  };
-
-  showEditors = nextProps => {
-    let props = nextProps ? nextProps : this.props;
-    if (props.match.params.productId) {
-      this.handleShowProductEditor();
-    }
-
-    if (props.match.params.warehouseId) {
-      this.handleShowWarehouseEditor();
-    }
-  };
-
-  handleShowProductEditor = () => {
-    this.setState({
-      showProductEditor: true
-    });
-  };
-
-  handleShowWarehouseEditor = () => {
-    this.setState({
-      showWarehouseEditor: true
-    });
-  };
-
-  handleHideProductEditor = () => {
-    this.setState({
-      showProductEditor: false
-    });
-  };
-
-  handleHideWarehouseEditor = () => {
-    this.setState({
-      showWarehouseEditor: false
-    });
+  handleDeleteWarehouse = async () => {
+    const {
+      warehouse,
+      business,
+      actions: { fetchWarehouses, deleteWarehouse, fetchProductsStock }
+    } = this.props;
+    await deleteWarehouse(warehouse.id);
+    await fetchProductsStock(business.name);
+    await fetchWarehouses(business.name);
   };
 
   render() {
-    const { classes, products, warehouses } = this.props;
-    const { showProductEditor, showWarehouseEditor } = this.state;
-
-    if (!this.props.fetched) {
-      return <p>Loading</p>;
-    }
+    const { warehouse, hideWarehouseEditor } = this.props;
 
     return (
-      <div>
-        <WarehouseTable products={products} warehouses={warehouses} />
+      <Editor>
+        <EditorHeader
+          editedObject={warehouse}
+          editedObjectLabel="Warehouse"
+          hideEditor={hideWarehouseEditor}
+        />
 
-        {!showProductEditor &&
-          !showWarehouseEditor && (
-            <Grid container>
-              <Grid item className={classes.flex} />
-              <Grid item className={classes.buttons}>
-                <Button
-                  onClick={this.handleShowProductEditor}
-                  variant="raised"
-                  color="primary"
-                  component={Link}
-                  to="/warehouse/"
-                  className={classes.button}
-                >
-                  Add New Product
-                </Button>
-                <Button
-                  onClick={this.handleShowWarehouseEditor}
-                  variant="raised"
-                  color="primary"
-                  component={Link}
-                  to="/warehouse/"
-                  className={classes.button}
-                >
-                  Add New Warehouse
-                </Button>
-              </Grid>
-            </Grid>
-          )}
-
-        {showProductEditor && (
-          <ProductEditor
-            className={classes.root}
-            productId={this.props.match.params.productId}
-            hideProductEditor={this.handleHideProductEditor}
+        <EditorContent>
+          <TextField
+            name="name"
+            value={warehouse.name ? warehouse.name : ""}
+            label="Warehouse Name"
+            margin="dense"
+            onChange={this.handleWarehouseChange}
           />
-        )}
+        </EditorContent>
 
-        {showWarehouseEditor && (
-          <WarehouseEditor
-            className={classes.root}
-            warehouseId={this.props.match.params.warehouseId}
-            hideWarehouseEditor={this.handleHideWarehouseEditor}
-          />
-        )}
-      </div>
+        <EditorButtons
+          editedObjectLabel="Warehouse"
+          editedObject={warehouse}
+          deleteAction={this.handleDeleteWarehouse}
+          updateAction={this.handleCreateOrUpdateWarehouse}
+          createAction={this.handleCreateOrUpdateWarehouse}
+        />
+      </Editor>
     );
   }
 }
 
 Warehouse.propTypes = {
   actions: PropTypes.object.isRequired,
-  products: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-  warehouses: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-  fetched: PropTypes.bool,
-  classes: PropTypes.object.isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      productId: PropTypes.string,
-      warehouseId: PropTypes.string
-    })
-  }),
-  business: PropTypes.object.isRequired
+  warehouseId: PropTypes.string,
+  warehouse: PropTypes.object,
+  hideWarehouseEditor: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
   return {
-    products: state.products.products,
-    warehouses: state.warehouses.warehouses,
-    fetched: state.products.fetched,
-    business: state.business.business
+    warehouse: state.warehouse.warehouse,
+    business: state.business.business,
+    fetched: state.warehouse.fetched
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     actions: bindActionCreators(
-      { ...warehousesActions, ...productsActions },
+      { ...warehouseActions, ...warehousesActions, ...productsActions },
       dispatch
     )
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  withStyles(WarehouseStyle)(Warehouse)
-);
+export default connect(mapStateToProps, mapDispatchToProps)(Warehouse);

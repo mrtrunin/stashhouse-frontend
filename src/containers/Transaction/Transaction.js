@@ -8,7 +8,7 @@ import { withStyles, Grid, Paper, Button } from "@material-ui/core";
 
 // API calls
 import * as customersActions from "containers/Customers/CustomersActions";
-import * as warehousesActions from "containers/Warehouse/WarehousesActions";
+import * as warehousesActions from "containers/Warehouses/WarehousesActions";
 import * as transactionActions from "containers/Transaction/TransactionActions";
 import * as productsActions from "containers/Products/ProductsActions";
 

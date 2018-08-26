@@ -44,7 +44,7 @@ export class Businesses extends Component {
     const noBusinesses = businesses.length === 0;
 
     if (redirect) {
-      return <Redirect to="/warehouse/" />;
+      return <Redirect to="/warehouses/" />;
     }
 
     if (noBusinesses) {

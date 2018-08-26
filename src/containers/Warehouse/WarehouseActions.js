@@ -80,8 +80,7 @@ export function deleteWarehouse(id) {
 
 export function fetchWarehouse(warehouseId) {
   return async dispatch => {
-    console.log("HERE?");
-    dispatch({
+    await dispatch({
       type: FETCH_WAREHOUSE
     });
 
@@ -92,15 +91,23 @@ export function fetchWarehouse(warehouseId) {
         }
       });
 
-      dispatch({
+      await dispatch({
         type: FETCH_WAREHOUSE_FULFILLED,
         payload: data
       });
     } catch (error) {
-      dispatch({
+      await dispatch({
         type: FETCH_WAREHOUSE_REJECTED,
         payload: error
       });
     }
+  };
+}
+
+export function resetWarehouse() {
+  return async dispatch => {
+    dispatch({
+      type: RESET_WAREHOUSE
+    });
   };
 }

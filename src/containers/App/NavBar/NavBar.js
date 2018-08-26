@@ -105,7 +105,7 @@ class NavBar extends Component {
     } else {
       navBarLeft = (
         <Toolbar>
-          <Button href="/warehouse" color="inherit" variant="flat">
+          <Button href="/warehouses" color="inherit" variant="flat">
             <Business className={classes.leftIcon} />
             Products and Warehouse
           </Button>
