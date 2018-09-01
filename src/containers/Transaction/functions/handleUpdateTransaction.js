@@ -1,11 +1,11 @@
 import Message from "components/Message/Message";
-import addProductToTransaction from "api/addProductToTransaction";
-import deleteStockFromTransaction from "api/deleteStockFromTransaction";
 
 const handleUpdateTransaction = async (
   transactionState,
   business,
-  updateTransaction
+  updateTransaction,
+  addProductToTransaction,
+  deleteStockFromTransaction
 ) => {
   const {
     existingTransactionId,

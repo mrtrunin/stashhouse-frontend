@@ -1,12 +1,11 @@
 import PropTypes from "prop-types";
 import Message from "components/Message/Message";
 
-import addProductToTransaction from "api/addProductToTransaction";
-
 const handleCreateTransaction = async (
   transactionState,
   business,
   createTransaction,
+  addProductToTransaction,
   e
 ) => {
   e.preventDefault();

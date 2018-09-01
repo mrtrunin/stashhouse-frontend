@@ -137,3 +137,79 @@ export function fetchTransaction(id) {
     }
   };
 }
+
+export function addProductToTransaction(
+  productId,
+  fromWarehouseId = null,
+  toWarehouseId = null,
+  transactionId,
+  quantity,
+  price,
+  tax_rate = null,
+  business_name
+) {
+  return async dispatch => {
+    let url = process.env.REACT_APP_SERVER_URL;
+    let payload = {};
+
+    payload.price = price;
+    payload.tax_rate = tax_rate;
+    payload.product = productId;
+    payload.from_warehouse = fromWarehouseId;
+    payload.to_warehouse = toWarehouseId;
+    payload.transaction = transactionId;
+    payload.quantity = quantity;
+    payload.business = {
+      name: business_name
+    };
+
+    try {
+      const { data } = await axios.post(url + "/stock/", payload, {
+        headers: {
+          Authorization: "Bearer " + localStorage.jwtToken
+        }
+      });
+
+      return data;
+    } catch (error) {
+      Message("Cannot add product to transaction: " + error, "error");
+    }
+  };
+}
+
+export function deleteStockFromTransaction(transactionId) {
+  return async dispatch => {
+    try {
+      const { data } = await axios.delete(
+        url + "/stock/?transactionId=" + transactionId,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.jwtToken
+          }
+        }
+      );
+
+      Message("Stock deleted!", "success");
+
+      return data;
+    } catch (error) {
+      Message("Could not delete stock: " + error, "error");
+    }
+  };
+}
+
+export function fetchStock(id) {
+  return async dispatch => {
+    try {
+      const { data } = await axios.get(url + "/stock/" + id, {
+        headers: {
+          Authorization: "Bearer " + localStorage.jwtToken
+        }
+      });
+
+      return data;
+    } catch (error) {
+      Message("Could not fetch stock: " + error);
+    }
+  };
+}

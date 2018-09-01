@@ -1,10 +1,14 @@
 import PropTypes from "prop-types";
-import fetchStock from "api/fetchStock";
 import store from "store";
 import transformSelectedProduct from "./transformSelectedProduct";
 import Message from "components/Message/Message";
 
-const loadExistingTransaction = async (props, redirect, fetchTransaction) => {
+const loadExistingTransaction = async (
+  props,
+  redirect,
+  fetchTransaction,
+  fetchStock
+) => {
   let transactionId = props.match.params.transactionId;
 
   if (!transactionId) {

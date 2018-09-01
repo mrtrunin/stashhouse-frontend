@@ -66,13 +66,19 @@ export class Transaction extends Component {
         fetchCustomers,
         fetchWarehouses,
         fetchTransaction,
-        fetchProducts
+        fetchProducts,
+        fetchStock
       }
     } = this.props;
     await fetchCustomers(business.name);
     await fetchWarehouses(business.name);
     await fetchProducts(business.name);
-    await loadExistingTransaction(this.props, this.redirect, fetchTransaction);
+    await loadExistingTransaction(
+      this.props,
+      this.redirect,
+      fetchTransaction,
+      fetchStock
+    );
     await setTransactionType(this.props.match.params.transactionType);
   };
 
@@ -83,7 +89,13 @@ export class Transaction extends Component {
   render() {
     const {
       classes,
-      actions: { deleteTransaction, createTransaction, updateTransaction }
+      actions: {
+        deleteTransaction,
+        createTransaction,
+        updateTransaction,
+        addProductToTransaction,
+        deleteStockFromTransaction
+      }
     } = this.props;
 
     let customersFetched = this.props.customersFetched;
@@ -243,7 +255,9 @@ export class Transaction extends Component {
                       null,
                       this.props.transactionState,
                       this.props.business,
-                      updateTransaction
+                      updateTransaction,
+                      addProductToTransaction,
+                      deleteStockFromTransaction
                     )}
                   >
                     Update
@@ -258,7 +272,8 @@ export class Transaction extends Component {
                       null,
                       this.props.transactionState,
                       this.props.business,
-                      createTransaction
+                      createTransaction,
+                      addProductToTransaction
                     )}
                   >
                     {this.props.transactionState.transactionType}

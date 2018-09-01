@@ -12,7 +12,6 @@ import payment from "containers/Payment/PaymentReducer";
 import payments from "containers/Payments/PaymentsReducer";
 import transactionState from "containers/Transaction/TransactionStateReducer";
 import { transactions } from "containers/Transactions/TransactionsReducer";
-import invoices from "reducers/InvoicesReducer";
 import business from "containers/Business/BusinessReducer";
 import businesses from "containers/Businesses/BusinessesReducer";
 import message from "components/Message/MessageReducer";
@@ -25,7 +24,6 @@ const appReducer = combineReducers({
   businesses,
   transaction,
   transactions,
-  invoices,
   customer,
   customers,
   warehouse,

@@ -13,8 +13,6 @@ import {
   Select
 } from "@material-ui/core";
 
-import fetchInvoices from "api/fetchInvoices";
-
 import moment from "moment";
 import EditorButtons from "components/Editors/EditorComponents/EditorButtons";
 import Editor from "components/Editors/EditorComponents/Editor";
@@ -31,7 +29,7 @@ export class Payment extends Component {
   componentDidMount = async () => {
     const {
       invoiceId,
-      actions: { resetPayment }
+      actions: { resetPayment, fetchInvoices }
     } = this.props;
 
     resetPayment();
@@ -280,7 +278,7 @@ Payment.propTypes = {
 const mapStateToProps = state => {
   return {
     payment: state.payment.payment,
-    invoices: state.invoices.invoices,
+    invoices: state.payments.invoices,
     business: state.business.business
   };
 };
