@@ -11,10 +11,10 @@ import { MuiThemeProvider } from "@material-ui/core/styles";
 
 import Message from "components/Message/Message";
 
-import refreshToken from "api/UserAuth/RefreshTokenAction";
-
 import axios from "axios";
 import store from "store";
+
+import refreshToken from "containers/Login/LoginActions";
 
 class App extends Component {
   componentDidMount = () => {
@@ -22,18 +22,44 @@ class App extends Component {
   };
 
   interceptApiResponse = () => {
+    axios.interceptors.request.use(
+      config => {
+        const token = localStorage.getItem("jwtToken");
+        const url = process.env.REACT_APP_SERVER_URL;
+        const tokenAuthUrl = url + "/auth/";
+
+        if (token) {
+          config.headers["Authorization"] = "Bearer " + token;
+        }
+        if (!token && !config.url.startsWith(tokenAuthUrl)) {
+          // Don't execute request if no authorization token
+          return;
+        }
+        return config;
+      },
+      error => {
+        return Promise.reject(error);
+      }
+    );
+
     axios.interceptors.response.use(
       response => response,
-      async error => {
+      error => {
         const url = process.env.REACT_APP_SERVER_URL;
         const tokenAuthUrl = url + "/auth/token/";
+
+        const unauthorized = error.response.status === 401;
+
+        const hasAuthTokenExpired =
+          localStorage.jwtToken &&
+          error.config &&
+          error.response &&
+          error.response.status === 401;
+
         const hasRefreshTokenExpired =
           error.config.url === tokenAuthUrl &&
           error.response &&
           error.response.status === 401;
-
-        const hasAuthTokenExpired =
-          error.config && error.response && error.response.status === 401;
 
         const isBadRequest = error.response.status === 400;
 
@@ -42,8 +68,13 @@ class App extends Component {
           return Promise.reject(error);
         }
 
+        if (unauthorized) {
+          Message("Unauthorized request", "error", 401);
+        }
+
         if (hasRefreshTokenExpired) {
-          this.hardLogout();
+          this.logout();
+          return Promise.reject(error);
         }
 
         if (hasAuthTokenExpired) {
@@ -78,10 +109,7 @@ class App extends Component {
   logout = () => {
     return new Promise(async () => {
       await store.dispatch({ type: "USER_LOGOUT" });
-      await localStorage.removeItem("refresh_token");
-      await localStorage.removeItem("jwtToken");
-      await localStorage.removeItem("jwtToken_expiration_time");
-      await localStorage.removeItem("state");
+      await localStorage.clear();
     });
   };
 

@@ -12,12 +12,7 @@ export function fetchWarehouses(business_name) {
 
     try {
       const { data } = await axios.get(
-        url + "/warehouses/?business_name=" + business_name,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.jwtToken
-          }
-        }
+        url + "/warehouses/?business_name=" + business_name
       );
 
       dispatch({

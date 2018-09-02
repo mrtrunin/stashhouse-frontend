@@ -19,11 +19,7 @@ export function createWarehouse(name, business_name) {
     };
 
     try {
-      const { data } = await axios.post(url + "/warehouses/", payload, {
-        headers: {
-          Authorization: "Bearer " + localStorage.jwtToken
-        }
-      });
+      const { data } = await axios.post(url + "/warehouses/", payload);
 
       Message("Warehouse Created!", "success");
 
@@ -43,12 +39,7 @@ export function updateWarehouse(name, warehouseId) {
     try {
       const { data } = await axios.patch(
         url + "/warehouses/" + warehouseId + "/",
-        payload,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.jwtToken
-          }
-        }
+        payload
       );
 
       Message("Warehouse Updated Successfully!", "success");
@@ -63,11 +54,7 @@ export function updateWarehouse(name, warehouseId) {
 export function deleteWarehouse(id) {
   return async dispatch => {
     try {
-      const { data } = await axios.delete(url + "/warehouses/" + id + "/", {
-        headers: {
-          Authorization: "Bearer " + localStorage.jwtToken
-        }
-      });
+      const { data } = await axios.delete(url + "/warehouses/" + id + "/");
 
       Message("Warehouse " + id + " deleted successfully!", "success");
       return data;
@@ -84,11 +71,7 @@ export function fetchWarehouse(warehouseId) {
     });
 
     try {
-      const { data } = await axios.get(url + "/warehouses/" + warehouseId, {
-        headers: {
-          Authorization: "Bearer " + localStorage.jwtToken
-        }
-      });
+      const { data } = await axios.get(url + "/warehouses/" + warehouseId);
 
       await dispatch({
         type: FETCH_WAREHOUSE_FULFILLED,

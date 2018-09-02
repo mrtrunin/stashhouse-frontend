@@ -28,11 +28,7 @@ export function createProduct(
     };
 
     try {
-      const { data } = await axios.post(url + "/products/", payload, {
-        headers: {
-          Authorization: "Bearer " + localStorage.jwtToken
-        }
-      });
+      const { data } = await axios.post(url + "/products/", payload);
 
       Message("Product Created!", "success");
 
@@ -46,11 +42,7 @@ export function createProduct(
 export function deleteProduct(id) {
   return async dispatch => {
     try {
-      const { data } = await axios.delete(url + "/products/" + id + "/", {
-        headers: {
-          Authorization: "Bearer " + localStorage.jwtToken
-        }
-      });
+      const { data } = await axios.delete(url + "/products/" + id + "/");
 
       Message("Product " + id + " deleted successfully!", "success");
       return data;
@@ -67,11 +59,7 @@ export function fetchProduct(productId) {
     });
 
     try {
-      const { data } = await axios.get(url + "/products/" + productId, {
-        headers: {
-          Authorization: "Bearer " + localStorage.jwtToken
-        }
-      });
+      const { data } = await axios.get(url + "/products/" + productId);
 
       dispatch({
         type: FETCH_PRODUCT_FULFILLED,
@@ -98,12 +86,7 @@ export function updateProduct(name, ean, default_price, tax_rate, productId) {
     try {
       const { data } = await axios.patch(
         url + "/products/" + productId + "/",
-        payload,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.jwtToken
-          }
-        }
+        payload
       );
 
       Message("Product Updated Successfully!", "success");

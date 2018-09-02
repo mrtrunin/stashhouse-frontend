@@ -11,11 +11,7 @@ export function fetchBusinesses() {
     try {
       const { data } = await axios.get(
         process.env.REACT_APP_SERVER_URL + "/businesses/",
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.jwtToken
-          }
-        }
+        {}
       );
       await dispatch({
         type: FETCH_BUSINESSES_FULFILLED,

@@ -18,12 +18,7 @@ export function fetchPayments(businessName) {
 
     try {
       const { data } = await axios.get(
-        url + "/payments/?business_name=" + businessName,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.jwtToken
-          }
-        }
+        url + "/payments/?business_name=" + businessName
       );
 
       await dispatch({
@@ -48,11 +43,7 @@ export function fetchInvoices() {
     });
 
     try {
-      const { data } = await axios.get(url + "/invoices/", {
-        headers: {
-          Authorization: "Bearer " + localStorage.jwtToken
-        }
-      });
+      const { data } = await axios.get(url + "/invoices/");
 
       await dispatch({
         type: FETCH_INVOICES_FULFILLED,

@@ -17,12 +17,7 @@ export function fetchProducts(businessName) {
 
     try {
       const { data } = await axios.get(
-        url + "/products/?business_name=" + businessName,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.jwtToken
-          }
-        }
+        url + "/products/?business_name=" + businessName
       );
 
       dispatch({
@@ -46,12 +41,7 @@ export function fetchProductsStock(businessName) {
 
     try {
       const { data } = await axios.get(
-        url + "/products-stock/?business_name=" + businessName,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.jwtToken
-          }
-        }
+        url + "/products-stock/?business_name=" + businessName
       );
 
       await dispatch({

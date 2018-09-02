@@ -12,12 +12,7 @@ export function fetchTransactions(businessName) {
     await dispatch({ type: FETCH_TRANSACTIONS });
     try {
       const { data } = await axios.get(
-        url + "/transactions/?business_name=" + businessName,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.jwtToken
-          }
-        }
+        url + "/transactions/?business_name=" + businessName
       );
       await dispatch({
         type: FETCH_TRANSACTIONS_FULFILLED,
@@ -36,11 +31,7 @@ export function deleteTransactions(transactionIds) {
   return async dispatch => {
     for (let transactionId of transactionIds) {
       try {
-        await axios.delete(url + "/transactions/" + transactionId, {
-          headers: {
-            Authorization: "Bearer " + localStorage.jwtToken
-          }
-        });
+        await axios.delete(url + "/transactions/" + transactionId);
 
         Message(
           "Transaction " + transactionId + " deleted successfully!",

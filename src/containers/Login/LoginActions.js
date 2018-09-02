@@ -9,6 +9,8 @@ export const FETCH_AUTH_TOKEN = "FETCH_AUTH_TOKEN";
 export const FETCH_AUTH_TOKEN_FULFILLED = "FETCH_AUTH_TOKEN_FULFILLED";
 export const FETCH_AUTH_TOKEN_REJECTED = "FETCH_AUTH_TOKEN_REJECTED";
 
+export const USER_LOGOUT = "USER_LOGOUT";
+
 export function login(data) {
   return async dispatch => {
     let client_id = process.env.REACT_APP_CLIENT_ID;
@@ -75,12 +77,7 @@ export function fetchUserData() {
     await dispatch({ type: FETCH_USER });
     try {
       const { data } = await axios.get(
-        process.env.REACT_APP_SERVER_URL + "/users/me/",
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.jwtToken
-          }
-        }
+        process.env.REACT_APP_SERVER_URL + "/users/me/"
       );
 
       await dispatch({
@@ -120,7 +117,7 @@ const handleLoginSuccess = (dispatch, data) => {
     Date.now() + expiresIn * 1000
   );
 
-  Message("Welcome to Stashhouse!", 200);
+  Message("Welcome to Stashhouse!", "success");
 };
 
 const handleLoginFailure = (dispatch, error) => {
@@ -130,3 +127,40 @@ const handleLoginFailure = (dispatch, error) => {
   });
   Message("Could not login with Google: " + error, "error");
 };
+
+export function refreshToken() {
+  return async dispatch => {
+    let client_id = process.env.REACT_APP_CLIENT_ID;
+    let client_secret = process.env.REACT_APP_CLIENT_SECRET;
+    let url = process.env.REACT_APP_SERVER_URL;
+
+    let formdata = new FormData();
+    formdata.append("grant_type", "refresh_token");
+    formdata.append("refresh_token", localStorage.refresh_token);
+    formdata.append("client_id", client_id);
+    formdata.append("client_secret", client_secret);
+
+    try {
+      const { data } = await axios.post(url + "/auth/token/", formdata, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
+      });
+
+      const access_token = data.access_token;
+      const refresh_token = data.refresh_token;
+      const expiration_time = Date.now() + data.expires_in * 1000;
+
+      localStorage.setItem("jwtToken", access_token);
+      localStorage.setItem("refresh_token", refresh_token);
+      localStorage.setItem("jwtToken_expiration_time", expiration_time);
+    } catch (error) {
+      Message("Token expired", "info");
+
+      dispatch({ type: USER_LOGOUT });
+      localStorage.clear();
+    }
+  };
+}
+
+export default refreshToken;

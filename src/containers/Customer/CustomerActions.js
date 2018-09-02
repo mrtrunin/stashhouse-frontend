@@ -34,11 +34,7 @@ export function createCustomer(
     };
 
     try {
-      const { data } = await axios.post(url + "/customers/", payload, {
-        headers: {
-          Authorization: "Bearer " + localStorage.jwtToken
-        }
-      });
+      const { data } = await axios.post(url + "/customers/", payload);
 
       Message("Customer Created!", "success");
 
@@ -56,11 +52,7 @@ export function fetchCustomer(customerId) {
     });
 
     try {
-      const { data } = await axios.get(url + "/customers/" + customerId, {
-        headers: {
-          Authorization: "Bearer " + localStorage.jwtToken
-        }
-      });
+      const { data } = await axios.get(url + "/customers/" + customerId);
 
       dispatch({
         type: FETCH_CUSTOMER_FULFILLED,
@@ -78,11 +70,7 @@ export function fetchCustomer(customerId) {
 export function deleteCustomer(id) {
   return async dispatch => {
     try {
-      const { data } = await axios.delete(url + "/customers/" + id + "/", {
-        headers: {
-          Authorization: "Bearer " + localStorage.jwtToken
-        }
-      });
+      const { data } = await axios.delete(url + "/customers/" + id + "/");
 
       Message("Customer " + id + " deleted successfully!", "success");
       return data;
@@ -117,11 +105,7 @@ export function updateCustomer(
       const { data } = await axios.patch(
         url + "/customers/" + customerId + "/",
         payload,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.jwtToken
-          }
-        }
+        {}
       );
 
       Message("Customer Updated Successfully!", "success");

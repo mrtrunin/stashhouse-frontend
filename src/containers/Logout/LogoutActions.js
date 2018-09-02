@@ -25,19 +25,13 @@ export function logout() {
       });
       await dispatch({ type: USER_LOGOUT });
 
-      localStorage.removeItem("refresh_token");
-      localStorage.removeItem("jwtToken");
-      localStorage.removeItem("jwtToken_expiration_time");
-      localStorage.removeItem("state");
+      localStorage.clear();
 
       Message("Logged out successfully", "success");
     } catch (error) {
       Message("Could not log out: " + error, "error");
       dispatch({ type: USER_LOGOUT });
-      localStorage.removeItem("refresh_token");
-      localStorage.removeItem("jwtToken");
-      localStorage.removeItem("jwtToken_expiration_time");
-      localStorage.removeItem("state");
+      localStorage.clear();
     }
   };
 }

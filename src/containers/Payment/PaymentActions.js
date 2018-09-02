@@ -32,11 +32,7 @@ export function createPayment(
     };
 
     try {
-      const { data } = await axios.post(url + "/payments/", payload, {
-        headers: {
-          Authorization: "Bearer " + localStorage.jwtToken
-        }
-      });
+      const { data } = await axios.post(url + "/payments/", payload);
 
       Message("Payment Created!", "success");
 
@@ -50,11 +46,7 @@ export function createPayment(
 export function deletePayment(id) {
   return async dispatch => {
     try {
-      const { data } = await axios.delete(url + "/payments/" + id + "/", {
-        headers: {
-          Authorization: "Bearer " + localStorage.jwtToken
-        }
-      });
+      const { data } = await axios.delete(url + "/payments/" + id + "/");
 
       Message("Payment " + id + " deleted successfully!", "success");
       return data;
@@ -71,11 +63,7 @@ export function fetchPayment(paymentId) {
     });
 
     try {
-      const { data } = await axios.get(url + "/payments/" + paymentId, {
-        headers: {
-          Authorization: "Bearer " + localStorage.jwtToken
-        }
-      });
+      const { data } = await axios.get(url + "/payments/" + paymentId);
 
       dispatch({
         type: FETCH_PAYMENT_FULFILLED,
@@ -112,12 +100,7 @@ export function updatePayment(
     try {
       const { data } = await axios.patch(
         url + "/payments/" + paymentId + "/",
-        payload,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.jwtToken
-          }
-        }
+        payload
       );
 
       Message("Payment Updated Successfully!", "success");

@@ -31,8 +31,11 @@ export class Warehouses extends Component {
       business,
       actions: { fetchWarehouses, fetchProductsStock }
     } = this.props;
-    await fetchProductsStock(business.name);
-    await fetchWarehouses(business.name);
+
+    if (business) {
+      await fetchProductsStock(business.name);
+      await fetchWarehouses(business.name);
+    }
   };
 
   componentDidUpdate = prevProps => {
@@ -44,7 +47,7 @@ export class Warehouses extends Component {
       this.showEditors();
     }
 
-    if (prevProps.business !== this.props.business) {
+    if (prevProps.business !== this.props.business && this.props.business) {
       this.fetchData();
     }
   };

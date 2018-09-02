@@ -42,11 +42,7 @@ export function createBusiness(
     };
 
     try {
-      const { data } = await axios.post(url + "/businesses/", payload, {
-        headers: {
-          Authorization: "Bearer " + localStorage.jwtToken
-        }
-      });
+      const { data } = await axios.post(url + "/businesses/", payload);
 
       Message("Business has been created successfully!", "success");
 
@@ -66,11 +62,7 @@ export function fetchBusiness(businessId) {
     });
 
     try {
-      const { data } = await axios.get(url + "/businesses/" + businessId, {
-        headers: {
-          Authorization: "Bearer " + localStorage.jwtToken
-        }
-      });
+      const { data } = await axios.get(url + "/businesses/" + businessId);
 
       dispatch({
         type: FETCH_BUSINESS_FULFILLED,
@@ -124,11 +116,7 @@ export function updateBusiness(
       const { data } = await axios.patch(
         url + "/businesses/" + id + "/",
         payload,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.jwtToken
-          }
-        }
+        {}
       );
 
       Message("Business Updated Successfully!", "success");

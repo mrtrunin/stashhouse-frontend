@@ -14,12 +14,7 @@ export function fetchCustomers(businessName) {
 
     try {
       const { data } = await axios.get(
-        url + "/customers/?business_name=" + businessName,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.jwtToken
-          }
-        }
+        url + "/customers/?business_name=" + businessName
       );
 
       await dispatch({

@@ -41,11 +41,7 @@ export function createTransaction(customerId, transactionType, business_name) {
     });
 
     try {
-      const { data } = await axios.post(url + "/transactions/", payload, {
-        headers: {
-          Authorization: "Bearer " + localStorage.jwtToken
-        }
-      });
+      const { data } = await axios.post(url + "/transactions/", payload);
 
       dispatch({
         type: TRANSACTION_STATE_FETCHED
@@ -77,12 +73,7 @@ export function updateTransaction(transactionId, customerId) {
     try {
       const { data } = await axios.patch(
         url + "/transactions/" + transactionId + "/",
-        payload,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.jwtToken
-          }
-        }
+        payload
       );
 
       dispatch({
@@ -105,11 +96,7 @@ export function updateTransaction(transactionId, customerId) {
 export function deleteTransaction(id) {
   return async dispatch => {
     try {
-      const { data } = await axios.delete(url + "/transactions/" + id, {
-        headers: {
-          Authorization: "Bearer " + localStorage.jwtToken
-        }
-      });
+      const { data } = await axios.delete(url + "/transactions/" + id);
 
       Message("Transaction " + id + " deleted successfully!");
       return data;
@@ -122,11 +109,7 @@ export function deleteTransaction(id) {
 export function fetchTransaction(id) {
   return async dispatch => {
     try {
-      const { data } = await axios.get(url + "/transactions/" + id, {
-        headers: {
-          Authorization: "Bearer " + localStorage.jwtToken
-        }
-      });
+      const { data } = await axios.get(url + "/transactions/" + id);
 
       return data;
     } catch (error) {
@@ -164,11 +147,7 @@ export function addProductToTransaction(
     };
 
     try {
-      const { data } = await axios.post(url + "/stock/", payload, {
-        headers: {
-          Authorization: "Bearer " + localStorage.jwtToken
-        }
-      });
+      const { data } = await axios.post(url + "/stock/", payload);
 
       return data;
     } catch (error) {
@@ -181,12 +160,7 @@ export function deleteStockFromTransaction(transactionId) {
   return async dispatch => {
     try {
       const { data } = await axios.delete(
-        url + "/stock/?transactionId=" + transactionId,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.jwtToken
-          }
-        }
+        url + "/stock/?transactionId=" + transactionId
       );
 
       Message("Stock deleted!", "success");
@@ -201,15 +175,72 @@ export function deleteStockFromTransaction(transactionId) {
 export function fetchStock(id) {
   return async dispatch => {
     try {
-      const { data } = await axios.get(url + "/stock/" + id, {
-        headers: {
-          Authorization: "Bearer " + localStorage.jwtToken
-        }
-      });
+      const { data } = await axios.get(url + "/stock/" + id);
 
       return data;
     } catch (error) {
       Message("Could not fetch stock: " + error);
+    }
+  };
+}
+
+export function fetchTransactionPdf(
+  transactionId,
+  transactionName,
+  businessName
+) {
+  return async dispatch => {
+    try {
+      const { data } = await axios.get(
+        url +
+          "/transactions/" +
+          transactionId +
+          "/pdf?business_name=" +
+          businessName
+      );
+
+      const href = window.URL.createObjectURL(new Blob([data]));
+      const link = document.createElement("a");
+      link.href = href;
+      let filename = transactionName + ".pdf";
+      link.setAttribute("download", filename);
+      document.body.appendChild(link);
+      link.click();
+
+      Message("PDF downloaded successfully!");
+      return data;
+    } catch (error) {
+      Message("Could not download PDF: " + error, "error");
+    }
+  };
+}
+
+export function sendEmail(
+  business_name,
+  transactionId,
+  recipients,
+  subject,
+  body
+) {
+  return async dispatch => {
+    let formdata = new FormData();
+    formdata.append("subject", subject);
+    formdata.append("body", body);
+    formdata.append("recipients", recipients);
+
+    try {
+      const { data } = await axios.post(
+        url +
+          "/transactions/" +
+          transactionId +
+          "/send-email?business_name=" +
+          business_name,
+        formdata
+      );
+      Message("Email sent successfully!", "success");
+      return data;
+    } catch (error) {
+      Message("Sending email failed: " + error, "error");
     }
   };
 }

@@ -7,14 +7,12 @@ import * as transactionActions from "containers/Transaction/TransactionActions";
 import * as transactionsActions from "./TransactionsActions";
 
 import TransactionsTable from "./components/TransactionsTable/TransactionsTable";
-import fetchTransactionPdf from "api/fetchTransactionPdf";
 
 import { Button, Grid } from "@material-ui/core";
 import TransactionCreationButtons from "./components/TransactionCreationButtons";
 
 import ButtonRow from "components/ButtonRow/ButtonRow";
 import TableFilter from "./components/TransactionsTable/TableFilter";
-import sendEmail from "api/sendEmail";
 
 export class Transactions extends Component {
   state = {
@@ -43,7 +41,10 @@ export class Transactions extends Component {
 
   handleDownloadPdf = (transactionId, transactionName, e) => {
     e.preventDefault();
-    const { business } = this.props;
+    const {
+      business,
+      actions: { fetchTransactionPdf }
+    } = this.props;
     fetchTransactionPdf(transactionId, transactionName, business.name);
   };
 
@@ -117,7 +118,10 @@ export class Transactions extends Component {
 
   handleSendEmail = (transactionId, e) => {
     e.preventDefault();
-    const { business } = this.props;
+    const {
+      business,
+      actions: { sendEmail }
+    } = this.props;
     const recipients = ["lars.trunin@gmail.com", "l.arstrunin@gmail.com"];
     const subject = "Testin with Dima";
     const body = "First <br> second";
