@@ -71,7 +71,8 @@ const LoginBox = props => {
               buttonText="Google Login"
               onSuccess={googleLogin}
               onFailure={googleLogin}
-              className="MuiButtonBase-root-90 MuiButton-root-68 MuiButton-contained-77 MuiButton-containedPrimary-78 MuiButton-raised-80 MuiButton-raisedPrimary-81 MuiButton-sizeLarge-88 jss90 jss68 jss77 jss78 jss80 jss81 jss88"
+              className={classes.googleButton}
+              // className="MuiButtonBase-root-192 MuiButton-root-170 MuiButton-contained-179 MuiButton-containedPrimary-180 MuiButton-raised-182 MuiButton-raisedPrimary-183 MuiButton-sizeLarge-190 jss194 jss172 jss181 jss182 jss184 jss185 jss192"
               style={{
                 backgroundColor: "rgb(209, 72, 54)",
                 color: "white"
