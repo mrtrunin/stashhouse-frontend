@@ -9,17 +9,7 @@ import {
 } from "@material-ui/core";
 import { Typography, Paper, withStyles } from "@material-ui/core";
 import { Link } from "react-router-dom";
-
-const styles = theme => ({
-  root: {
-    width: "100%",
-    marginTop: theme.spacing.unit * 2,
-    overflowX: "auto"
-  },
-  table: {
-    minWidth: 700
-  }
-});
+import WarehouseTableStyle from "./WarehouseTableStyle";
 
 const WarehouseTable = props => {
   const { classes, products, warehouses } = props;
@@ -132,4 +122,4 @@ WarehouseTable.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(WarehouseTable);
+export default withStyles(WarehouseTableStyle)(WarehouseTable);

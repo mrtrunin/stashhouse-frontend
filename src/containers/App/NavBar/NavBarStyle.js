@@ -20,6 +20,9 @@ const NavBarStyle = theme => ({
   smallButton: {
     padding: theme.spacing.unit,
     margin: theme.spacing.unit
+  },
+  navBarRightLarge: {
+    marginRight: theme.spacing.unit
   }
 });
 

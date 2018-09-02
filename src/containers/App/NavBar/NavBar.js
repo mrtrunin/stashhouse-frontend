@@ -64,24 +64,28 @@ class NavBar extends Component {
 
     if (!isLoggedIn) {
       navBarLeftLarge = (
-        <Typography
-          align="center"
-          noWrap
-          component={Link}
-          className={classes.logo}
-          to="/"
-        >
-          STASHHOUSE
-        </Typography>
+        <Toolbar>
+          <Typography
+            align="center"
+            noWrap
+            component={Link}
+            className={classes.logo}
+            to="/"
+          >
+            STASHHOUSE
+          </Typography>
+        </Toolbar>
       );
 
       navBarLeftSmall = navBarLeftLarge;
 
       navBarRightLarge = (
-        <Button href="/login" color="inherit">
-          <PowerSettingsNew className={classes.iconLeft} />
-          Login
-        </Button>
+        <Toolbar className={classes.navBarRightLarge}>
+          <Button href="/login" color="inherit">
+            <PowerSettingsNew className={classes.iconLeft} />
+            Login
+          </Button>
+        </Toolbar>
       );
 
       navBarRightSmall = navBarRightLarge;
@@ -131,7 +135,7 @@ class NavBar extends Component {
       );
 
       navBarRightLarge = (
-        <Toolbar>
+        <Toolbar className={classes.navBarRightLarge}>
           {business.name && (
             <div>
               <Button
