@@ -29,6 +29,7 @@ import {
 } from "@material-ui/icons";
 import { bindActionCreators } from "redux";
 import NavBarStyle from "./NavBarStyle";
+import Loader from "../Loader/Loader";
 
 class NavBar extends Component {
   componentDidUpdate = prevProps => {
@@ -55,7 +56,7 @@ class NavBar extends Component {
   };
 
   render() {
-    const { classes, isLoggedIn, businesses, business } = this.props;
+    const { classes, isLoggedIn, businesses, business, fetching } = this.props;
 
     let navBarLeftLarge = "";
     let navBarRightLarge = "";
@@ -225,6 +226,7 @@ class NavBar extends Component {
           <Hidden lgUp>{navBarRightSmall}</Hidden>
           <Hidden mdDown>{navBarRightLarge}</Hidden>
         </Toolbar>
+        <Loader fetching={fetching} />
       </AppBar>
     );
   }
@@ -244,12 +246,17 @@ NavBar.propTypes = {
 };
 
 const mapStateToProps = state => {
+  const fetching = Object.keys(state).some(key => {
+    return state[key].fetching;
+  });
+
   return {
     businesses: state.businesses.businesses,
     business: state.business.business,
     user: state.user.user,
     isLoggedIn: state.user.isLoggedIn,
-    transactions: state.transactions.transactions
+    transactions: state.transactions.transactions,
+    fetching: fetching
   };
 };
 

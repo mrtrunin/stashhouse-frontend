@@ -6,7 +6,7 @@ import { AppTheme } from "./AppTheme";
 import MuiPickersUtilsProvider from "material-ui-pickers/utils/MuiPickersUtilsProvider";
 import MomentUtils from "material-ui-pickers/utils/moment-utils";
 
-import { CssBaseline } from "@material-ui/core";
+import { CssBaseline, LinearProgress } from "@material-ui/core";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 
 import Message from "components/Message/Message";
@@ -43,7 +43,9 @@ class App extends Component {
     );
 
     axios.interceptors.response.use(
-      response => response,
+      response => {
+        return response;
+      },
       error => {
         const url = process.env.REACT_APP_SERVER_URL;
         const tokenAuthUrl = url + "/auth/token/";
