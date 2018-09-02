@@ -10,83 +10,77 @@ import { LoginBoxStyle } from "./LoginBoxStyle";
 const LoginBox = props => {
   const { classes, onSubmit, handleChange, googleLogin } = props;
   return (
-    <Grid container justify="center" spacing={16}>
-      <Grid item xs={3} />
-      <Grid item xs={6}>
-        <Paper className={classes.root}>
-          <form onSubmit={onSubmit}>
-            {/* Header */}
+    <Paper className={classes.root}>
+      <form onSubmit={onSubmit}>
+        {/* Header */}
 
-            <h1 className={classes.heading}>Log in dear person!</h1>
+        <h1 className={classes.heading}>Log in dear person!</h1>
 
-            {/* User Name */}
+        {/* User Name */}
 
-            <Grid container spacing={24} alignItems="flex-end" justify="center">
-              <Grid item>
-                <AccountCircle />
-              </Grid>
-              <Grid item>
-                <TextField
-                  id="username"
-                  label="User Name"
-                  autoComplete="username"
-                  onChange={handleChange("username")}
-                />
-              </Grid>
-            </Grid>
+        <Grid container spacing={24} alignItems="flex-end" justify="center">
+          <Grid item>
+            <AccountCircle />
+          </Grid>
+          <Grid item>
+            <TextField
+              id="username"
+              label="User Name"
+              autoComplete="username"
+              onChange={handleChange("username")}
+            />
+          </Grid>
+        </Grid>
 
-            {/* Password */}
-            <Grid container spacing={24} alignItems="flex-end" justify="center">
-              <Grid item>
-                <Lock />
-              </Grid>
-              <Grid item>
-                <TextField
-                  id="password"
-                  label="Password"
-                  type="password"
-                  autoComplete="current-password"
-                  onChange={handleChange("password")}
-                />
-              </Grid>
-            </Grid>
+        {/* Password */}
+        <Grid container spacing={24} alignItems="flex-end" justify="center">
+          <Grid item>
+            <Lock />
+          </Grid>
+          <Grid item>
+            <TextField
+              id="password"
+              label="Password"
+              type="password"
+              autoComplete="current-password"
+              onChange={handleChange("password")}
+            />
+          </Grid>
+        </Grid>
 
-            {/* Buttons */}
-            <Grid
-              container
-              justify="center"
-              spacing={24}
-              alignItems="flex-end"
-              className={classes.button}
+        {/* Buttons */}
+        <Grid
+          container
+          justify="center"
+          spacing={24}
+          alignItems="flex-end"
+          className={classes.button}
+        >
+          <Grid item>
+            <Button
+              size="large"
+              color="primary"
+              variant="raised"
+              onClick={onSubmit}
             >
-              <Grid item>
-                <Button
-                  size="large"
-                  color="primary"
-                  variant="raised"
-                  onClick={onSubmit}
-                >
-                  Log in
-                </Button>
+              Log in
+            </Button>
 
-                <GoogleLogin
-                  clientId="55376108045-u21pjckajg7knr4dode63bqnm3u99tug.apps.googleusercontent.com"
-                  buttonText="Google Login"
-                  onSuccess={googleLogin}
-                  onFailure={googleLogin}
-                  className="MuiButtonBase-root-90 MuiButton-root-68 MuiButton-contained-77 MuiButton-containedPrimary-78 MuiButton-raised-80 MuiButton-raisedPrimary-81 MuiButton-sizeLarge-88 jss90 jss68 jss77 jss78 jss80 jss81 jss88"
-                  style={{
-                    backgroundColor: "rgb(209, 72, 54)",
-                    color: "white"
-                  }}
-                />
-              </Grid>
-            </Grid>
-          </form>
-        </Paper>
-      </Grid>
-      <Grid item xs={3} />
-    </Grid>
+            <GoogleLogin
+              clientId="55376108045-u21pjckajg7knr4dode63bqnm3u99tug.apps.googleusercontent.com"
+              buttonText="Google Login"
+              onSuccess={googleLogin}
+              onFailure={googleLogin}
+              className="MuiButtonBase-root-90 MuiButton-root-68 MuiButton-contained-77 MuiButton-containedPrimary-78 MuiButton-raised-80 MuiButton-raisedPrimary-81 MuiButton-sizeLarge-88 jss90 jss68 jss77 jss78 jss80 jss81 jss88"
+              style={{
+                backgroundColor: "rgb(209, 72, 54)",
+                color: "white"
+              }}
+            />
+          </Grid>
+        </Grid>
+      </form>
+    </Paper>
   );
 };
 

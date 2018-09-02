@@ -14,7 +14,9 @@ import {
   FormControl,
   Input,
   Select,
-  MenuItem
+  MenuItem,
+  Hidden,
+  IconButton
 } from "@material-ui/core";
 
 import {
@@ -26,33 +28,7 @@ import {
   Settings
 } from "@material-ui/icons";
 import { bindActionCreators } from "redux";
-
-const styles = theme => ({
-  root: {
-    paddingRight: theme.spacing.unit * 2
-  },
-  flex: {
-    flex: 1
-  },
-  leftIcon: {
-    marginRight: theme.spacing.unit
-  },
-  logo: {
-    textDecoration: "none",
-    display: "inline",
-    paddingLeft: theme.spacing.unit * 4,
-    color: "white",
-    fontWeight: 600,
-    fontSize: "20px"
-  },
-  businessSelector: {
-    color: "white"
-  },
-  smallButton: {
-    padding: theme.spacing.unit,
-    margin: theme.spacing.unit
-  }
-});
+import NavBarStyle from "./NavBarStyle";
 
 class NavBar extends Component {
   componentDidUpdate = prevProps => {
@@ -81,11 +57,13 @@ class NavBar extends Component {
   render() {
     const { classes, isLoggedIn, businesses, business } = this.props;
 
-    let navBarLeft = "";
-    let navBarRight = "";
+    let navBarLeftLarge = "";
+    let navBarRightLarge = "";
+    let navBarLeftSmall = "";
+    let navBarRightSmall = "";
 
     if (!isLoggedIn) {
-      navBarLeft = (
+      navBarLeftLarge = (
         <Typography
           align="center"
           noWrap
@@ -96,38 +74,63 @@ class NavBar extends Component {
           STASHHOUSE
         </Typography>
       );
-      navBarRight = (
+
+      navBarLeftSmall = navBarLeftLarge;
+
+      navBarRightLarge = (
         <Button href="/login" color="inherit">
-          <PowerSettingsNew className={classes.leftIcon} />
+          <PowerSettingsNew className={classes.iconLeft} />
           Login
         </Button>
       );
+
+      navBarRightSmall = navBarRightLarge;
     } else {
-      navBarLeft = (
+      navBarLeftLarge = (
         <Toolbar>
           <Button href="/warehouses" color="inherit" variant="flat">
-            <Business className={classes.leftIcon} />
+            <Business className={classes.iconLeft} />
             Products and Warehouse
           </Button>
 
           <Button href="/transactions" color="inherit" variant="flat">
-            <List className={classes.leftIcon} />
-            Transactions
+            <List className={classes.iconLeft} />
+            <Hidden mdDown>Transactions</Hidden>
           </Button>
 
           <Button href="/payments" color="inherit" variant="flat">
-            <AttachMoney className={classes.leftIcon} />
-            Payments
+            <AttachMoney className={classes.iconLeft} />
+            <Hidden mdDown>Payments</Hidden>
           </Button>
 
           <Button href="/customers" color="inherit" variant="flat">
-            <People className={classes.leftIcon} />
-            Customers
+            <People className={classes.iconLeft} />
+            <Hidden mdDown>Customers</Hidden>
           </Button>
         </Toolbar>
       );
 
-      navBarRight = (
+      navBarLeftSmall = (
+        <Toolbar>
+          <IconButton href="/warehouses" color="inherit" variant="flat">
+            <Business />
+          </IconButton>
+
+          <IconButton href="/transactions" color="inherit" variant="flat">
+            <List />
+          </IconButton>
+
+          <IconButton href="/payments" color="inherit" variant="flat">
+            <AttachMoney />
+          </IconButton>
+
+          <IconButton href="/customers" color="inherit" variant="flat">
+            <People />
+          </IconButton>
+        </Toolbar>
+      );
+
+      navBarRightLarge = (
         <Toolbar>
           {business.name && (
             <div>
@@ -164,19 +167,59 @@ class NavBar extends Component {
           )}
 
           <Button href="/logout" color="inherit" variant="flat">
-            <PowerSettingsNew className={classes.leftIcon} />
-            Log out
+            <PowerSettingsNew className={classes.iconLeft} />
+            <Hidden mdDown>Log out</Hidden>
           </Button>
+        </Toolbar>
+      );
+
+      navBarRightSmall = (
+        <Toolbar>
+          {business.name && (
+            <div>
+              <IconButton href="/settings" color="inherit" variant="flat">
+                <Settings />
+              </IconButton>
+
+              <Hidden xsDown>
+                <FormControl className={classes.businessSelector}>
+                  {/* <InputLabel htmlFor="business">Business</InputLabel> */}
+                  <Select
+                    value={business.name ? business.name : ""}
+                    onChange={this.handleChooseBusiness.bind(null, businesses)}
+                    name="business"
+                    renderValue={value => value}
+                    input={<Input id="business" />}
+                    className={classes.businessSelector}
+                  >
+                    {businesses.map(business => {
+                      return (
+                        <MenuItem key={business.id} value={business.name}>
+                          {business.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Hidden>
+            </div>
+          )}
+
+          <IconButton href="/logout" color="inherit" variant="flat">
+            <PowerSettingsNew />
+          </IconButton>
         </Toolbar>
       );
     }
     return (
-      <AppBar elevation={0} className={classes.root}>
-        <Toolbar disableGutters className={classes.toolbar}>
+      <AppBar elevation={0}>
+        <Toolbar disableGutters>
           <Typography variant="title" color="inherit" className={classes.flex}>
-            {navBarLeft}
+            <Hidden lgUp>{navBarLeftSmall}</Hidden>
+            <Hidden mdDown>{navBarLeftLarge}</Hidden>
           </Typography>
-          {navBarRight}
+          <Hidden lgUp>{navBarRightSmall}</Hidden>
+          <Hidden mdDown>{navBarRightLarge}</Hidden>
         </Toolbar>
       </AppBar>
     );
@@ -213,5 +256,5 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  withStyles(styles)(NavBar)
+  withStyles(NavBarStyle)(NavBar)
 );

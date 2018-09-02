@@ -3,23 +3,7 @@ import PropTypes from "prop-types";
 
 import { withStyles, Grid } from "@material-ui/core";
 import MessageBox from "components/Message/MessageBox";
-
-const styles = theme => ({
-  root: {
-    marginTop: theme.spacing.unit * 6,
-    padding: theme.spacing.unit * 2
-  },
-  font: theme.typography,
-  paper: { height: "100%", padding: theme.spacing.unit * 5 },
-  landingPage: {
-    backgroundColor: theme.palette.primary.main,
-    minHeight: "600px"
-  },
-  container: {
-    margin: theme.spacing.unit * 2,
-    width: "100%"
-  }
-});
+import MainStyle from "./MainStyle";
 
 const Main = props => {
   const { classes } = props;
@@ -43,7 +27,7 @@ const Main = props => {
   return (
     <Grid container className={[classes.root, classes.font].join(" ")}>
       <Grid item md={1} />
-      <Grid item xs={12} md={10}>
+      <Grid item xs={12} md={10} className={classes.content}>
         {props.children}
       </Grid>
       <Grid item md={1} />
@@ -61,4 +45,4 @@ Main.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(Main);
+export default withStyles(MainStyle)(Main);

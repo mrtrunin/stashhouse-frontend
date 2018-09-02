@@ -8,7 +8,7 @@ export function fetchCustomers(businessName) {
   return async dispatch => {
     let url = process.env.REACT_APP_SERVER_URL;
 
-    dispatch({
+    await dispatch({
       type: FETCH_CUSTOMERS
     });
 
@@ -22,12 +22,10 @@ export function fetchCustomers(businessName) {
         payload: data
       });
     } catch (error) {
-      dispatch({
+      await dispatch({
         type: FETCH_CUSTOMERS_REJECTED,
         payload: error
       });
     }
   };
 }
-
-export default fetchCustomers;

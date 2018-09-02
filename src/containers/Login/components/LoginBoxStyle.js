@@ -1,6 +1,6 @@
 export const LoginBoxStyle = theme => ({
   root: {
-    width: "100%",
+    width: theme.spacing.unit * 46,
     marginTop: theme.spacing.unit * 4,
     overflowX: "auto"
   },

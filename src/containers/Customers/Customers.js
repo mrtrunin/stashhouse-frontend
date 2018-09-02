@@ -29,12 +29,12 @@ export class Customers extends Component {
     }
   };
 
-  fetchData = () => {
+  fetchData = async () => {
     const {
       business,
       actions: { fetchCustomers }
     } = this.props;
-    fetchCustomers(business.name);
+    await fetchCustomers(business.name);
   };
 
   showEditors = nextProps => {
