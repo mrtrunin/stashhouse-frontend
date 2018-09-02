@@ -1,8 +1,4 @@
 const NavBarStyle = theme => ({
-  root: {},
-  toolbar: {
-    backgroundColor: "red"
-  },
   flex: {
     flex: 1
   },

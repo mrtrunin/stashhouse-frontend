@@ -26,7 +26,7 @@ class App extends Component {
       config => {
         const token = localStorage.getItem("jwtToken");
         const url = process.env.REACT_APP_SERVER_URL;
-        const tokenAuthUrl = url + "/auth/";
+        const tokenAuthUrl = url + "/auth/token";
 
         if (token) {
           config.headers["Authorization"] = "Bearer " + token;
