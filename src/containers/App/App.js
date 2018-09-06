@@ -13,8 +13,11 @@ import Message from "components/Message/Message";
 
 import axios from "axios";
 import store from "store";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as loginActions from "containers/Login/LoginActions";
 
-import refreshToken from "containers/Login/LoginActions";
+// import refreshToken from "containers/Login/LoginActions";
 
 class App extends Component {
   componentDidMount = () => {
@@ -28,7 +31,7 @@ class App extends Component {
         const url = process.env.REACT_APP_SERVER_URL;
         const tokenAuthUrl = url + "/auth/token";
 
-        if (token) {
+        if (token && !config.url.startsWith(tokenAuthUrl)) {
           config.headers["Authorization"] = "Bearer " + token;
         }
         if (!token && !config.url.startsWith(tokenAuthUrl)) {
@@ -70,15 +73,6 @@ class App extends Component {
           return Promise.reject(error);
         }
 
-        if (unauthorized) {
-          Message("Unauthorized request", "error", 401);
-        }
-
-        if (hasRefreshTokenExpired) {
-          this.logout();
-          return Promise.reject(error);
-        }
-
         if (hasAuthTokenExpired) {
           return new Promise(async () => {
             await this.checkTokenExpiration();
@@ -89,6 +83,17 @@ class App extends Component {
           });
         }
 
+        if (hasRefreshTokenExpired) {
+          this.logout();
+          return Promise.reject(error);
+        }
+
+        if (unauthorized) {
+          Message("Unauthorized request", "error", 401);
+          this.logout();
+          return Promise.reject(error);
+        }
+
         return Promise.reject(error);
       }
     );
@@ -97,6 +102,9 @@ class App extends Component {
   checkTokenExpiration = async () => {
     let expiration_time = localStorage.jwtToken_expiration_time;
     let now = Date.now();
+    const {
+      actions: { refreshToken }
+    } = this.props;
 
     if (localStorage.refresh_token && expiration_time - now < 82800 * 1000) {
       try {
@@ -110,8 +118,8 @@ class App extends Component {
 
   logout = () => {
     return new Promise(async () => {
-      await store.dispatch({ type: "USER_LOGOUT" });
       await localStorage.clear();
+      await store.dispatch({ type: "USER_LOGOUT" });
     });
   };
 
@@ -130,4 +138,14 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {};
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    actions: bindActionCreators({ ...loginActions }, dispatch)
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
