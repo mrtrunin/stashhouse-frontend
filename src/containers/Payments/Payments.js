@@ -9,6 +9,8 @@ import { Redirect } from "react-router-dom";
 import { bindActionCreators } from "redux";
 
 import * as actions from "./PaymentsActions";
+import { withStyles } from "@material-ui/core";
+import { PaymentsStyle } from "./PaymentsStyle";
 
 export class Payments extends Component {
   state = {
@@ -66,7 +68,7 @@ export class Payments extends Component {
   };
 
   render() {
-    const { payments, fetched } = this.props;
+    const { payments, fetched, classes } = this.props;
     const { showPaymentEditor, redirectToRoot } = this.state;
 
     const isOnRootPath =
@@ -82,7 +84,7 @@ export class Payments extends Component {
     }
 
     return (
-      <div>
+      <div className={classes.root}>
         <PaymentsTable payments={payments} />
 
         {/* TODO: Introduce delete option for payments */}
@@ -100,6 +102,7 @@ export class Payments extends Component {
 }
 
 Payments.propTypes = {
+  classes: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired,
   payments: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   fetched: PropTypes.bool,
@@ -127,4 +130,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Payments);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  withStyles(PaymentsStyle)(Payments)
+);

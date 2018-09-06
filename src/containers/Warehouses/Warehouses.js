@@ -8,7 +8,7 @@ import Warehouse from "containers/Warehouse/Warehouse";
 
 import { withStyles, Button, Grid } from "@material-ui/core";
 
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { WarehouseStyle } from "./WarehousesStyle";
 import { bindActionCreators } from "redux";
 
@@ -18,7 +18,8 @@ import * as productsActions from "containers/Products/ProductsActions";
 export class Warehouses extends Component {
   state = {
     showProductEditor: false,
-    showWarehouseEditor: false
+    showWarehouseEditor: false,
+    redirectToRoot: false
   };
 
   componentDidMount = async () => {
@@ -38,7 +39,7 @@ export class Warehouses extends Component {
     }
   };
 
-  componentDidUpdate = prevProps => {
+  componentDidUpdate = (prevProps, prevState) => {
     if (!this.props.products[0].stock) {
       this.fetchData();
     }
@@ -49,6 +50,12 @@ export class Warehouses extends Component {
 
     if (prevProps.business !== this.props.business && this.props.business) {
       this.fetchData();
+    }
+
+    if (prevState.redirectToRoot === true) {
+      this.setState({
+        redirectToRoot: false
+      });
     }
   };
 
@@ -76,28 +83,38 @@ export class Warehouses extends Component {
     });
   };
 
-  handleHideProductEditor = () => {
+  handleHideProductEditor = async () => {
     this.setState({
-      showProductEditor: false
+      showProductEditor: false,
+      redirectToRoot: true
     });
   };
 
   handleHideWarehouseEditor = () => {
     this.setState({
-      showWarehouseEditor: false
+      showWarehouseEditor: false,
+      redirectToRoot: true
     });
   };
 
   render() {
     const { classes, products, warehouses } = this.props;
-    const { showProductEditor, showWarehouseEditor } = this.state;
+    const {
+      showProductEditor,
+      showWarehouseEditor,
+      redirectToRoot
+    } = this.state;
 
     if (!this.props.fetched) {
       return <p>Loading</p>;
     }
 
+    if (redirectToRoot) {
+      return <Redirect to="/warehouses" />;
+    }
+
     return (
-      <div>
+      <div className={classes.root}>
         <WarehouseTable products={products} warehouses={warehouses} />
 
         {!showProductEditor &&

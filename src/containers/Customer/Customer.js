@@ -24,7 +24,7 @@ export class Customer extends Component {
       actions: { fetchCustomers, resetCustomer }
     } = this.props;
     await resetCustomer();
-    await fetchCustomers();
+    // await fetchCustomers();
     await this.fetchCustomer();
   };
 

@@ -8,8 +8,9 @@ import * as transactionsActions from "./TransactionsActions";
 
 import TransactionsTable from "./components/TransactionsTable/TransactionsTable";
 
-import { Button, Grid } from "@material-ui/core";
+import { Button, Grid, withStyles } from "@material-ui/core";
 import TransactionCreationButtons from "./components/TransactionCreationButtons";
+import { TransactionsStyle } from "./TransactionsStyle";
 
 import ButtonRow from "components/ButtonRow/ButtonRow";
 import TableFilter from "./components/TransactionsTable/TableFilter";
@@ -130,7 +131,7 @@ export class Transactions extends Component {
   };
 
   render() {
-    const { transactions, fetched } = this.props;
+    const { transactions, fetched, classes } = this.props;
 
     const {
       selectedTransactions,
@@ -144,7 +145,7 @@ export class Transactions extends Component {
     }
 
     return (
-      <div>
+      <div className={classes.root}>
         <Grid container>
           <Grid item xs={12}>
             <TableFilter
@@ -189,7 +190,8 @@ Transactions.propTypes = {
   actions: PropTypes.object.isRequired,
   transactions: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   business: PropTypes.object.isRequired,
-  fetched: PropTypes.bool
+  fetched: PropTypes.bool,
+  classes: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => {
@@ -209,4 +211,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Transactions);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  withStyles(TransactionsStyle)(Transactions)
+);

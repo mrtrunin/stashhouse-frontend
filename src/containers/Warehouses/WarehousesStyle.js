@@ -1,8 +1,6 @@
 export const WarehouseStyle = theme => ({
   root: {
-    width: "100%",
-    marginTop: theme.spacing.unit * 2,
-    overflowX: "auto"
+    width: "100%"
   },
   flex: {
     flex: 1

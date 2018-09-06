@@ -2,16 +2,19 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import CustomersTable from "./components/CustomersTable";
 import { connect } from "react-redux";
-import { Button } from "@material-ui/core";
+import { Button, withStyles } from "@material-ui/core";
 import TableContainerComponent from "components/Tables/TableContainerComponent/TableContainerComponent";
 import ButtonRow from "components/ButtonRow";
 import Customer from "containers/Customer/Customer";
 import { bindActionCreators } from "redux";
 import * as actions from "./CustomersActions";
+import { CustomersStyle } from "./CustomersStyle";
+import Redirect from "react-router-dom/Redirect";
 
 export class Customers extends Component {
   state = {
-    showCustomerEditor: false
+    showCustomerEditor: false,
+    redirectToRoot: false
   };
 
   componentDidMount = () => {
@@ -19,13 +22,19 @@ export class Customers extends Component {
     this.showEditors();
   };
 
-  componentDidUpdate = prevProps => {
+  componentDidUpdate = (prevProps, prevState) => {
     if (prevProps !== this.props) {
       this.showEditors(this.props);
     }
 
     if (prevProps.business !== this.props.business) {
       this.fetchData();
+    }
+
+    if (prevState.redirectToRoot === true) {
+      this.setState({
+        redirectToRoot: false
+      });
     }
   };
 
@@ -49,19 +58,23 @@ export class Customers extends Component {
   };
 
   hideCustomerEditor = () => {
-    this.setState(() => ({ showCustomerEditor: false }));
+    this.setState(() => ({ showCustomerEditor: false, redirectToRoot: true }));
   };
 
   render() {
-    const { customers, fetched } = this.props;
-    const { showCustomerEditor } = this.state;
+    const { customers, fetched, classes } = this.props;
+    const { showCustomerEditor, redirectToRoot } = this.state;
 
     if (!fetched) {
       return "Loading...";
     }
 
+    if (redirectToRoot) {
+      return <Redirect to="/customers" />;
+    }
+
     return (
-      <div>
+      <div className={classes.root}>
         <TableContainerComponent>
           <CustomersTable customers={customers} />
         </TableContainerComponent>
@@ -88,6 +101,7 @@ export class Customers extends Component {
 }
 
 Customers.propTypes = {
+  classes: PropTypes.object.isRequired,
   customers: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   match: PropTypes.shape({
     params: PropTypes.shape({ customerId: PropTypes.string })
@@ -111,4 +125,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Customers);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  withStyles(CustomersStyle)(Customers)
+);
