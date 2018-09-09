@@ -5,7 +5,6 @@ import { Paper, withStyles } from "@material-ui/core";
 const style = theme => ({
   root: {
     width: "100%",
-    marginTop: theme.spacing.unit * 2,
     overflowX: "auto"
   }
 });

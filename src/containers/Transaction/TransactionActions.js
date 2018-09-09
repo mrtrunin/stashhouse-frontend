@@ -244,3 +244,11 @@ export function sendEmail(
     }
   };
 }
+
+export function resetTransaction() {
+  return async dispatch => {
+    dispatch({
+      type: TRANSACTION_STATE_RESET
+    });
+  };
+}

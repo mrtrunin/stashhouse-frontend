@@ -33,26 +33,7 @@ import loadExistingTransaction from "./functions/loadExistingTransaction";
 import handleUpdateTransaction from "./functions/handleUpdateTransaction";
 import { bindActionCreators } from "redux";
 
-const styles = theme => ({
-  topAttributes: {
-    marginTop: theme.spacing.unit
-  },
-  table: {
-    width: "100%",
-    overflowX: "hidden"
-  },
-  grandTotalCalculator: {
-    padding: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 3
-  },
-  flex: {
-    flex: 1,
-    padding: theme.spacing.unit * 2
-  },
-  button: {
-    padding: theme.spacing.unit * 2
-  }
-});
+import { TransactionStyle } from "./TransactionStyle";
 
 export class Transaction extends Component {
   state = {
@@ -67,9 +48,11 @@ export class Transaction extends Component {
         fetchWarehouses,
         fetchTransaction,
         fetchProducts,
-        fetchStock
+        fetchStock,
+        resetTransaction
       }
     } = this.props;
+    await resetTransaction();
     await fetchCustomers(business.name);
     await fetchWarehouses(business.name);
     await fetchProducts(business.name);
@@ -336,5 +319,5 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  withStyles(styles)(Transaction)
+  withStyles(TransactionStyle)(Transaction)
 );

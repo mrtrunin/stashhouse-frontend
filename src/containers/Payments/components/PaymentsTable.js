@@ -15,23 +15,7 @@ import {
 import moment from "moment";
 
 import { Link } from "react-router-dom";
-
-const style = theme => ({
-  root: {
-    width: "100%",
-    marginTop: theme.spacing.unit * 2,
-    overflowX: "auto"
-  },
-  flex: {
-    flex: 1
-  },
-  buttons: {
-    padding: theme.spacing.unit * 2
-  },
-  button: {
-    marginLeft: theme.spacing.unit
-  }
-});
+import { PaymentsTableStyle } from "./PaymentsTableStyle";
 
 const PaymentsTable = props => {
   const { classes, payments } = props;
@@ -92,4 +76,4 @@ PaymentsTable.propTypes = {
   payments: PropTypes.array.isRequired
 };
 
-export default withStyles(style)(PaymentsTable);
+export default withStyles(PaymentsTableStyle)(PaymentsTable);

@@ -14,13 +14,16 @@ import { TransactionsStyle } from "./TransactionsStyle";
 
 import ButtonRow from "components/ButtonRow/ButtonRow";
 import TableFilter from "./components/TransactionsTable/TableFilter";
+import Email from "containers/Email/Email";
 
 export class Transactions extends Component {
   state = {
     selectedTransactions: [],
     page: 0,
-    rowsPerPage: 5,
-    filteredTransactionType: "ALL"
+    rowsPerPage: 10,
+    filteredTransactionType: "ALL",
+    openEmail: false,
+    transactionIdForEmail: null
   };
   componentDidMount = () => {
     this.fetchData();
@@ -117,21 +120,24 @@ export class Transactions extends Component {
     }));
   };
 
-  handleSendEmail = (transactionId, e) => {
+  handleOpenEmail = (transactionId, e) => {
     e.preventDefault();
-    const {
-      business,
-      actions: { sendEmail }
-    } = this.props;
-    const recipients = ["lars.trunin@gmail.com", "l.arstrunin@gmail.com"];
-    const subject = "Testin with Dima";
-    const body = "First <br> second";
+    this.setState(() => ({
+      openEmail: true,
+      transactionIdForEmail: transactionId
+    }));
+  };
 
-    sendEmail(business.name, transactionId, recipients, subject, body);
+  handleCloseEmail = () => {
+    this.setState(() => ({
+      openEmail: false,
+      transactionIdForEmail: null
+    }));
   };
 
   render() {
     const { transactions, fetched, classes } = this.props;
+    const { openEmail, transactionIdForEmail } = this.state;
 
     const {
       selectedTransactions,
@@ -146,6 +152,12 @@ export class Transactions extends Component {
 
     return (
       <div className={classes.root}>
+        {/* TODO: NEED TO FIGURE OUT THIS MODAL THING FOR EMAILS */}
+        <Email
+          open={openEmail}
+          handleClose={this.handleCloseEmail}
+          transactionId={transactionIdForEmail}
+        />
         <Grid container>
           <Grid item xs={12}>
             <TableFilter
@@ -165,7 +177,7 @@ export class Transactions extends Component {
               rowsPerPage={rowsPerPage}
               filteredTransactionType={filteredTransactionType}
               handleFilterTransactionType={this.handleFilterTransactionType}
-              handleSendEmail={this.handleSendEmail}
+              handleOpenEmail={this.handleOpenEmail}
             />
           </Grid>
         </Grid>

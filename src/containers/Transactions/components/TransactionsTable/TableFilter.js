@@ -10,9 +10,6 @@ import {
 } from "@material-ui/core";
 
 const styles = theme => ({
-  root: {
-    marginTop: theme.spacing.unit * 2
-  },
   formControl: {
     margin: theme.spacing.unit,
     marginLeft: theme.spacing.unit * 3
@@ -26,7 +23,7 @@ const TableFilter = props => {
     handleFilterTransactionType
   } = props;
   return (
-    <Paper className={classes.root}>
+    <Paper>
       <FormControl
         component="fieldset"
         required

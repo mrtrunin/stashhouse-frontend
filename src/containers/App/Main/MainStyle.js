@@ -1,6 +1,6 @@
 const MainStyle = theme => ({
   root: {
-    marginTop: theme.spacing.unit * 6,
+    marginTop: theme.spacing.unit * 8,
     padding: theme.spacing.unit * 2
   },
   font: theme.typography,

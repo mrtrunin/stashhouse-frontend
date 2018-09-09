@@ -33,7 +33,7 @@ const TransactionsTable = props => {
     selectedTransactions,
     onChange,
     onClick,
-    handleSendEmail,
+    handleOpenEmail,
     handleChangePage,
     handleChangeRowsPerPage,
     rowsPerPage,
@@ -41,19 +41,28 @@ const TransactionsTable = props => {
     filteredTransactionType
   } = props;
 
-  let linkTargetOptions = {
+  const linkTargetOptions = {
     INVOICE: "sell",
     PURCHASE: "buy",
     TRANSFER: "move"
   };
 
-  let transactionRows = transactions
-    .filter(transaction => {
-      if (filteredTransactionType === "ALL") {
-        return true;
-      }
-      return transaction.type === filteredTransactionType;
-    })
+  const filteredTransactions = transactions.filter(transaction => {
+    if (filteredTransactionType === "ALL") {
+      return true;
+    }
+    return transaction.type === filteredTransactionType;
+  });
+  const sortedTransactions = filteredTransactions.sort(
+    (transactionA, transactionB) => {
+      return (
+        new Date(transactionB.date_created) -
+        new Date(transactionA.date_created)
+      );
+    }
+  );
+
+  const transactionRows = sortedTransactions
     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
     .map(transaction => {
       let date_created = moment(transaction.date_created).format("DD-MMM-YYYY");
@@ -144,7 +153,7 @@ const TransactionsTable = props => {
             {showInvoiceAttribute && (
               <SendEmailButton
                 transaction={transaction}
-                onClick={handleSendEmail}
+                onClick={handleOpenEmail}
               />
             )}
           </TableCell>
@@ -177,7 +186,7 @@ const TransactionsTable = props => {
 
       <TablePagination
         component="div"
-        count={transactions.length}
+        count={filteredTransactions.length}
         rowsPerPage={rowsPerPage}
         page={page}
         backIconButtonProps={{
@@ -206,7 +215,7 @@ TransactionsTable.propTypes = {
   data: PropTypes.object,
   filteredTransactionType: PropTypes.string,
   handleFilterTransactionType: PropTypes.func,
-  handleSendEmail: PropTypes.func.isRequired
+  handleOpenEmail: PropTypes.func.isRequired
 };
 
 export default withTheme()(

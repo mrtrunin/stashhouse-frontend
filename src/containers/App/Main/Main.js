@@ -13,6 +13,7 @@ import axios from "axios";
 import store from "store";
 
 import * as loginActions from "containers/Login/LoginActions";
+import * as logoutActions from "containers/Logout/LogoutActions";
 
 class Main extends Component {
   componentDidMount = () => {
@@ -112,10 +113,11 @@ class Main extends Component {
   };
 
   logout = () => {
-    return new Promise(async () => {
-      await localStorage.clear();
-      await store.dispatch({ type: "USER_LOGOUT" });
-    });
+    const {
+      actions: { logout }
+    } = this.props;
+
+    logout();
   };
 
   render() {
@@ -153,6 +155,7 @@ class Main extends Component {
 }
 
 Main.propTypes = {
+  actions: PropTypes.object.isRequired,
   title: PropTypes.string,
   children: PropTypes.oneOfType([
     PropTypes.element,

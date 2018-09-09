@@ -112,6 +112,11 @@ class NavBar extends Component {
             <People className={classes.iconLeft} />
             <Hidden mdDown>Customers</Hidden>
           </Button>
+
+          <Button href="/reports" color="inherit" variant="flat">
+            <List className={classes.iconLeft} />
+            <Hidden mdDown>Reports</Hidden>
+          </Button>
         </Toolbar>
       );
 
@@ -131,6 +136,10 @@ class NavBar extends Component {
 
           <IconButton href="/customers" color="inherit" variant="flat">
             <People />
+          </IconButton>
+
+          <IconButton href="/reports" color="inherit" variant="flat">
+            <List />
           </IconButton>
         </Toolbar>
       );
