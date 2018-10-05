@@ -53,6 +53,8 @@ const TableFilter = props => {
             control={<Radio />}
             label="Transfer"
           />
+
+          <FormControlLabel value="UNPAID" control={<Radio />} label="Unpaid" />
         </RadioGroup>
       </FormControl>
     </Paper>

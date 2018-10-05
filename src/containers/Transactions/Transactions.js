@@ -23,7 +23,7 @@ export class Transactions extends Component {
     rowsPerPage: 10,
     filteredTransactionType: "ALL",
     openEmail: false,
-    transactionIdForEmail: null
+    transaction: {}
   };
   componentDidMount = () => {
     this.fetchData();
@@ -120,24 +120,25 @@ export class Transactions extends Component {
     }));
   };
 
-  handleOpenEmail = (transactionId, e) => {
+  handleOpenEmail = (transaction, e) => {
     e.preventDefault();
     this.setState(() => ({
       openEmail: true,
-      transactionIdForEmail: transactionId
+      transaction: transaction
     }));
   };
 
   handleCloseEmail = () => {
     this.setState(() => ({
       openEmail: false,
-      transactionIdForEmail: null
+      transactionIdForEmail: null,
+      fullTransactionNumber: null
     }));
   };
 
   render() {
     const { transactions, fetched, classes } = this.props;
-    const { openEmail, transactionIdForEmail } = this.state;
+    const { openEmail, transaction } = this.state;
 
     const {
       selectedTransactions,
@@ -156,7 +157,7 @@ export class Transactions extends Component {
         <Email
           open={openEmail}
           handleClose={this.handleCloseEmail}
-          transactionId={transactionIdForEmail}
+          transaction={transaction}
         />
         <Grid container>
           <Grid item xs={12}>

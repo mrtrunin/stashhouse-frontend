@@ -10,10 +10,8 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
 import axios from "axios";
-import store from "store";
 
 import * as loginActions from "containers/Login/LoginActions";
-import * as logoutActions from "containers/Logout/LogoutActions";
 
 class Main extends Component {
   componentDidMount = () => {

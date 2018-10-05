@@ -11,6 +11,7 @@ const url = process.env.REACT_APP_SERVER_URL;
 
 export function createCustomer(
   name,
+  email,
   address,
   zip_code,
   city,
@@ -23,6 +24,7 @@ export function createCustomer(
 
     payload = {
       name,
+      email,
       address,
       zip_code,
       city,
@@ -82,6 +84,7 @@ export function deleteCustomer(id) {
 
 export function updateCustomer(
   name,
+  email,
   address,
   zip_code,
   city,
@@ -94,6 +97,7 @@ export function updateCustomer(
 
     payload = {
       name,
+      email,
       address,
       zip_code,
       city,

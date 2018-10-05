@@ -14,12 +14,16 @@ import { bindActionCreators } from "redux";
 
 import * as warehousesActions from "./WarehousesActions";
 import * as productsActions from "containers/Products/ProductsActions";
+import WarehouseTableFilter from "./components/WarehouseTableFilter";
+
+import * as moment from "moment";
 
 export class Warehouses extends Component {
   state = {
     showProductEditor: false,
     showWarehouseEditor: false,
-    redirectToRoot: false
+    redirectToRoot: false,
+    warehouseDate: moment().format("YYYY-MM-DD")
   };
 
   componentDidMount = async () => {
@@ -97,12 +101,28 @@ export class Warehouses extends Component {
     });
   };
 
+  handleWarehouseDateChange = async e => {
+    await this.setState({
+      warehouseDate: e.target.value
+    });
+
+    if (await this.isDateFormat(this.state.warehouseDate)) {
+      console.log("SUBMIT!");
+    }
+  };
+
+  isDateFormat = date => {
+    const regex = /^([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))$/;
+    return regex.test(date);
+  };
+
   render() {
     const { classes, products, warehouses } = this.props;
     const {
       showProductEditor,
       showWarehouseEditor,
-      redirectToRoot
+      redirectToRoot,
+      warehouseDate
     } = this.state;
 
     if (!this.props.fetched) {
@@ -115,6 +135,10 @@ export class Warehouses extends Component {
 
     return (
       <div className={classes.root}>
+        <WarehouseTableFilter
+          warehouseDate={warehouseDate}
+          handleWarehouseDateChange={this.handleWarehouseDateChange}
+        />
         <WarehouseTable products={products} warehouses={warehouses} />
 
         {!showProductEditor &&

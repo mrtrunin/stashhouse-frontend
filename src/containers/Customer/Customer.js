@@ -16,15 +16,11 @@ import * as customersActions from "containers/Customers/CustomersActions";
 import { bindActionCreators } from "redux";
 
 export class Customer extends Component {
-  // TODO: Handling of existing customer
-  // TODO: Rename all but labels from customer to customer
-
   componentDidMount = async () => {
     const {
-      actions: { fetchCustomers, resetCustomer }
+      actions: { resetCustomer }
     } = this.props;
     await resetCustomer();
-    // await fetchCustomers();
     await this.fetchCustomer();
   };
 
@@ -66,6 +62,7 @@ export class Customer extends Component {
     if (customer.id) {
       await updateCustomer(
         customer.name,
+        customer.email,
         customer.address,
         customer.zip_code,
         customer.city,
@@ -76,6 +73,7 @@ export class Customer extends Component {
     } else {
       await createCustomer(
         customer.name,
+        customer.email,
         customer.address,
         customer.zip_code,
         customer.city,
@@ -84,16 +82,17 @@ export class Customer extends Component {
         business.name
       );
     }
-    await fetchCustomers();
+    await fetchCustomers(business.name);
   };
 
   handleDeleteCustomer = async () => {
     const {
       customer,
+      business,
       actions: { fetchCustomers, deleteCustomer }
     } = this.props;
     await deleteCustomer(customer.id);
-    await fetchCustomers();
+    await fetchCustomers(business.name);
   };
 
   render() {
@@ -112,6 +111,14 @@ export class Customer extends Component {
             name="name"
             value={customer.name ? customer.name : ""}
             label="Name"
+            margin="dense"
+            onChange={this.handleCustomerChange}
+          />
+
+          <TextField
+            name="email"
+            value={customer.email ? customer.email : ""}
+            label="Email"
             margin="dense"
             onChange={this.handleCustomerChange}
           />

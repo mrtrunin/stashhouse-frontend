@@ -14,6 +14,8 @@ const EditorButtons = props => {
     deleteAction,
     updateAction,
     createAction,
+    mainAction,
+    mainActionLabel,
     editedObject,
     editedObjectLabel
   } = props;
@@ -31,7 +33,7 @@ const EditorButtons = props => {
       ) : (
         ""
       )}
-      {editedObject && editedObject.id ? (
+      {editedObject && editedObject.id && updateAction ? (
         <Button
           variant="raised"
           color="primary"
@@ -41,13 +43,26 @@ const EditorButtons = props => {
           Update
         </Button>
       ) : (
+        createAction && (
+          <Button
+            variant="raised"
+            color="primary"
+            className={classes.button}
+            onClick={createAction}
+          >
+            Add {editedObjectLabel}
+          </Button>
+        )
+      )}
+
+      {mainAction && (
         <Button
           variant="raised"
           color="primary"
           className={classes.button}
-          onClick={createAction}
+          onClick={mainAction}
         >
-          Add {editedObjectLabel}
+          {mainActionLabel}
         </Button>
       )}
     </CardActions>
@@ -57,10 +72,12 @@ const EditorButtons = props => {
 EditorButtons.propTypes = {
   classes: PropTypes.object.isRequired,
   deleteAction: PropTypes.func,
-  updateAction: PropTypes.func.isRequired,
-  createAction: PropTypes.func.isRequired,
+  updateAction: PropTypes.func,
+  createAction: PropTypes.func,
   editedObject: PropTypes.object,
-  editedObjectLabel: PropTypes.string.isRequired
+  editedObjectLabel: PropTypes.string,
+  mainAction: PropTypes.func,
+  mainActionLabel: PropTypes.string
 };
 
 export default withStyles(style)(EditorButtons);

@@ -1,83 +1,100 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Modal, withStyles, TextField } from "@material-ui/core";
+import { Modal, withStyles, TextField, Typography } from "@material-ui/core";
 import { EmailStyle } from "./EmailStyle";
+import { connect } from "react-redux";
+
+import * as transactionActions from "containers/Transaction/TransactionActions";
+
 import Editor from "components/Editors/EditorComponents/Editor";
 import EditorHeader from "components/Editors/EditorComponents/EditorHeader";
 import EditorContent from "components/Editors/EditorComponents/EditorContent";
 import EditorButtons from "components/Editors/EditorComponents/EditorButtons";
 
+import { bindActionCreators } from "redux";
+
 class Email extends Component {
   state = {
-    sender: "",
-    recipient: "",
+    senderEmail: "",
+    recipientEmail: "",
+    recipientName: "",
     subject: "",
     body: "",
-    transactionId: null
+    transaction: null
   };
 
-  componentDidUpdate = (prevProps, prevState) => {
-    const { transactionId } = this.props;
-    if (transactionId && prevProps.transactionId !== this.props.transactionId) {
-      this.setTransactionIdAndResetState(transactionId);
+  componentDidUpdate = prevProps => {
+    const { transaction } = this.props;
+    if (transaction && prevProps.transaction !== this.props.transaction) {
+      this.settransactionAndResetState(transaction);
     }
   };
 
-  setTransactionIdAndResetState = transactionId => {
+  settransactionAndResetState = transaction => {
+    const { business } = this.props;
     this.setState(() => ({
-      transactionId: transactionId,
-      sender: "",
-      recipient: "",
-      subject: "",
-      body: ""
+      transaction: transaction,
+      senderEmail: business.email,
+      recipientEmail: transaction.customer.email,
+      recipientName: transaction.customer.name,
+      subject:
+        business.default_email_subject +
+        " " +
+        transaction.full_transaction_number,
+      body: business.default_email_body
     }));
   };
 
-  handleEmailSenderChange = e => {
-    const sender = e.target.value;
+  handleSenderChange = e => {
+    const senderEmail = e.target.value;
     this.setState({
-      sender: sender
+      senderEmail: senderEmail
     });
   };
 
-  handleEmailRecipientChange = e => {
-    const recipient = e.target.value;
+  handleRecipientChange = e => {
+    const recipientEmail = e.target.value;
     this.setState({
-      recipient: recipient
+      recipientEmail: recipientEmail
     });
   };
 
-  handleEmailSubjectChange = e => {
+  handleSubjectChange = e => {
     const subject = e.target.value;
     this.setState({
       subject: subject
     });
   };
 
-  handleEmailBodyChange = e => {
+  handleBodyChange = e => {
     const body = e.target.value;
     this.setState({
       body: body
     });
   };
 
-  handleSendEmail = () => {
-    const { transactionId } = this.state;
+  handleSendEmail = async () => {
+    const { transaction, recipientEmail, subject, body } = this.state;
 
-    // const {
-    //   business,
-    //   actions: { sendEmail }
-    // } = this.props;
-    // const recipients = ["lars.trunin@gmail.com", "l.arstrunin@gmail.com"];
-    // const subject = "Testin with Dima";
-    // const body = "First <br> second";
+    const {
+      business,
+      actions: { sendEmail }
+    } = this.props;
 
-    // sendEmail(business.name, transactionId, recipients, subject, body);
+    await sendEmail(
+      business.name,
+      transaction.id,
+      recipientEmail,
+      subject,
+      body
+    );
+
+    await this.props.handleClose();
   };
 
   render() {
-    const { open, handleClose, classes } = this.props;
-    const { sender, recipient, subject, body } = this.state;
+    const { open, handleClose, classes, transaction, business } = this.props;
+    const { recipientName, recipientEmail, subject, body } = this.state;
 
     return (
       <Modal
@@ -88,48 +105,56 @@ class Email extends Component {
       >
         <div className={classes.root}>
           <Editor>
-            <EditorHeader label="Send email" />
+            <EditorHeader
+              label={
+                "Email " +
+                transaction.full_transaction_number +
+                " to " +
+                recipientName
+              }
+              hideEditor={handleClose}
+            />
+
             <EditorContent>
+              {/* TODO: Add link to invoice pdf here, so it'd be clear for the user what's going on */}
+              <Typography variant="subheading" />
               <TextField
                 name="from"
-                value={sender}
+                value={business.email}
                 label="From"
                 margin="dense"
-                onChange={this.handleEmailSenderChange}
                 required
               />
-
               <TextField
                 name="to"
-                value={recipient}
+                value={recipientEmail}
                 label="To"
                 margin="dense"
-                onChange={this.handleEmailRecipientChange}
+                onChange={this.handleRecipientChange}
                 required
               />
-
               <TextField
                 name="subject"
                 value={subject}
                 label="Subject"
                 margin="dense"
-                onChange={this.handleEmailSubjectChange}
+                onChange={this.handleSubjectChange}
                 required
               />
-
               <TextField
                 name="body"
                 value={body}
                 label="Body"
                 margin="dense"
-                onChange={this.handleEmailBodyChange}
+                onChange={this.handleBodyChange}
                 required
                 multiline
               />
             </EditorContent>
+
             <EditorButtons
-              createAction={this.handleCreateOrUpdateBusiness}
-              updateAction={this.handleCreateOrUpdateBusiness}
+              mainAction={this.handleSendEmail}
+              mainActionLabel="Send email"
             />
           </Editor>
           {/* <Typography variant="title" id="modal-title">
@@ -149,7 +174,23 @@ Email.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
-  transactionId: PropTypes.number
+  transaction: PropTypes.object,
+  business: PropTypes.object.isRequired,
+  actions: PropTypes.object.isRequired
 };
 
-export default withStyles(EmailStyle)(Email);
+const mapStateToProps = state => {
+  return {
+    business: state.business.business
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    actions: bindActionCreators({ ...transactionActions }, dispatch)
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  withStyles(EmailStyle)(Email)
+);

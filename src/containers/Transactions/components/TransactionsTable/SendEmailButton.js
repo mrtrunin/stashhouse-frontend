@@ -4,16 +4,15 @@ import { Button } from "@material-ui/core";
 
 const SendEmailButton = props => {
   const { onClick, transaction } = props;
-  const transactionId = transaction.id;
 
   return (
     <Button
       variant="raised"
       color="default"
-      onClick={onClick.bind(props, transactionId)}
+      onClick={onClick.bind(props, transaction)}
       size="small"
     >
-      <span id={transactionId} name="email">
+      <span id={transaction.id} name="email">
         <div name="email" />
         Email
       </span>

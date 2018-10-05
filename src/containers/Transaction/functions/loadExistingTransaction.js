@@ -40,7 +40,7 @@ const loadExistingTransaction = async (
 
     // HANDLE CUSTOMER
     let selectedCustomer = props.customers.find(customer => {
-      return customer.name === transaction.customer;
+      return customer.name === transaction.customer.name;
     });
 
     await store.dispatch({

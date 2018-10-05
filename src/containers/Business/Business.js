@@ -175,6 +175,29 @@ export class Business extends Component {
             margin="dense"
             onChange={this.handleBusinessChange}
           />
+
+          <TextField
+            name="default_email_subject"
+            value={
+              business.default_email_subject
+                ? business.default_email_subject
+                : ""
+            }
+            label="Default Email Subject (Note: the transaction number will be added to the subject line)"
+            margin="dense"
+            onChange={this.handleBusinessChange}
+          />
+
+          <TextField
+            name="default_email_body"
+            value={
+              business.default_email_body ? business.default_email_body : ""
+            }
+            label="Default Email Body"
+            margin="dense"
+            onChange={this.handleBusinessChange}
+            multiline
+          />
         </EditorContent>
         <EditorButtons
           editedObjectLabel="Business"

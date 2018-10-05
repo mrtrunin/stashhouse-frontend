@@ -48,8 +48,16 @@ const TransactionsTable = props => {
   };
 
   const filteredTransactions = transactions.filter(transaction => {
+    let transactionAmountWithTax = transaction.amount + transaction.tax;
+    let paidAmount = transaction.paid_amount;
+    let unpaidAmount = transactionAmountWithTax - paidAmount;
+
     if (filteredTransactionType === "ALL") {
       return true;
+    }
+
+    if (filteredTransactionType === "UNPAID") {
+      return transaction.type === "INVOICE" && unpaidAmount !== 0;
     }
     return transaction.type === filteredTransactionType;
   });
@@ -73,9 +81,9 @@ const TransactionsTable = props => {
       let linkTarget = linkTargetOptions[transaction.type];
 
       let transactionAmountWithTax = transaction.amount + transaction.tax;
-
       let paidAmount = transaction.paid_amount;
       let unpaidAmount = transactionAmountWithTax - paidAmount;
+
       let absUnpaidAmount = Math.abs(unpaidAmount);
       let showUnpaidAmount =
         transactionAmountWithTax !== paidAmount && showInvoiceAttribute;
@@ -111,7 +119,7 @@ const TransactionsTable = props => {
             {date_due}
           </TableCell>
           <TableCell padding="dense" name="Customer">
-            {transaction.customer || "-"}
+            {transaction.customer ? transaction.customer.name : "-" || "-"}
           </TableCell>
           <TableCell padding="dense" name="Warehouse">
             {transaction.warehouse}

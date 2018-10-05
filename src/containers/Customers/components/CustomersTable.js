@@ -30,6 +30,9 @@ const CustomersTable = props => {
             {customer.name}
           </Typography>
         </TableCell>
+        <TableCell name="Email" padding="dense">
+          {customer.email}
+        </TableCell>
         <TableCell name="Address" padding="dense">
           {customer.address}
         </TableCell>
@@ -52,6 +55,7 @@ const CustomersTable = props => {
       <TableHead>
         <TableRow>
           <TableCell padding="dense">Name</TableCell>
+          <TableCell padding="dense">Email</TableCell>
           <TableCell padding="dense">Address</TableCell>
           <TableCell padding="dense">Zip code</TableCell>
           <TableCell padding="dense">City</TableCell>
