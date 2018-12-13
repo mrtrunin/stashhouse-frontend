@@ -85,8 +85,7 @@ const TransactionsTable = props => {
       let unpaidAmount = transactionAmountWithTax - paidAmount;
 
       let absUnpaidAmount = Math.abs(unpaidAmount);
-      let showUnpaidAmount =
-        transactionAmountWithTax !== paidAmount && showInvoiceAttribute;
+      let showUnpaidAmount = absUnpaidAmount < 0.05 && showInvoiceAttribute;
 
       return (
         <TableRow key={transaction.id}>

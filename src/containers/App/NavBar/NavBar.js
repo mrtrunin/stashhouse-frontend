@@ -251,7 +251,8 @@ NavBar.propTypes = {
   business: PropTypes.object.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
   classes: PropTypes.object.isRequired,
-  transactions: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
+  transactions: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  fetching: PropTypes.bool
 };
 
 const mapStateToProps = state => {

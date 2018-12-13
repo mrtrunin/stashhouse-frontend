@@ -108,6 +108,7 @@ export class Warehouses extends Component {
 
     if (await this.isDateFormat(this.state.warehouseDate)) {
       console.log("SUBMIT!");
+      // TODO: filter warehouse based on the date change
     }
   };
 

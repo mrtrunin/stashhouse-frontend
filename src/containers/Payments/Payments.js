@@ -11,6 +11,7 @@ import { bindActionCreators } from "redux";
 import * as actions from "./PaymentsActions";
 import { withStyles } from "@material-ui/core";
 import { PaymentsStyle } from "./PaymentsStyle";
+import PaymentsImportBox from "./components/PaymentsImportBox";
 
 export class Payments extends Component {
   state = {
@@ -85,6 +86,7 @@ export class Payments extends Component {
 
     return (
       <div className={classes.root}>
+        <PaymentsImportBox />
         <PaymentsTable payments={payments} />
 
         {/* TODO: Introduce delete option for payments */}
