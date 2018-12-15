@@ -47,17 +47,23 @@ const TransactionsTable = props => {
     TRANSFER: "move"
   };
 
+  const unpaidAmountTolerance = 0.05;
+
   const filteredTransactions = transactions.filter(transaction => {
     let transactionAmountWithTax = transaction.amount + transaction.tax;
     let paidAmount = transaction.paid_amount;
     let unpaidAmount = transactionAmountWithTax - paidAmount;
+    let absUnpaidAmount = Math.abs(unpaidAmount);
 
     if (filteredTransactionType === "ALL") {
       return true;
     }
 
     if (filteredTransactionType === "UNPAID") {
-      return transaction.type === "INVOICE" && unpaidAmount !== 0;
+      return (
+        transaction.type === "INVOICE" &&
+        absUnpaidAmount >= unpaidAmountTolerance
+      );
     }
     return transaction.type === filteredTransactionType;
   });
@@ -85,7 +91,8 @@ const TransactionsTable = props => {
       let unpaidAmount = transactionAmountWithTax - paidAmount;
 
       let absUnpaidAmount = Math.abs(unpaidAmount);
-      let showUnpaidAmount = absUnpaidAmount >= 0.05 && showInvoiceAttribute;
+      let showUnpaidAmount =
+        absUnpaidAmount >= unpaidAmountTolerance && showInvoiceAttribute;
 
       return (
         <TableRow key={transaction.id}>
