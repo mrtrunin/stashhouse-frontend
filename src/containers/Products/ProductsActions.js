@@ -1,5 +1,6 @@
 import axios from "axios";
 import Message from "components/Message/Message";
+import * as moment from "moment";
 
 export const FETCH_PRODUCTS = "FETCH_PRODUCTS";
 export const FETCH_PRODUCTS_FULFILLED = "FETCH_PRODUCTS_FULFILLED";
@@ -36,7 +37,10 @@ export function fetchProducts(businessName) {
   };
 }
 
-export function fetchProductsStock(businessName, date = new Date()) {
+export function fetchProductsStock(
+  businessName,
+  date = moment().format("YYYY-MM-DD")
+) {
   return async dispatch => {
     await dispatch({
       type: FETCH_PRODUCTS_STOCK

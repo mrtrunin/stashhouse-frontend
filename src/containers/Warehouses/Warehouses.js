@@ -101,14 +101,20 @@ export class Warehouses extends Component {
     });
   };
 
-  handleWarehouseDateChange = async e => {
+  handleWarehouseDateChange = async date => {
+    const {
+      business,
+      actions: { fetchProductsStock }
+    } = this.props;
+
     await this.setState({
-      warehouseDate: e.target.value
+      warehouseDate: date.format("YYYY-MM-DD")
     });
 
-    if (await this.isDateFormat(this.state.warehouseDate)) {
-      console.log("SUBMIT!");
-      // TODO: filter warehouse based on the date change
+    const { warehouseDate } = await this.state;
+
+    if (this.isDateFormat(this.state.warehouseDate)) {
+      await fetchProductsStock(business.name, warehouseDate);
     }
   };
 
@@ -142,34 +148,33 @@ export class Warehouses extends Component {
         />
         <WarehouseTable products={products} warehouses={warehouses} />
 
-        {!showProductEditor &&
-          !showWarehouseEditor && (
-            <Grid container>
-              <Grid item className={classes.flex} />
-              <Grid item className={classes.buttons}>
-                <Button
-                  onClick={this.handleShowProductEditor}
-                  variant="raised"
-                  color="primary"
-                  component={Link}
-                  to="/warehouses/"
-                  className={classes.button}
-                >
-                  Add New Product
-                </Button>
-                <Button
-                  onClick={this.handleShowWarehouseEditor}
-                  variant="raised"
-                  color="primary"
-                  component={Link}
-                  to="/warehouses/"
-                  className={classes.button}
-                >
-                  Add New Warehouse
-                </Button>
-              </Grid>
+        {!showProductEditor && !showWarehouseEditor && (
+          <Grid container>
+            <Grid item className={classes.flex} />
+            <Grid item className={classes.buttons}>
+              <Button
+                onClick={this.handleShowProductEditor}
+                variant="raised"
+                color="primary"
+                component={Link}
+                to="/warehouses/"
+                className={classes.button}
+              >
+                Add New Product
+              </Button>
+              <Button
+                onClick={this.handleShowWarehouseEditor}
+                variant="raised"
+                color="primary"
+                component={Link}
+                to="/warehouses/"
+                className={classes.button}
+              >
+                Add New Warehouse
+              </Button>
             </Grid>
-          )}
+          </Grid>
+        )}
 
         {showProductEditor && (
           <Product
@@ -224,6 +229,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  withStyles(WarehouseStyle)(Warehouses)
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(WarehouseStyle)(Warehouses));

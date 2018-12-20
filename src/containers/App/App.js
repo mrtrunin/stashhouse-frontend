@@ -3,8 +3,8 @@ import Router from "containers/App/Router";
 import NavBar from "containers/App/NavBar/NavBar";
 import { AppTheme } from "./AppTheme";
 
-import MuiPickersUtilsProvider from "material-ui-pickers/utils/MuiPickersUtilsProvider";
-import MomentUtils from "material-ui-pickers/utils/moment-utils";
+import { MuiPickersUtilsProvider } from "material-ui-pickers";
+import MomentUtils from "@date-io/moment";
 
 import { CssBaseline } from "@material-ui/core";
 import { MuiThemeProvider } from "@material-ui/core/styles";

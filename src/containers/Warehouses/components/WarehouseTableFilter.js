@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Paper, FormControl, withStyles, TextField } from "@material-ui/core";
+import { Paper, FormControl, withStyles } from "@material-ui/core";
+import { DatePicker } from "material-ui-pickers";
 
 const styles = theme => ({
   formControl: {
@@ -19,12 +20,13 @@ const WarehouseTableFilter = props => {
         required
         className={classes.formControl}
       >
-        <TextField
-          name="date"
+        <DatePicker
           value={warehouseDate ? warehouseDate : ""}
-          label="Date"
-          margin="dense"
           onChange={handleWarehouseDateChange}
+          format="YYYY-MM-DD"
+          label="Date"
+          autoOk
+          keyboard
         />
       </FormControl>
     </Paper>
