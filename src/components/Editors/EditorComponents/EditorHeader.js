@@ -7,7 +7,8 @@ const EditorHeader = props => {
   const {
     editedObject,
     existsEditedObject,
-    editedObjectLabel,
+    addNewObjectLabel,
+    updateExistingObjectLabel,
     hideEditor,
     editedObjectSubheader
   } = props;
@@ -15,14 +16,14 @@ const EditorHeader = props => {
   let { label } = props;
 
   if (!label) {
-    label = "Add New " + editedObjectLabel;
+    label = addNewObjectLabel;
 
     if (editedObject && editedObject.name) {
       label = editedObject.name;
     }
 
     if (existsEditedObject) {
-      label = "Update " + editedObjectLabel;
+      label = updateExistingObjectLabel;
     }
   }
 
@@ -35,7 +36,7 @@ const EditorHeader = props => {
           </IconButton>
         )
       }
-      title={<Typography variant="h2">{label}</Typography>}
+      title={<Typography variant="h4">{label}</Typography>}
       subheader={editedObjectSubheader}
     />
   );
@@ -44,7 +45,8 @@ const EditorHeader = props => {
 EditorHeader.propTypes = {
   label: PropTypes.string,
   editedObject: PropTypes.object,
-  editedObjectLabel: PropTypes.string,
+  addNewObjectLabel: PropTypes.string,
+  updateExistingObjectLabel: PropTypes.string,
   hideEditor: PropTypes.func,
   editedObjectSubheader: PropTypes.string,
   existsEditedObject: PropTypes.bool

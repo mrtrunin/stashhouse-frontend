@@ -98,7 +98,8 @@ export class Product extends Component {
       <Editor>
         <EditorHeader
           editedObject={product}
-          editedObjectLabel="Product"
+          addNewObjectLabel="Add new product"
+          updateExistingObjectLabel="Update product"
           hideEditor={hideProductEditor}
         />
 
@@ -175,4 +176,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Product);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Product);

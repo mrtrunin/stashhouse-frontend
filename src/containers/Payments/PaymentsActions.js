@@ -76,7 +76,6 @@ export function importStatement(statementFile, businessName) {
           "Content-Type": "multipart/form-data"
         }
       });
-      console.log(data);
       Message("Statement successfully imported! " + data, "success");
     } catch (error) {
       Message("Could not import statement invoices: " + error, "error");

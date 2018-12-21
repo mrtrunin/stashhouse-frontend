@@ -90,7 +90,8 @@ export class Warehouse extends Component {
       <Editor>
         <EditorHeader
           editedObject={warehouse}
-          editedObjectLabel="Warehouse"
+          addNewObjectLabel="Add new warehouse"
+          updateExistingObjectLabel="Update warehouse"
           hideEditor={hideWarehouseEditor}
         />
 
@@ -140,4 +141,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Warehouse);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Warehouse);

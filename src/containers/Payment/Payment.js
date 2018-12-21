@@ -143,14 +143,27 @@ export class Payment extends Component {
         return invoice.full_transaction_number === invoiceId;
       });
     }
+    const unpaidAmountTolerance = 0.05;
 
     const invoicesList = existsInvoices
       ? invoices.map((invoice, index) => {
-          return (
-            <MenuItem value={invoice.full_transaction_number} key={index}>
-              {invoice.full_transaction_number}
-            </MenuItem>
-          );
+          const invoiceAmountWithTax = invoice.amount + invoice.tax;
+          const paidAmount = invoice.paid_amount;
+          const unpaidAmount = invoiceAmountWithTax - paidAmount;
+
+          if (unpaidAmount >= unpaidAmountTolerance) {
+            return (
+              <MenuItem value={invoice.full_transaction_number} key={index}>
+                <span>
+                  <strong>{invoice.full_transaction_number}</strong>
+                  {" (" +
+                    addCommas(invoiceAmountWithTax.toFixed(2)) +
+                    ") " +
+                    invoice.customer.name}
+                </span>
+              </MenuItem>
+            );
+          } else return null;
         })
       : "Loading";
 
@@ -170,7 +183,16 @@ export class Payment extends Component {
       <Editor>
         <EditorHeader
           existsEditedObject={existsPayment}
-          editedObjectLabel={invoiceId ? "Payment for " + invoiceId : "Payment"}
+          addNewObjectLabel={""}
+          updateExistingObjectLabel={
+            invoiceId
+              ? "Payment for " + invoiceId
+              : addCommas(payment.amount) +
+                " " +
+                payment.currency +
+                " from " +
+                payment.sender_name
+          }
           hideEditor={hidePayment}
           editedObjectSubheader={
             invoice
