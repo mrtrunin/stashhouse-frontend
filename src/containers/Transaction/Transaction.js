@@ -206,7 +206,7 @@ export class Transaction extends Component {
                 <Grid item className={classes.flex}>
                   <Button
                     color="secondary"
-                    variant="raised"
+                    variant="contained"
                     onClick={handleDelete.bind(
                       null,
                       existingTransactionId,
@@ -221,7 +221,7 @@ export class Transaction extends Component {
                 <Grid item className={classes.flex}>
                   <Button
                     color="default"
-                    variant="raised"
+                    variant="contained"
                     onClick={handleReset}
                   >
                     Reset
@@ -233,7 +233,7 @@ export class Transaction extends Component {
                 <Grid item className={classes.button}>
                   <Button
                     color="primary"
-                    variant="raised"
+                    variant="contained"
                     onClick={handleUpdateTransaction.bind(
                       null,
                       this.props.transactionState,
@@ -250,7 +250,7 @@ export class Transaction extends Component {
                 <Grid item className={classes.button}>
                   <Button
                     color="primary"
-                    variant="raised"
+                    variant="contained"
                     onClick={handleCreateTransaction.bind(
                       null,
                       this.props.transactionState,
@@ -318,6 +318,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  withStyles(TransactionStyle)(Transaction)
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(TransactionStyle)(Transaction));

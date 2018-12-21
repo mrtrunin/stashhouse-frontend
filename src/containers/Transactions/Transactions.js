@@ -186,7 +186,7 @@ export class Transactions extends Component {
         <ButtonRow show={selectedTransactions.length > 0}>
           <Button
             color="secondary"
-            variant="raised"
+            variant="contained"
             onClick={this.handleDeleteTransactions}
           >
             Delete transactions
@@ -224,6 +224,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  withStyles(TransactionsStyle)(Transactions)
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(TransactionsStyle)(Transactions));

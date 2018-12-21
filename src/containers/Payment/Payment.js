@@ -134,8 +134,8 @@ export class Payment extends Component {
   render() {
     const { payment, invoices, hidePayment, invoiceId } = this.props;
 
-    let existsPayment = Object.keys(payment).length !== 0 && payment.id;
-    let existsInvoices = Object.keys(invoices).length !== 0;
+    const existsPayment = Object.keys(payment).length !== 0 && payment.id;
+    const existsInvoices = Object.keys(invoices).length !== 0;
 
     let invoice = null;
     if (existsInvoices) {
@@ -292,4 +292,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Payment);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Payment);

@@ -82,7 +82,7 @@ export class Customers extends Component {
         <ButtonRow show={!showCustomerEditor}>
           <Button
             color="primary"
-            variant="raised"
+            variant="contained"
             onClick={this.showCustomerEditor}
           >
             Add Customer
@@ -125,6 +125,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  withStyles(CustomersStyle)(Customers)
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(CustomersStyle)(Customers));

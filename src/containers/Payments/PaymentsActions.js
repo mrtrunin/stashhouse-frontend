@@ -7,6 +7,9 @@ export const FETCH_PAYMENTS_REJECTED = "FETCH_PAYMENTS_REJECTED";
 export const FETCH_INVOICES = "FETCH_INVOICES";
 export const FETCH_INVOICES_FULFILLED = "FETCH_INVOICES_FULFILLED";
 export const FETCH_INVOICES_REJECTED = "FETCH_INVOICES_REJECTED";
+export const IMPORT_STATEMENT = "IMPORT_STATEMENT";
+export const IMPORT_STATEMENT_FULFILLED = "IMPORT_STATEMENT_FULFILLED";
+export const IMPORT_STATEMENT_REJECTED = "IMPORT_STATEMENT_REJECTED";
 
 const url = process.env.REACT_APP_SERVER_URL;
 
@@ -57,6 +60,40 @@ export function fetchInvoices() {
         payload: error
       });
       Message("Could not fetch invoices: " + error, "error");
+    }
+  };
+}
+
+export function importStatement(statementFile, businessName) {
+  return async dispatch => {
+    const formData = new FormData();
+    formData.append("statementFile", statementFile);
+    formData.append("business_name", businessName);
+
+    try {
+      const { data } = await axios.post(url + "/import_statement/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+      console.log(data);
+      Message("Statement successfully imported! " + data, "success");
+    } catch (error) {
+      Message("Could not import statement invoices: " + error, "error");
+    }
+  };
+}
+
+export function deletePayments(paymentIds) {
+  return async dispatch => {
+    for (let paymentId of paymentIds) {
+      try {
+        await axios.delete(url + "/payments/" + paymentId);
+
+        Message("Payment " + paymentId + " deleted successfully!", "success");
+      } catch (error) {
+        Message("Could not delete payments: " + error, "error");
+      }
     }
   };
 }

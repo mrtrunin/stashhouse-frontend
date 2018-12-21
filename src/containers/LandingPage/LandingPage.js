@@ -29,7 +29,7 @@ export class LandingPage extends Component {
             </h2>
             <Button
               size="large"
-              variant="raised"
+              variant="contained"
               color="default"
               component={Link}
               to="/login"

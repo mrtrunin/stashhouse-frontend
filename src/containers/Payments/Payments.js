@@ -13,8 +13,12 @@ import { withStyles } from "@material-ui/core";
 import { PaymentsStyle } from "./PaymentsStyle";
 import PaymentsImportBox from "./components/PaymentsImportBox";
 
+import ButtonRow from "components/ButtonRow/ButtonRow";
+import { Button } from "@material-ui/core";
+
 export class Payments extends Component {
   state = {
+    selectedPayments: [],
     showPaymentEditor: false,
     redirectToRoot: false
   };
@@ -48,6 +52,54 @@ export class Payments extends Component {
     fetchPayments(business.name);
   };
 
+  handleCheckbox = e => {
+    const { payments } = this.props;
+
+    if (e.target.name === "select_all" && e.target.checked) {
+      payments.forEach(payment => {
+        this.addPaymentIdToState(parseInt(payment.id, 10));
+      });
+    }
+
+    if (e.target.name === "select_all" && !e.target.checked) {
+      payments.forEach(() => {
+        this.setState({ selectedPayments: [] });
+      });
+    }
+
+    if (e.target.checked) {
+      this.addPaymentIdToState(e.target.id);
+    } else {
+      this.removePaymentIdFromState(e.target.id);
+    }
+  };
+
+  addPaymentIdToState(paymentId) {
+    this.setState(prevState => ({
+      selectedPayments: [...prevState.selectedPayments, parseInt(paymentId, 10)]
+    }));
+  }
+
+  removePaymentIdFromState(paymentId) {
+    let index = this.state.selectedPayments.indexOf(parseInt(paymentId, 10));
+    this.setState(prevState => ({
+      selectedPayments: [
+        ...prevState.selectedPayments.slice(0, index),
+        ...prevState.selectedPayments.slice(index + 1)
+      ]
+    }));
+  }
+
+  handleDeletePayments = async () => {
+    const {
+      business,
+      actions: { fetchPayments, deletePayments }
+    } = this.props;
+    await deletePayments(this.state.selectedPayments);
+    await fetchPayments(business.name);
+    await this.setState({ selectedPayments: [] });
+  };
+
   showEditors = nextProps => {
     let props = nextProps ? nextProps : this.props;
     const { paymentId, invoiceId } = props.match.params;
@@ -70,7 +122,7 @@ export class Payments extends Component {
 
   render() {
     const { payments, fetched, classes } = this.props;
-    const { showPaymentEditor, redirectToRoot } = this.state;
+    const { showPaymentEditor, redirectToRoot, selectedPayments } = this.state;
 
     const isOnRootPath =
       this.props.match.path === "/payments/" ||
@@ -87,13 +139,25 @@ export class Payments extends Component {
     return (
       <div className={classes.root}>
         <PaymentsImportBox />
-        <PaymentsTable payments={payments} />
+        <PaymentsTable
+          payments={payments}
+          selectedPayments={selectedPayments}
+          onChange={this.handleCheckbox}
+        />
 
-        {/* TODO: Introduce delete option for payments */}
+        <ButtonRow show={selectedPayments.length > 0}>
+          <Button
+            color="secondary"
+            variant="contained"
+            onClick={this.handleDeletePayments}
+          >
+            Delete payments
+          </Button>
+        </ButtonRow>
 
         {showPaymentEditor && (
           <Payment
-            hidePaymentEditor={this.hidePaymentEditor}
+            hidePayment={this.hidePaymentEditor}
             paymentId={this.props.match.params.paymentId}
             invoiceId={this.props.match.params.invoiceId}
           />
@@ -132,6 +196,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  withStyles(PaymentsStyle)(Payments)
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(PaymentsStyle)(Payments));

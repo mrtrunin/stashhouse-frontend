@@ -9,7 +9,7 @@ const ExportPdfButton = props => {
 
   return (
     <Button
-      variant="raised"
+      variant="contained"
       color="default"
       onClick={onClick.bind(props, transactionId, transactionName)}
       size="small"

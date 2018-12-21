@@ -93,27 +93,27 @@ class NavBar extends Component {
     } else {
       navBarLeftLarge = (
         <Toolbar>
-          <Button href="/warehouses" color="inherit" variant="flat">
+          <Button href="/warehouses" color="inherit" variant="text">
             <Business className={classes.iconLeft} />
             Products and Warehouse
           </Button>
 
-          <Button href="/transactions" color="inherit" variant="flat">
+          <Button href="/transactions" color="inherit" variant="text">
             <List className={classes.iconLeft} />
             <Hidden mdDown>Transactions</Hidden>
           </Button>
 
-          <Button href="/payments" color="inherit" variant="flat">
+          <Button href="/payments" color="inherit" variant="text">
             <AttachMoney className={classes.iconLeft} />
             <Hidden mdDown>Payments</Hidden>
           </Button>
 
-          <Button href="/customers" color="inherit" variant="flat">
+          <Button href="/customers" color="inherit" variant="text">
             <People className={classes.iconLeft} />
             <Hidden mdDown>Customers</Hidden>
           </Button>
 
-          {/* <Button href="/reports" color="inherit" variant="flat">
+          {/* <Button href="/reports" color="inherit" variant="text">
             <List className={classes.iconLeft} />
             <Hidden mdDown>Reports</Hidden>
           </Button> */}
@@ -122,23 +122,23 @@ class NavBar extends Component {
 
       navBarLeftSmall = (
         <Toolbar>
-          <IconButton href="/warehouses" color="inherit" variant="flat">
+          <IconButton href="/warehouses" color="inherit" variant="text">
             <Business />
           </IconButton>
 
-          <IconButton href="/transactions" color="inherit" variant="flat">
+          <IconButton href="/transactions" color="inherit" variant="text">
             <List />
           </IconButton>
 
-          <IconButton href="/payments" color="inherit" variant="flat">
+          <IconButton href="/payments" color="inherit" variant="text">
             <AttachMoney />
           </IconButton>
 
-          <IconButton href="/customers" color="inherit" variant="flat">
+          <IconButton href="/customers" color="inherit" variant="text">
             <People />
           </IconButton>
 
-          {/* <IconButton href="/reports" color="inherit" variant="flat">
+          {/* <IconButton href="/reports" color="inherit" variant="text">
             <List />
           </IconButton> */}
         </Toolbar>
@@ -151,7 +151,7 @@ class NavBar extends Component {
               <Button
                 href="/settings"
                 color="inherit"
-                variant="flat"
+                variant="text"
                 size="small"
                 mini
               >
@@ -180,7 +180,7 @@ class NavBar extends Component {
             </div>
           )}
 
-          <Button href="/logout" color="inherit" variant="flat">
+          <Button href="/logout" color="inherit" variant="text">
             <PowerSettingsNew className={classes.iconLeft} />
             <Hidden mdDown>Log out</Hidden>
           </Button>
@@ -191,7 +191,7 @@ class NavBar extends Component {
         <Toolbar>
           {business.name && (
             <div>
-              <IconButton href="/settings" color="inherit" variant="flat">
+              <IconButton href="/settings" color="inherit" variant="text">
                 <Settings />
               </IconButton>
 
@@ -219,7 +219,7 @@ class NavBar extends Component {
             </div>
           )}
 
-          <IconButton href="/logout" color="inherit" variant="flat">
+          <IconButton href="/logout" color="inherit" variant="text">
             <PowerSettingsNew />
           </IconButton>
         </Toolbar>
@@ -228,7 +228,7 @@ class NavBar extends Component {
     return (
       <AppBar elevation={0}>
         <Toolbar disableGutters>
-          <Typography variant="title" color="inherit" className={classes.flex}>
+          <Typography variant="h6" color="inherit" className={classes.flex}>
             <Hidden lgUp>{navBarLeftSmall}</Hidden>
             <Hidden mdDown>{navBarLeftLarge}</Hidden>
           </Typography>
@@ -276,6 +276,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  withStyles(NavBarStyle)(NavBar)
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(NavBarStyle)(NavBar));

@@ -35,7 +35,7 @@ const EditorHeader = props => {
           </IconButton>
         )
       }
-      title={<Typography variant="display1">{label}</Typography>}
+      title={<Typography variant="h2">{label}</Typography>}
       subheader={editedObjectSubheader}
     />
   );

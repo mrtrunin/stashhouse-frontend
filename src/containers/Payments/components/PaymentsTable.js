@@ -18,14 +18,19 @@ import { Link } from "react-router-dom";
 import { PaymentsTableStyle } from "./PaymentsTableStyle";
 
 const PaymentsTable = props => {
-  const { classes, payments } = props;
+  const { classes, payments, selectedPayments, onChange } = props;
 
   let paymentsBody = payments.map((payment, index) => {
     let date_payment = moment(payment.date_payment).format("DD-MMM-YYYY");
     return (
       <TableRow key={index}>
         <TableCell>
-          <Checkbox color="primary" />
+          <Checkbox
+            color="primary"
+            onChange={onChange}
+            id={payment.id.toString()}
+            checked={selectedPayments.includes(payment.id)}
+          />
         </TableCell>
         <TableCell>
           <Typography
@@ -56,7 +61,7 @@ const PaymentsTable = props => {
         <TableHead>
           <TableRow>
             <TableCell>
-              <Checkbox color="primary" />
+              <Checkbox color="primary" onChange={onChange} name="select_all" />
             </TableCell>
             <TableCell>Sender Name</TableCell>
             <TableCell>Description</TableCell>
@@ -73,7 +78,9 @@ const PaymentsTable = props => {
 
 PaymentsTable.propTypes = {
   classes: PropTypes.object.isRequired,
-  payments: PropTypes.array.isRequired
+  payments: PropTypes.array.isRequired,
+  selectedPayments: PropTypes.array,
+  onChange: PropTypes.func.isRequired
 };
 
 export default withStyles(PaymentsTableStyle)(PaymentsTable);

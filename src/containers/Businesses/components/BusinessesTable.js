@@ -20,7 +20,7 @@ const BusinessesTable = props => {
           <Button
             onClick={chooseBusiness.bind(null, business)}
             color="primary"
-            variant="raised"
+            variant="contained"
           >
             Choose
           </Button>

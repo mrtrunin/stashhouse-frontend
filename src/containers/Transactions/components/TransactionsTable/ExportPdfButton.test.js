@@ -18,7 +18,7 @@ it("Renders PDF button", () => {
   );
 
   let button = (
-    <Button variant="raised" color="default" onClick={mock} size="small">
+    <Button variant="contained" color="default" onClick={mock} size="small">
       <span id={1} name="hello">
         <div name="hello" />
         PDF

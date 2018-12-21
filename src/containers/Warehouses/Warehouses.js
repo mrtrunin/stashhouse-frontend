@@ -154,7 +154,7 @@ export class Warehouses extends Component {
             <Grid item className={classes.buttons}>
               <Button
                 onClick={this.handleShowProductEditor}
-                variant="raised"
+                variant="contained"
                 color="primary"
                 component={Link}
                 to="/warehouses/"
@@ -164,7 +164,7 @@ export class Warehouses extends Component {
               </Button>
               <Button
                 onClick={this.handleShowWarehouseEditor}
-                variant="raised"
+                variant="contained"
                 color="primary"
                 component={Link}
                 to="/warehouses/"

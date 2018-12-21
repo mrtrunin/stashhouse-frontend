@@ -7,7 +7,7 @@ const SendEmailButton = props => {
 
   return (
     <Button
-      variant="raised"
+      variant="contained"
       color="default"
       onClick={onClick.bind(props, transaction)}
       size="small"

@@ -23,7 +23,7 @@ const EditorButtons = props => {
     <CardActions>
       {editedObject && editedObject.id && deleteAction ? (
         <Button
-          variant="raised"
+          variant="contained"
           color="secondary"
           className={classes.button}
           onClick={deleteAction}
@@ -35,7 +35,7 @@ const EditorButtons = props => {
       )}
       {editedObject && editedObject.id && updateAction ? (
         <Button
-          variant="raised"
+          variant="contained"
           color="primary"
           className={classes.button}
           onClick={updateAction}
@@ -45,7 +45,7 @@ const EditorButtons = props => {
       ) : (
         createAction && (
           <Button
-            variant="raised"
+            variant="contained"
             color="primary"
             className={classes.button}
             onClick={createAction}
@@ -57,7 +57,7 @@ const EditorButtons = props => {
 
       {mainAction && (
         <Button
-          variant="raised"
+          variant="contained"
           color="primary"
           className={classes.button}
           onClick={mainAction}

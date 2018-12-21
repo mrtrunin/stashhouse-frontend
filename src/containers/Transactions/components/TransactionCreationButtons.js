@@ -19,17 +19,17 @@ const TransactionCreationButtons = props => {
   if (show) {
     return (
       <ButtonRow show>
-        <Button href="/sell" color="primary" variant="raised">
+        <Button href="/sell" color="primary" variant="contained">
           <AttachMoney className={classes.leftIcon} />
           Sell
         </Button>
 
-        <Button href="/move" color="primary" variant="raised">
+        <Button href="/move" color="primary" variant="contained">
           <ArrowForward className={classes.leftIcon} />
           Move
         </Button>
 
-        <Button href="/buy" color="primary" variant="raised">
+        <Button href="/buy" color="primary" variant="contained">
           <Add className={classes.leftIcon} />
           Buy
         </Button>

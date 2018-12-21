@@ -60,7 +60,7 @@ const LoginBox = props => {
             <Button
               size="large"
               color="primary"
-              variant="raised"
+              variant="contained"
               onClick={onSubmit}
             >
               Log in

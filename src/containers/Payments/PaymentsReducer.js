@@ -4,7 +4,10 @@ import {
   FETCH_PAYMENTS_REJECTED,
   FETCH_INVOICES,
   FETCH_INVOICES_FULFILLED,
-  FETCH_INVOICES_REJECTED
+  FETCH_INVOICES_REJECTED,
+  IMPORT_STATEMENT,
+  IMPORT_STATEMENT_FULFILLED,
+  IMPORT_STATEMENT_REJECTED
 } from "./PaymentsActions";
 
 export default function reducer(
@@ -44,6 +47,15 @@ export default function reducer(
       };
     }
     case FETCH_INVOICES_REJECTED: {
+      return { ...state, fetching: false, error: action.payload };
+    }
+    case IMPORT_STATEMENT: {
+      return { ...state, fetching: true, fetched: false };
+    }
+    case IMPORT_STATEMENT_FULFILLED: {
+      return { ...state, fetching: false, fetched: true };
+    }
+    case IMPORT_STATEMENT_REJECTED: {
       return { ...state, fetching: false, error: action.payload };
     }
     default:
