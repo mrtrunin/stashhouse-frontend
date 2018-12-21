@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import DatePicker from "material-ui-pickers/DatePicker";
+import { DatePicker } from "material-ui-pickers";
 
 import {
   MenuItem,
@@ -202,7 +202,10 @@ export class Payment extends Component {
 
           <DatePicker
             name="date_payment"
-            label="Payment Date"
+            format="YYYY-MM-DD"
+            label="Date"
+            autoOk
+            keyboard
             value={payment.date_payment ? payment.date_payment : new Date()}
             onChange={this.handleDateChange}
           />
