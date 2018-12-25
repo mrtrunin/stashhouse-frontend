@@ -1,8 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { addCommas } from "services/functions";
-import { TableRow, TableCell } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
+import { TableRow, TableCell, Fab } from "@material-ui/core";
 import Remove from "@material-ui/icons/Remove";
 import {
   FormControl,
@@ -31,16 +30,15 @@ const ProductRowInTable = props => {
   return (
     <TableRow>
       {showProductRemoveButton && (
-        <TableCell padding="none" numeric>
-          <Button
-            mini
+        <TableCell padding="none" align="right">
+          <Fab
+            size="small"
             color="default"
-            variant="fab"
             aria-label="remove"
             onClick={props.onClick.bind(props, props.id)}
           >
             <Remove id={props.id} />
-          </Button>
+          </Fab>
         </TableCell>
       )}
       <TableCell name="Product Name" padding="dense">
@@ -63,11 +61,11 @@ const ProductRowInTable = props => {
           style={{ width: 80 }}
         />
       </TableCell>
-      <TableCell name="Total without tax" numeric padding="dense">
+      <TableCell name="Total without tax" align="right" padding="dense">
         <strong>{addCommas(total_without_tax.toFixed(2))}</strong>
       </TableCell>
       {showTaxRate && (
-        <TableCell name="Tax rate" numeric padding="dense">
+        <TableCell name="Tax rate" align="right" padding="dense">
           <FormControl>
             <Select
               value={tax_rate ? tax_rate : "0"}
@@ -84,7 +82,7 @@ const ProductRowInTable = props => {
         </TableCell>
       )}
       {showTotalWithTax && (
-        <TableCell name="Total with tax" numeric padding="dense">
+        <TableCell name="Total with tax" align="right" padding="dense">
           {addCommas(total_with_tax.toFixed(2))}
         </TableCell>
       )}

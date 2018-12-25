@@ -52,16 +52,16 @@ const TransactionProductTable = props => {
           {showEAN && <TableCell>EAN</TableCell>}
           <TableCell padding="dense">Quantity</TableCell>
           <TableCell padding="dense">Price</TableCell>
-          <TableCell padding="dense" numeric>
+          <TableCell padding="dense" align="right">
             Total
           </TableCell>
           {showTaxRate && (
-            <TableCell padding="dense" numeric>
+            <TableCell padding="dense" align="right">
               Tax rate
             </TableCell>
           )}
           {showTotalWithTax && (
-            <TableCell padding="dense" numeric>
+            <TableCell padding="dense" align="right">
               Total (incl. tax)
             </TableCell>
           )}
