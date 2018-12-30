@@ -11,29 +11,31 @@ import {
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core";
 
-const styles = {
-  tableCell: {
-    // padding: 0
-  }
-};
+const TransactionProductTableStyles = {};
 
-const TransactionProductTable = props => {
-  const { classes, products } = props;
+const TransactionProductTable = ({
+  classes,
+  products,
+  hasTableProducts,
+  selectedProducts,
+  onProductAttributeChange,
+  onProductRemove,
+  onProductChange
+}) => {
+  const showProductRemoveButton = true || hasTableProducts;
+  const showEAN = false;
+  const showTaxRate = true;
+  const showTotalWithTax = true;
 
-  let showProductRemoveButton = true || props.hasTableProducts;
-  let showEAN = false;
-  let showTaxRate = true;
-  let showTotalWithTax = true;
-
-  let productRows = props.selectedProducts
-    ? props.selectedProducts.map((product, index) => {
+  const productRows = selectedProducts
+    ? selectedProducts.map((product, index) => {
         return (
           <ProductRowInTable
             key={index}
             id={index}
             product={product}
-            onChange={props.onProductAttributeChange}
-            onClick={props.onProductRemove}
+            onChange={onProductAttributeChange}
+            onClick={onProductRemove}
             showProductRemoveButton={showProductRemoveButton}
             showTaxRate={showTaxRate}
             showTotalWithTax={showTotalWithTax}
@@ -72,7 +74,7 @@ const TransactionProductTable = props => {
         {productRows}
         <AddNewProductToTable
           products={products}
-          onChange={props.onProductChange}
+          onChange={onProductChange}
           showProductRemoveButton={showProductRemoveButton}
           showTaxRate={showTaxRate}
           showTotalWithTax={showTotalWithTax}
@@ -92,4 +94,6 @@ TransactionProductTable.propTypes = {
   hasTableProducts: PropTypes.bool
 };
 
-export default withStyles(styles)(TransactionProductTable);
+export default withStyles(TransactionProductTableStyles)(
+  TransactionProductTable
+);

@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import CustomersTable from "./components/CustomersTable";
 import { connect } from "react-redux";
 import { Button, withStyles } from "@material-ui/core";
-import TableContainerComponent from "components/Tables/TableContainerComponent/TableContainerComponent";
-import ButtonRow from "components/ButtonRow";
+import Table from "components/Table/Table";
+import ButtonRow from "components/Buttons/ButtonRow";
 import Customer from "pages/Customer/Customer";
 import { bindActionCreators } from "redux";
 import * as actions from "./CustomersActions";
@@ -75,9 +75,9 @@ export class Customers extends Component {
 
     return (
       <div className={classes.root}>
-        <TableContainerComponent>
+        <Table>
           <CustomersTable customers={customers} />
-        </TableContainerComponent>
+        </Table>
 
         <ButtonRow show={!showCustomerEditor}>
           <Button

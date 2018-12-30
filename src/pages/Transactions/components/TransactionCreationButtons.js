@@ -6,7 +6,7 @@ import ArrowForward from "@material-ui/icons/ArrowForward";
 import Add from "@material-ui/icons/Add";
 import AttachMoney from "@material-ui/icons/AttachMoney";
 
-import ButtonRow from "components/ButtonRow";
+import ButtonRow from "components/Buttons/ButtonRow";
 
 const style = theme => ({
   leftIcon: {

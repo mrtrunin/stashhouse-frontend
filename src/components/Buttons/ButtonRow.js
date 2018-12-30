@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Grid, withStyles } from "@material-ui/core";
 
-const style = theme => ({
+const ButtonRowStyle = theme => ({
   flex: {
     flex: 1
   },
@@ -40,4 +40,4 @@ ButtonRow.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(style)(ButtonRow);
+export default withStyles(ButtonRowStyle)(ButtonRow);

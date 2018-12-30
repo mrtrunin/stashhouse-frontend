@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { MessageBoxStyles } from "./MessageBoxStyles";
 import { withStyles } from "@material-ui/core";
 import SnackbarContent from "@material-ui/core/SnackbarContent";
 
@@ -12,12 +11,41 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import classNames from "classnames";
 
+import green from "@material-ui/core/colors/green";
+import amber from "@material-ui/core/colors/amber";
+
 const variantIcon = {
   success: CheckCircleIcon,
   warning: WarningIcon,
   error: ErrorIcon,
   info: InfoIcon
 };
+
+const MessageBoxStyles = theme => ({
+  success: {
+    backgroundColor: green[600]
+  },
+  error: {
+    backgroundColor: theme.palette.error.dark
+  },
+  info: {
+    backgroundColor: theme.palette.primary.main
+  },
+  warning: {
+    backgroundColor: amber[700]
+  },
+  icon: {
+    fontSize: 20
+  },
+  iconVariant: {
+    opacity: 0.9,
+    marginRight: theme.spacing.unit
+  },
+  message: {
+    display: "flex",
+    alignItems: "center"
+  }
+});
 
 const MessageBoxContent = props => {
   const { classes, className, message, onClose, variant, ...other } = props;

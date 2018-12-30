@@ -13,10 +13,10 @@ import * as transactionActions from "pages/Transaction/TransactionActions";
 import * as productsActions from "pages/Products/ProductsActions";
 
 // Stashhouse components
-import CustomerSelector from "components/Selectors/CustomerSelector";
-import WarehouseSelector from "components/Selectors/WarehouseSelector";
-import TransactionProductTable from "components/Tables/TransactionProductTable";
-import GrandTotalCalculator from "components/Calculators/GrandTotalCalculator";
+import CustomerSelector from "./components/CustomerSelector";
+import WarehouseSelector from "./components/WarehouseSelector";
+import TransactionProductTable from "./components/TransactionProductTable";
+import GrandTotalCalculator from "./components/GrandTotalCalculator";
 
 // Transaction functions
 import calculateTotals from "./functions/calculateTotals";

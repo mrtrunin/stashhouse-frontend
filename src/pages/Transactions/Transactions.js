@@ -12,7 +12,7 @@ import { Button, Grid, withStyles } from "@material-ui/core";
 import TransactionCreationButtons from "./components/TransactionCreationButtons";
 import { TransactionsStyle } from "./TransactionsStyle";
 
-import ButtonRow from "components/ButtonRow/ButtonRow";
+import ButtonRow from "components/Buttons/ButtonRow";
 import TableFilter from "./components/TransactionsTable/TableFilter";
 import Email from "components/Email/Email";
 

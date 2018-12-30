@@ -3,12 +3,16 @@ import PropTypes from "prop-types";
 
 import { MenuItem, Select, InputLabel, FormControl } from "@material-ui/core";
 
-const ProductSelector = props => {
-  let defaultValue = "Select Product";
-  let label = "Product";
-  let selectedProduct = "";
+const ProductSelector = ({
+  products,
+  hardDefaultValue,
+  selectedProduct,
+  onChange
+}) => {
+  const selectedProductName =
+    selectedProduct && !hardDefaultValue ? selectedProduct.name : "";
 
-  let productOptions = props.products.map(product => {
+  const productOptions = products.map(product => {
     return (
       <MenuItem key={product.id} value={product.name}>
         {product.name}
@@ -16,26 +20,20 @@ const ProductSelector = props => {
     );
   });
 
-  if (!props.hardDefaultValue) {
-    selectedProduct = props.selectedProduct.name
-      ? props.selectedProduct.name
-      : "";
-  }
-
   return (
     <FormControl>
-      <InputLabel htmlFor="productSelector">{label}</InputLabel>
+      <InputLabel htmlFor="productSelector">Product</InputLabel>
       <Select
-        value={selectedProduct}
+        value={selectedProductName}
         inputProps={{
           name: "productSelector",
           id: "productSelector"
         }}
-        onChange={props.onChange}
+        onChange={onChange}
         style={{ width: 300 }}
       >
         <MenuItem defaultValue disabled>
-          {defaultValue}
+          Select Product
         </MenuItem>
         {productOptions}
       </Select>
@@ -45,7 +43,6 @@ const ProductSelector = props => {
 
 ProductSelector.propTypes = {
   products: PropTypes.array,
-  className: PropTypes.string,
   onChange: PropTypes.func,
   selectedProduct: PropTypes.object,
   hardDefaultValue: PropTypes.bool,

@@ -13,7 +13,7 @@ import { withStyles } from "@material-ui/core";
 import { PaymentsStyle } from "./PaymentsStyle";
 import PaymentsImportBox from "./components/PaymentsImportBox";
 
-import ButtonRow from "components/ButtonRow/ButtonRow";
+import ButtonRow from "components/Buttons/ButtonRow";
 import { Button } from "@material-ui/core";
 import PaymentEditor from "../Payment/PaymentEditor";
 

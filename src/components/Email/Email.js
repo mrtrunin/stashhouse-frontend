@@ -1,17 +1,29 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Modal, withStyles, TextField, Typography } from "@material-ui/core";
-import { EmailStyle } from "./EmailStyle";
 import { connect } from "react-redux";
 
 import * as transactionActions from "pages/Transaction/TransactionActions";
 
-import Editor from "components/Editors/EditorComponents/Editor";
-import EditorHeader from "components/Editors/EditorComponents/EditorHeader";
-import EditorContent from "components/Editors/EditorComponents/EditorContent";
-import EditorButtons from "components/Editors/EditorComponents/EditorButtons";
+import Editor from "components/Editor/Editor";
+import EditorHeader from "components/Editor/EditorHeader";
+import EditorContent from "components/Editor/EditorContent";
+import EditorButtons from "components/Editor/EditorButtons";
 
 import { bindActionCreators } from "redux";
+
+export const EmailStyle = theme => ({
+  root: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "80%",
+    maxWidth: theme.spacing.unit * 100,
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: theme.shadows[5]
+  }
+});
 
 class Email extends Component {
   state = {

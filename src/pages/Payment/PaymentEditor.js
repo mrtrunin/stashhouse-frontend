@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import EditorButtons from "components/Editors/EditorComponents/EditorButtons";
-import Editor from "components/Editors/EditorComponents/Editor";
-import EditorHeader from "components/Editors/EditorComponents/EditorHeader";
-import EditorContent from "components/Editors/EditorComponents/EditorContent";
+import EditorButtons from "components/Editor/EditorButtons";
+import Editor from "components/Editor/Editor";
+import EditorHeader from "components/Editor/EditorHeader";
+import EditorContent from "components/Editor/EditorContent";
 
 import { DatePicker } from "material-ui-pickers";
 import { addCommas } from "services/functions";

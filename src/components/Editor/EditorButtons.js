@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { CardActions, Button, withStyles } from "@material-ui/core";
 
-const style = () => ({
+const EditorButtonStyle = () => ({
   button: {
     flex: 1
   }
@@ -80,4 +80,4 @@ EditorButtons.propTypes = {
   mainActionLabel: PropTypes.string
 };
 
-export default withStyles(style)(EditorButtons);
+export default withStyles(EditorButtonStyle)(EditorButtons);

@@ -9,10 +9,10 @@ import * as warehousesActions from "pages/Warehouses/WarehousesActions";
 import * as productsActions from "pages/Products/ProductsActions";
 
 import { TextField } from "@material-ui/core";
-import EditorButtons from "components/Editors/EditorComponents/EditorButtons";
-import Editor from "components/Editors/EditorComponents/Editor";
-import EditorHeader from "components/Editors/EditorComponents/EditorHeader";
-import EditorContent from "components/Editors/EditorComponents/EditorContent";
+import EditorButtons from "components/Editor/EditorButtons";
+import Editor from "components/Editor/Editor";
+import EditorHeader from "components/Editor/EditorHeader";
+import EditorContent from "components/Editor/EditorContent";
 
 import { bindActionCreators } from "redux";
 

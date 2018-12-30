@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import ProductSelector from "components/Selectors/ProductSelector";
+import ProductSelector from "./ProductSelector";
 import { TableRow, TableCell } from "@material-ui/core";
 
 const AddNewProductToTable = props => {
