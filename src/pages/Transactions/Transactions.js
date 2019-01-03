@@ -10,11 +10,16 @@ import TransactionsTable from "./components/TransactionsTable/TransactionsTable"
 
 import { Button, Grid, withStyles } from "@material-ui/core";
 import TransactionCreationButtons from "./components/TransactionCreationButtons";
-import { TransactionsStyle } from "./TransactionsStyle";
 
 import ButtonRow from "components/Buttons/ButtonRow";
 import TableFilter from "./components/TransactionsTable/TableFilter";
-import Email from "components/Email/Email";
+import EmailDialog from "components/Email/EmailDialog";
+
+export const TransactionsStyle = () => ({
+  root: {
+    width: "100%"
+  }
+});
 
 export class Transactions extends Component {
   state = {
@@ -153,8 +158,7 @@ export class Transactions extends Component {
 
     return (
       <div className={classes.root}>
-        {/* TODO: NEED TO FIGURE OUT THIS MODAL THING FOR EMAILS */}
-        <Email
+        <EmailDialog
           open={openEmail}
           handleClose={this.handleCloseEmail}
           transaction={transaction}

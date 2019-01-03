@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Modal, withStyles, TextField, Typography } from "@material-ui/core";
 import { connect } from "react-redux";
 
-import * as transactionActions from "pages/Transaction/TransactionActions";
+import * as emailActions from "components/Email/EmailActions";
 
 import Editor from "components/Editor/Editor";
 import EditorHeader from "components/Editor/EditorHeader";
@@ -25,7 +25,7 @@ export const EmailStyle = theme => ({
   }
 });
 
-class Email extends Component {
+class EmailDialog extends Component {
   state = {
     senderEmail: "",
     recipientEmail: "",
@@ -119,7 +119,7 @@ class Email extends Component {
           <Editor>
             <EditorHeader
               label={
-                "Email " +
+                "EmailDialog " +
                 transaction.full_transaction_number +
                 " to " +
                 recipientName
@@ -182,7 +182,7 @@ class Email extends Component {
   }
 }
 
-Email.propTypes = {
+EmailDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
@@ -199,11 +199,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    actions: bindActionCreators({ ...transactionActions }, dispatch)
+    actions: bindActionCreators({ ...emailActions }, dispatch)
   };
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(EmailStyle)(Email));
+)(withStyles(EmailStyle)(EmailDialog));

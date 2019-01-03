@@ -9,7 +9,20 @@ import {
 } from "@material-ui/core";
 import { Typography, Paper, withStyles } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import WarehouseTableStyle from "./WarehouseTableStyle";
+
+const WarehouseTableStyle = theme => ({
+  root: {
+    overflowX: "auto"
+  },
+  table: {
+    minWidth: 700,
+    width: "100%"
+  },
+  redNumbers: {
+    fontWeight: "bold",
+    color: "red"
+  }
+});
 
 const WarehouseTable = props => {
   const { classes, products, warehouses } = props;
@@ -80,11 +93,18 @@ const WarehouseTable = props => {
         <TableCell padding="dense">{product.ean}</TableCell>
 
         {Object.keys(product.stock).map(warehouse => {
-          let stockQuantityForWarehouse = product.stock[warehouse].quantity;
+          const stockQuantityForWarehouse = product.stock[warehouse].quantity;
           totalQuantity += stockQuantityForWarehouse;
 
           return (
-            <TableCell padding="dense" key={warehouse} align="right">
+            <TableCell
+              padding="dense"
+              key={warehouse}
+              align="right"
+              className={
+                stockQuantityForWarehouse < 0 ? classes.redNumbers : ""
+              }
+            >
               {stockQuantityForWarehouse}
             </TableCell>
           );

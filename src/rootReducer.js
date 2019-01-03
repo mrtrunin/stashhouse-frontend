@@ -4,6 +4,7 @@ import auth from "pages/Login/AuthReducer";
 import user from "pages/Login/UserReducer";
 import customer from "pages/Customer/CustomerReducer";
 import customers from "pages/Customers/CustomersReducer";
+import emails from "components/Email/EmailsReducer";
 import warehouse from "pages/Warehouse/WarehouseReducer";
 import warehouses from "pages/Warehouses/WarehousesReducer";
 import product from "pages/Product/ProductReducer";
@@ -20,6 +21,7 @@ import { USER_LOGOUT } from "pages/Logout/LogoutActions";
 const appReducer = combineReducers({
   auth,
   user,
+  emails,
   business,
   businesses,
   transaction,

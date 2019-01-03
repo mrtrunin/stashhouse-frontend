@@ -5,7 +5,6 @@ import { addCommas } from "services/functions";
 
 import { Link } from "react-router-dom";
 import ExportPdfButton from "./ExportPdfButton";
-import SendEmailButton from "./SendEmailButton";
 
 import {
   Table,
@@ -25,6 +24,7 @@ import {
 } from "@material-ui/core";
 
 import { TransactionsTableStyle } from "./TransactionsTableStyle";
+import ShowCounterOrSendEmailButton from "./ShowCounterOrSendEmailButton";
 
 const TransactionsTable = props => {
   const {
@@ -79,19 +79,21 @@ const TransactionsTable = props => {
   const transactionRows = sortedTransactions
     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
     .map(transaction => {
-      let date_created = moment(transaction.date_created).format("DD-MMM-YYYY");
-      let date_due = moment(transaction.date_due).format("DD-MMM-YYYY");
+      const date_created = moment(transaction.date_created).format(
+        "DD-MMM-YYYY"
+      );
+      const date_due = moment(transaction.date_due).format("DD-MMM-YYYY");
 
-      let showInvoiceAttribute = transaction.type === "INVOICE";
-      let showTransferAttribute = transaction.type === "TRANSFER";
-      let linkTarget = linkTargetOptions[transaction.type];
+      const showInvoiceAttribute = transaction.type === "INVOICE";
+      const showTransferAttribute = transaction.type === "TRANSFER";
+      const linkTarget = linkTargetOptions[transaction.type];
 
-      let transactionAmountWithTax = transaction.amount + transaction.tax;
-      let paidAmount = transaction.paid_amount;
-      let unpaidAmount = transactionAmountWithTax - paidAmount;
+      const transactionAmountWithTax = transaction.amount + transaction.tax;
+      const paidAmount = transaction.paid_amount;
+      const unpaidAmount = transactionAmountWithTax - paidAmount;
 
-      let absUnpaidAmount = Math.abs(unpaidAmount);
-      let showUnpaidAmount =
+      const absUnpaidAmount = Math.abs(unpaidAmount);
+      const showUnpaidAmount =
         absUnpaidAmount >= unpaidAmountTolerance && showInvoiceAttribute;
 
       return (
@@ -163,11 +165,11 @@ const TransactionsTable = props => {
               <ExportPdfButton transaction={transaction} onClick={onClick} />
             )}
           </TableCell>
-          <TableCell padding="dense">
+          <TableCell padding="dense" align="center">
             {showInvoiceAttribute && (
-              <SendEmailButton
+              <ShowCounterOrSendEmailButton
                 transaction={transaction}
-                onClick={handleOpenEmail}
+                handleOpenEmail={handleOpenEmail}
               />
             )}
           </TableCell>

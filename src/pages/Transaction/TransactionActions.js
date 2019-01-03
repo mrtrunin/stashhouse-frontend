@@ -215,36 +215,6 @@ export function fetchTransactionPdf(
   };
 }
 
-export function sendEmail(
-  business_name,
-  transactionId,
-  recipients,
-  subject,
-  body
-) {
-  return async dispatch => {
-    let formdata = new FormData();
-    formdata.append("subject", subject);
-    formdata.append("body", body);
-    formdata.append("recipients", recipients);
-
-    try {
-      const { data } = await axios.post(
-        url +
-          "/transactions/" +
-          transactionId +
-          "/send-email?business_name=" +
-          business_name,
-        formdata
-      );
-      Message("Email sent successfully!", "success");
-      return data;
-    } catch (error) {
-      Message("Sending email failed: " + error, "error");
-    }
-  };
-}
-
 export function resetTransaction() {
   return async dispatch => {
     dispatch({
