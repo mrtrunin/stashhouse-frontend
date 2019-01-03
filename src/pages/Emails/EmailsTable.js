@@ -31,7 +31,7 @@ export const EmailsTableStyle = theme => ({
 });
 
 const EmailsTable = ({ emails, classes }) => {
-  if (!emails) {
+  if (!emails || emails.length < 1) {
     return "No emails";
   }
 
