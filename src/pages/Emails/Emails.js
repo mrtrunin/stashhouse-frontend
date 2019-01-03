@@ -91,7 +91,7 @@ Emails.propTypes = {
   business: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired,
   transaction: PropTypes.object,
-  emails: PropTypes.array,
+  emails: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   classes: PropTypes.object.isRequired
 };
 

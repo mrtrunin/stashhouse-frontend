@@ -31,7 +31,7 @@ export const EmailsTableStyle = theme => ({
 });
 
 const EmailsTable = ({ emails, classes }) => {
-  if (!emails || emails.length < 1) {
+  if (!emails) {
     return "No emails";
   }
 
@@ -50,6 +50,7 @@ const EmailsTable = ({ emails, classes }) => {
         </TableHead>
         <TableBody>
           {emails &&
+            emails.length > 0 &&
             emails.map((email, i) => {
               return (
                 <TableRow
@@ -92,8 +93,8 @@ const EmailsTable = ({ emails, classes }) => {
 };
 
 EmailsTable.propTypes = {
-  classes: PropTypes.object,
-  emails: PropTypes.array
+  classes: PropTypes.object.isRequired,
+  emails: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
 };
 
 export default withStyles(EmailsTableStyle)(EmailsTable);
