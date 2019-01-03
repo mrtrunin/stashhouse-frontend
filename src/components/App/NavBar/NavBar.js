@@ -25,7 +25,8 @@ import {
   AttachMoney,
   People,
   PowerSettingsNew,
-  Settings
+  Settings,
+  Email
 } from "@material-ui/icons";
 import { bindActionCreators } from "redux";
 import NavBarStyle from "./NavBarStyle";
@@ -113,6 +114,11 @@ class NavBar extends Component {
             <Hidden mdDown>Customers</Hidden>
           </Button>
 
+          <Button href="/emails" color="inherit" variant="text">
+            <Email className={classes.iconLeft} />
+            <Hidden mdDown>Emails</Hidden>
+          </Button>
+
           {/* <Button href="/reports" color="inherit" variant="text">
             <List className={classes.iconLeft} />
             <Hidden mdDown>Reports</Hidden>
@@ -136,6 +142,10 @@ class NavBar extends Component {
 
           <IconButton href="/customers" color="inherit" variant="text">
             <People />
+          </IconButton>
+
+          <IconButton href="/emails" color="inherit" variant="text">
+            <Email />
           </IconButton>
 
           {/* <IconButton href="/reports" color="inherit" variant="text">

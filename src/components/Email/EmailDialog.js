@@ -119,7 +119,7 @@ class EmailDialog extends Component {
           <Editor>
             <EditorHeader
               label={
-                "EmailDialog " +
+                "Email " +
                 transaction.full_transaction_number +
                 " to " +
                 recipientName

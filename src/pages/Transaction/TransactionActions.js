@@ -108,11 +108,19 @@ export function deleteTransaction(id) {
 
 export function fetchTransaction(id) {
   return async dispatch => {
+    await dispatch({ type: FETCH_TRANSACTION });
     try {
       const { data } = await axios.get(url + "/transactions/" + id);
-
+      await dispatch({
+        type: FETCH_TRANSACTION_FULFILLED,
+        payload: data
+      });
       return data;
     } catch (error) {
+      await dispatch({
+        type: FETCH_TRANSACTION_REJECTED,
+        payload: error
+      });
       Message(
         "Could not fetch transaction " + id + ": " + error.response.data.detail,
         "error"

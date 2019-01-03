@@ -12,6 +12,7 @@ import Payments from "pages/Payments/Payments";
 import Customers from "pages/Customers/Customers";
 import Business from "pages/Business/Business";
 import Reports from "pages/Reports/Reports";
+import Emails from "pages/Emails/Emails";
 
 import LandingPage from "pages/LandingPage/LandingPage";
 import Businesses from "pages/Businesses/Businesses";
@@ -44,6 +45,8 @@ const Router = () => {
         <PrivateRoute exact path="/settings/" component={Business} />
         <PrivateRoute exact path="/businesses/" component={Businesses} />
         <PrivateRoute exact path="/reports/" component={Reports} />
+        <PrivateRoute exact path="/emails/" component={Emails} />
+        <PrivateRoute exact path="/emails/:transactionId" component={Emails} />
         <Route exact path="/logout/" component={Logout} />
         <Route exact path="/login/" component={Login} />
         <Route exact path="/" component={LandingPage} />

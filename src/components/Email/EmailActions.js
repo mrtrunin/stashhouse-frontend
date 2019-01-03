@@ -57,3 +57,29 @@ export function fetchEmails(business_name) {
     }
   };
 }
+
+export function fetchEmailsForTransaction(id) {
+  return async dispatch => {
+    await dispatch({ type: FETCH_EMAILS });
+    try {
+      const { data } = await axios.get(url + "/transactions/" + id);
+      await dispatch({
+        type: FETCH_EMAILS_FULFILLED,
+        payload: data.sent_emails
+      });
+      return data;
+    } catch (error) {
+      await dispatch({
+        type: FETCH_EMAILS_REJECTED,
+        payload: error
+      });
+      Message(
+        "Could not fetch emails for transaction " +
+          id +
+          ": " +
+          error.response.data.detail,
+        "error"
+      );
+    }
+  };
+}
