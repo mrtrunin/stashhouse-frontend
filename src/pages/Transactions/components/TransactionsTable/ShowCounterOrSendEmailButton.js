@@ -40,7 +40,7 @@ const ShowCounterOrSendEmailButton = ({
         to={linkTarget + "/" + transaction.id}
       >
         <span className={classes.sentEmails}>{successfulEmailCount} sent</span>
-        {failedEmailCount >= 0 && (
+        {failedEmailCount > 0 && (
           <span className={classes.failedEmails}>
             , {failedEmailCount} failed
           </span>
