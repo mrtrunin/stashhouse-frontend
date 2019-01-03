@@ -20,8 +20,7 @@ export const EmailsTableStyle = theme => ({
   },
   sentEmail: {
     color: green[800],
-    fontWeight: "bold",
-    backgroundColor: green[50]
+    fontWeight: "bold"
   },
   unsentEmail: {
     color: red[800],

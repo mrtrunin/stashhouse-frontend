@@ -21,7 +21,9 @@ export function createBusiness(
   email,
   website,
   primary_bank,
-  primary_account_number
+  primary_account_number,
+  default_email_subject,
+  default_email_body
 ) {
   return async dispatch => {
     let payload = {};
@@ -38,7 +40,9 @@ export function createBusiness(
       email,
       website,
       primary_bank,
-      primary_account_number
+      primary_account_number,
+      default_email_subject,
+      default_email_body
     };
 
     try {
@@ -90,7 +94,9 @@ export function updateBusiness(
   email,
   website,
   primary_bank,
-  primary_account_number
+  primary_account_number,
+  default_email_subject,
+  default_email_body
 ) {
   return async dispatch => {
     let url = process.env.REACT_APP_SERVER_URL;
@@ -109,7 +115,9 @@ export function updateBusiness(
       email,
       website,
       primary_bank,
-      primary_account_number
+      primary_account_number,
+      default_email_subject,
+      default_email_body
     };
 
     try {

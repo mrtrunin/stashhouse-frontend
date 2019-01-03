@@ -42,7 +42,9 @@ export class Business extends Component {
         business.email,
         business.website,
         business.primary_bank,
-        business.primary_account_number
+        business.primary_account_number,
+        business.default_email_subject,
+        business.default_email_body
       );
     } else {
       await createBusiness(
@@ -57,7 +59,9 @@ export class Business extends Component {
         business.email,
         business.website,
         business.primary_bank,
-        business.primary_account_number
+        business.primary_account_number,
+        business.default_email_subject,
+        business.default_email_body
       );
     }
 
