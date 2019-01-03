@@ -11,24 +11,22 @@ import {
   TableBody
 } from "@material-ui/core";
 import TableBase from "components/Table/TableBase";
-import { green800 } from "material-ui/styles/colors";
-import { red800 } from "material-ui/styles/colors";
-import { green50 } from "material-ui/styles/colors";
-import { red50 } from "material-ui/styles/colors";
+import { green } from "@material-ui/core/colors";
+import { red } from "@material-ui/core/colors";
 
 export const EmailsTableStyle = theme => ({
   root: {
     overflowX: "auto"
   },
   sentEmail: {
-    color: green800,
+    color: green[800],
     fontWeight: "bold",
-    backgroundColor: green50
+    backgroundColor: green[50]
   },
   unsentEmail: {
-    color: red800,
+    color: red[800],
     fontWeight: "bold",
-    backgroundColor: red50
+    backgroundColor: red[50]
   }
 });
 

@@ -3,15 +3,12 @@ import PropTypes from "prop-types";
 import SendEmailButton from "./SendEmailButton";
 import { Link } from "react-router-dom";
 import { Typography, withStyles } from "@material-ui/core";
-import { red800 } from "material-ui/styles/colors";
-import { black } from "material-ui/styles/colors";
+import { red } from "@material-ui/core/colors";
 
 export const ShowCounterOrSendEmailButtonStyles = theme => ({
-  sentEmails: {
-    color: black
-  },
+  sentEmails: {},
   failedEmails: {
-    color: red800
+    color: red[800]
   }
 });
 
