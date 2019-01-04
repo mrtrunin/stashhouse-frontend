@@ -51,7 +51,7 @@ export class Transaction extends Component {
         fetchStock,
         resetTransaction
       }
-    } = this.props;
+    } = await this.props;
     await resetTransaction();
     await fetchCustomers(business.name);
     await fetchWarehouses(business.name);

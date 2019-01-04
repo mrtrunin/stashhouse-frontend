@@ -9,6 +9,7 @@ const loadExistingTransaction = async (
   fetchTransaction,
   fetchStock
 ) => {
+  const { customers } = props;
   let transactionId = props.match.params.transactionId;
 
   if (!transactionId) {
@@ -39,14 +40,16 @@ const loadExistingTransaction = async (
     });
 
     // HANDLE CUSTOMER
-    let selectedCustomer = props.customers.find(customer => {
-      return customer.name === transaction.customer.name;
-    });
+    if (customers && transaction.customer) {
+      const selectedCustomer = props.customers.find(customer => {
+        return customer.name === transaction.customer.name;
+      });
 
-    await store.dispatch({
-      type: "TRANSACTION_STATE_CHANGE_CUSTOMER",
-      payload: selectedCustomer
-    });
+      await store.dispatch({
+        type: "TRANSACTION_STATE_CHANGE_CUSTOMER",
+        payload: selectedCustomer
+      });
+    }
 
     // HANDLE FROM WAREHOUSE
     if (fromWarehouse) {

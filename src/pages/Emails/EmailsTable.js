@@ -40,51 +40,55 @@ const EmailsTable = ({ emails, classes }) => {
         <TableHead>
           <TableRow>
             <TableCell>Date created</TableCell>
-            <TableCell>Subject</TableCell>
-            <TableCell>Body</TableCell>
             <TableCell>From</TableCell>
             <TableCell>To</TableCell>
+            <TableCell>Subject</TableCell>
+            <TableCell>Body</TableCell>
             <TableCell>Status</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {emails &&
             emails.length > 0 &&
-            emails.map((email, i) => {
-              return (
-                <TableRow
-                  key={i}
-                  className={
-                    email.status === "SENT"
-                      ? classes.sentEmail
-                      : classes.unsentEmail
-                  }
-                >
-                  <TableCell>
-                    {moment(email.date_created).format("YYYY-MM-DD")}
-                  </TableCell>
-                  <TableCell>{email.subject}</TableCell>
-                  <TableCell>{email.body}</TableCell>
-                  <TableCell>{email.from_email}</TableCell>
-                  <TableCell>
-                    {email.recipient_list
-                      .replace("['", "")
-                      .replace("']", "")
-                      .split("', '")
-                      .join(", ")}
-                  </TableCell>
-                  <TableCell
+            emails
+              .sort((A, B) => {
+                return new Date(B.date_created) - new Date(A.date_created);
+              })
+              .map((email, i) => {
+                return (
+                  <TableRow
+                    key={i}
                     className={
                       email.status === "SENT"
                         ? classes.sentEmail
                         : classes.unsentEmail
                     }
                   >
-                    {email.status}
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+                    <TableCell>
+                      {moment(email.date_created).format("YYYY-MM-DD HH:mm:ss")}
+                    </TableCell>
+                    <TableCell>{email.from_email}</TableCell>
+                    <TableCell>
+                      {email.recipient_list
+                        .replace("['", "")
+                        .replace("']", "")
+                        .split("', '")
+                        .join(", ")}
+                    </TableCell>
+                    <TableCell>{email.subject}</TableCell>
+                    <TableCell>{email.body}</TableCell>
+                    <TableCell
+                      className={
+                        email.status === "SENT"
+                          ? classes.sentEmail
+                          : classes.unsentEmail
+                      }
+                    >
+                      {email.status}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
         </TableBody>
       </Table>
     </TableBase>
