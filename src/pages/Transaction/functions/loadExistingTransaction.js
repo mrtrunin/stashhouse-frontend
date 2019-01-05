@@ -75,6 +75,14 @@ const loadExistingTransaction = async (
       });
     }
 
+    // HANDLE TO WAREHOUSE
+    if (transaction.days_due) {
+      await store.dispatch({
+        type: "TRANSACTION_STATE_CHANGE_DAYS_DUE",
+        payload: transaction.days_due
+      });
+    }
+
     // HANDLE PRODUCTS
     transaction.stock_list.map(async stockId => {
       let stock = await fetchStock(stockId);

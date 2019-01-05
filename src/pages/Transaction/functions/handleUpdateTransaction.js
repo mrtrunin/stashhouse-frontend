@@ -13,20 +13,27 @@ const handleUpdateTransaction = async (
     fromWarehouse,
     toWarehouse,
     products,
-    transactionType
+    transactionType,
+    daysDue
   } = transactionState;
 
-  let hasNoProducts = Object.keys(products).length === 0;
-  let hasNoFromWarehouse = Object.keys(fromWarehouse).length === 0;
-  let hasNoToWarehouse = Object.keys(toWarehouse).length === 0;
+  const hasNoProducts = Object.keys(products).length === 0;
+  const hasNoFromWarehouse = Object.keys(fromWarehouse).length === 0;
+  const hasNoToWarehouse = Object.keys(toWarehouse).length === 0;
+  const hasNoDaysDue = daysDue === undefined;
 
-  let hasNoCustomers = customer ? Object.keys(customer).length === 0 : true;
+  const hasNoCustomers = customer ? Object.keys(customer).length === 0 : true;
 
-  let fromWarehouseRequired = ["sell", "move"].includes(transactionType);
-  let toWarehouseRequired = ["buy", "move"].includes(transactionType);
-  let customerRequired = ["sell"].includes(transactionType);
+  const fromWarehouseRequired = ["sell", "move"].includes(transactionType);
+  const toWarehouseRequired = ["buy", "move"].includes(transactionType);
+  const customerRequired = ["sell"].includes(transactionType);
+  const daysDueRequired = ["sell"].includes(transactionType);
 
-  let customerId = hasNoCustomers ? null : customer.id;
+  const customerId = hasNoCustomers ? null : customer.id;
+
+  if (hasNoDaysDue && daysDueRequired) {
+    return Message("Days Due is missing!", "warning");
+  }
 
   if (hasNoProducts) {
     return Message("Product is missing!", "warning");
@@ -45,7 +52,7 @@ const handleUpdateTransaction = async (
   }
 
   try {
-    await updateTransaction(existingTransactionId, customerId);
+    await updateTransaction(existingTransactionId, customerId, daysDue);
 
     await deleteStockFromTransaction(existingTransactionId);
 

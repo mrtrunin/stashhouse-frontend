@@ -23,14 +23,22 @@ export const TRANSACTION_STATE_CHANGE_PRODUCT_ATTRIBUTE =
 export const TRANSACTION_STATE_FETCHING = "TRANSACTION_STATE_FETCHING";
 export const TRANSACTION_STATE_FETCHED = "TRANSACTION_STATE_FETCHED";
 export const TRANSACTION_STATE_RESET = "TRANSACTION_STATE_RESET";
+export const TRANSACTION_STATE_CHANGE_DAYS_DUE =
+  "TRANSACTION_STATE_CHANGE_DAYS_DUE";
 
 const url = process.env.REACT_APP_SERVER_URL;
 
-export function createTransaction(customerId, transactionType, business_name) {
+export function createTransaction(
+  customerId,
+  transactionType,
+  daysDue,
+  business_name
+) {
   return async dispatch => {
     let payload = {};
 
     payload.customer = customerId || null;
+    payload.days_due = daysDue || null;
     payload.type = transactionType;
     payload.business = {
       name: business_name
@@ -60,11 +68,12 @@ export function createTransaction(customerId, transactionType, business_name) {
   };
 }
 
-export function updateTransaction(transactionId, customerId) {
+export function updateTransaction(transactionId, customerId, daysDue) {
   return async dispatch => {
     let payload = {};
 
     payload.customer = customerId;
+    payload.days_due = daysDue;
 
     dispatch({
       type: TRANSACTION_STATE_FETCHING

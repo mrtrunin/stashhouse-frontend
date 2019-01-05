@@ -31,9 +31,11 @@ import handleDelete from "./functions/handleDelete";
 import handleCreateTransaction from "./functions/handleCreateTransaction";
 import loadExistingTransaction from "./functions/loadExistingTransaction";
 import handleUpdateTransaction from "./functions/handleUpdateTransaction";
+import handleInvoiceDaysDueChange from "./functions/handleInvoiceDaysDueChange";
 import { bindActionCreators } from "redux";
 
 import { TransactionStyle } from "./TransactionStyle";
+import InvoiceDaysDue from "./components/InvoiceDaysDue";
 
 export class Transaction extends Component {
   state = {
@@ -78,27 +80,34 @@ export class Transaction extends Component {
         updateTransaction,
         addProductToTransaction,
         deleteStockFromTransaction
-      }
+      },
+      customersFetched,
+      warehousesFetched,
+      productsFetched,
+      transactionState,
+      customers,
+      warehouses,
+      products,
+      business
     } = this.props;
 
-    let customersFetched = this.props.customersFetched;
-    let warehousesFetched = this.props.warehousesFetched;
-    let productsFetched = this.props.productsFetched;
+    const { redirect } = this.state;
 
-    let totals = calculateTotals(this.props.transactionState);
+    const totals = calculateTotals(transactionState);
 
-    let existingTransactionId = this.props.match.params.transactionId;
-    let isExistingTransaction = existingTransactionId ? true : false;
+    const existingTransactionId = this.props.match.params.transactionId;
+    const isExistingTransaction = existingTransactionId ? true : false;
 
-    let transactionType = this.props.transactionState.transactionType;
-    let fromWarehouseAllowed = ["sell", "move"].includes(transactionType);
-    let toWarehouseAllowed = ["buy", "move"].includes(transactionType);
-    let taxAllowed = ["sell", "buy"].includes(transactionType);
-    let totalWithTaxAllowed = ["sell", "buy"].includes(transactionType);
+    const transactionType = transactionState.transactionType;
+    const fromWarehouseAllowed = ["sell", "move"].includes(transactionType);
+    const toWarehouseAllowed = ["buy", "move"].includes(transactionType);
+    const invoiceDaysAllowed = ["sell"].includes(transactionType);
+    const taxAllowed = ["sell", "buy"].includes(transactionType);
+    const totalWithTaxAllowed = ["sell", "buy"].includes(transactionType);
 
-    let customerRequired = ["sell"].includes(transactionType);
+    const customersRequired = ["sell"].includes(transactionType);
 
-    if (this.state.redirect) {
+    if (redirect) {
       return <Redirect to="/transactions/" />;
     }
 
@@ -107,84 +116,59 @@ export class Transaction extends Component {
         <Grid container spacing={16} className={classes.topAttributes}>
           <Grid item xs={12}>
             <Grid container>
-              {customerRequired && (
-                <Grid item xs={4}>
-                  {customersFetched ? (
-                    <CustomerSelector
-                      className="col s3"
-                      customers={this.props.customers}
-                      selectedCustomer={this.props.transactionState.customer}
-                      onChange={handleCustomerSelect.bind(
-                        null,
-                        this.props.customers
-                      )}
-                    />
-                  ) : (
-                    "Loading"
-                  )}
-                </Grid>
+              {customersRequired && customersFetched && (
+                <CustomerSelector
+                  customers={customers}
+                  selectedCustomer={transactionState.customer}
+                  onChange={handleCustomerSelect.bind(null, customers)}
+                  customersRequired={customersRequired}
+                  customersFetched={customersFetched}
+                />
               )}
 
-              {fromWarehouseAllowed && (
-                <Grid item xs={4}>
-                  {warehousesFetched ? (
-                    <WarehouseSelector
-                      label="From Warehouse"
-                      warehouses={this.props.warehouses}
-                      defaultValue="Select From Warehouse"
-                      selectedWarehouse={
-                        this.props.transactionState.fromWarehouse
-                      }
-                      onChange={handleWarehouseSelect.bind(
-                        null,
-                        "FROM",
-                        this.props.warehouses
-                      )}
-                    />
-                  ) : (
-                    "Loading"
+              {fromWarehouseAllowed && warehousesFetched && (
+                <WarehouseSelector
+                  label="From Warehouse"
+                  warehouses={warehouses}
+                  defaultValue="Select From Warehouse"
+                  selectedWarehouse={transactionState.fromWarehouse}
+                  onChange={handleWarehouseSelect.bind(
+                    null,
+                    "FROM",
+                    warehouses
                   )}
-                </Grid>
+                />
               )}
 
-              {toWarehouseAllowed && (
-                <Grid item xs={4}>
-                  {warehousesFetched ? (
-                    <WarehouseSelector
-                      label="To Warehouse"
-                      warehouses={this.props.warehouses}
-                      defaultValue="Select To Warehouse"
-                      selectedWarehouse={
-                        this.props.transactionState.toWarehouse
-                      }
-                      onChange={handleWarehouseSelect.bind(
-                        null,
-                        "TO",
-                        this.props.warehouses
-                      )}
-                    />
-                  ) : (
-                    "Loading"
-                  )}
-                </Grid>
+              {toWarehouseAllowed && warehousesFetched && (
+                <WarehouseSelector
+                  label="To Warehouse"
+                  warehouses={warehouses}
+                  defaultValue="Select To Warehouse"
+                  selectedWarehouse={transactionState.toWarehouse}
+                  onChange={handleWarehouseSelect.bind(null, "TO", warehouses)}
+                />
+              )}
+
+              {invoiceDaysAllowed && (
+                <InvoiceDaysDue
+                  value={transactionState.daysDue}
+                  onChange={handleInvoiceDaysDueChange}
+                />
               )}
             </Grid>
           </Grid>
+
           <Grid item xs={12}>
             <Paper className={classes.table}>
-              {productsFetched ? (
+              {productsFetched && (
                 <TransactionProductTable
-                  products={this.props.products}
-                  selectedProducts={this.props.transactionState.products}
-                  onProductChange={handleProductSelect.bind(
-                    null,
-                    this.props.products
-                  )}
+                  products={products}
+                  selectedProducts={transactionState.products}
+                  onProductChange={handleProductSelect.bind(null, products)}
                   onProductAttributeChange={handleProductAttributeChange}
                   onProductRemove={handleProductRemove}
                 />
-              ) : (
-                "Loading"
               )}
 
               <Grid container className={classes.grandTotalCalculator}>
@@ -236,8 +220,8 @@ export class Transaction extends Component {
                     variant="contained"
                     onClick={handleUpdateTransaction.bind(
                       null,
-                      this.props.transactionState,
-                      this.props.business,
+                      transactionState,
+                      business,
                       updateTransaction,
                       addProductToTransaction,
                       deleteStockFromTransaction
@@ -253,13 +237,13 @@ export class Transaction extends Component {
                     variant="contained"
                     onClick={handleCreateTransaction.bind(
                       null,
-                      this.props.transactionState,
-                      this.props.business,
+                      transactionState,
+                      business,
                       createTransaction,
                       addProductToTransaction
                     )}
                   >
-                    {this.props.transactionState.transactionType}
+                    {transactionState.transactionType}
                   </Button>
                 </Grid>
               )}

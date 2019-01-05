@@ -10,7 +10,7 @@ const handleCreateTransaction = async (
 ) => {
   e.preventDefault();
 
-  let createTransactionTypes = {
+  const createTransactionTypes = {
     buy: "PURCHASE",
     sell: "INVOICE",
     move: "TRANSFER"
@@ -20,29 +20,36 @@ const handleCreateTransaction = async (
     transactionType,
     products,
     fromWarehouse,
-    toWarehouse
+    toWarehouse,
+    daysDue
   } = transactionState;
-  let selectedCreateTransactionType = createTransactionTypes[transactionType];
+  const selectedCreateTransactionType = createTransactionTypes[transactionType];
 
-  let customer = ["sell"].includes(transactionType)
+  const customer = ["sell"].includes(transactionType)
     ? transactionState.customer
     : {};
 
-  let hasNoProducts = Object.keys(products).length === 0;
-  let hasNoCustomers = Object.keys(customer).length === 0;
-  let hasNoFromWarehouse = Object.keys(fromWarehouse).length === 0;
-  let hasNoToWarehouse = Object.keys(toWarehouse).length === 0;
+  const hasNoProducts = Object.keys(products).length === 0;
+  const hasNoCustomers = Object.keys(customer).length === 0;
+  const hasNoFromWarehouse = Object.keys(fromWarehouse).length === 0;
+  const hasNoToWarehouse = Object.keys(toWarehouse).length === 0;
+  const hasNoDaysDue = daysDue === undefined;
 
-  let fromWarehouseRequired = ["sell", "move"].includes(transactionType);
-  let toWarehouseRequired = ["buy", "move"].includes(transactionType);
-  let customerRequired = ["sell"].includes(transactionType);
+  const fromWarehouseRequired = ["sell", "move"].includes(transactionType);
+  const toWarehouseRequired = ["buy", "move"].includes(transactionType);
+  const customerRequired = ["sell"].includes(transactionType);
+  const daysDueRequired = ["sell"].includes(transactionType);
+
+  if (hasNoDaysDue && daysDueRequired) {
+    return Message("Days Due is missing!");
+  }
 
   if (hasNoCustomers && customerRequired) {
     return Message("Customer is missing!");
   }
 
   if (hasNoFromWarehouse && fromWarehouseRequired) {
-    return Message("From warehouse is missing!");
+    return Message("From Warehouse is missing!");
   }
 
   if (hasNoToWarehouse && toWarehouseRequired) {
@@ -63,6 +70,7 @@ const handleCreateTransaction = async (
     let transaction = await createTransaction(
       customer.id,
       selectedCreateTransactionType,
+      daysDue,
       business.name
     );
 

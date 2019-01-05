@@ -1,7 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { MenuItem, Select, InputLabel, FormControl } from "@material-ui/core";
+import {
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+  Grid
+} from "@material-ui/core";
 
 const WarehouseSelector = props => {
   const { defaultValue, label, warehouses, selectedWarehouse } = props;
@@ -18,23 +24,25 @@ const WarehouseSelector = props => {
     selectedWarehouse && selectedWarehouse.name ? selectedWarehouse.name : "";
 
   return (
-    <FormControl>
-      <InputLabel htmlFor="warehouseSelector">{label}</InputLabel>
-      <Select
-        value={selectedWarehouseName}
-        inputProps={{
-          name: "warehouseSelector",
-          id: "warehouseSelector"
-        }}
-        onChange={props.onChange}
-        style={{ width: 240 }}
-      >
-        <MenuItem defaultValue disabled>
-          {defaultValue}
-        </MenuItem>
-        {warehouseOptions}
-      </Select>
-    </FormControl>
+    <Grid item xs={4}>
+      <FormControl>
+        <InputLabel htmlFor="warehouseSelector">{label}</InputLabel>
+        <Select
+          value={selectedWarehouseName}
+          inputProps={{
+            name: "warehouseSelector",
+            id: "warehouseSelector"
+          }}
+          onChange={props.onChange}
+          style={{ width: 240 }}
+        >
+          <MenuItem defaultValue disabled>
+            {defaultValue}
+          </MenuItem>
+          {warehouseOptions}
+        </Select>
+      </FormControl>
+    </Grid>
   );
 };
 

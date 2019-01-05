@@ -9,7 +9,8 @@ import {
   TRANSACTION_STATE_CHANGE_PRODUCT_ATTRIBUTE,
   TRANSACTION_STATE_FETCHING,
   TRANSACTION_STATE_FETCHED,
-  TRANSACTION_STATE_RESET
+  TRANSACTION_STATE_RESET,
+  TRANSACTION_STATE_CHANGE_DAYS_DUE
 } from "./TransactionActions";
 
 export default function reducer(
@@ -19,6 +20,7 @@ export default function reducer(
     customer: {},
     fromWarehouse: {},
     toWarehouse: {},
+    daysDue: "",
     products: [],
     error: null,
     fetching: false
@@ -54,6 +56,12 @@ export default function reducer(
       return {
         ...state,
         toWarehouse: action.payload
+      };
+    }
+    case TRANSACTION_STATE_CHANGE_DAYS_DUE: {
+      return {
+        ...state,
+        daysDue: action.payload
       };
     }
     case TRANSACTION_STATE_ADD_PRODUCT: {
@@ -113,7 +121,8 @@ export default function reducer(
         customer: {},
         fromWarehouse: {},
         toWarehouse: {},
-        products: []
+        products: [],
+        daysDue: ""
       };
     }
     default:
