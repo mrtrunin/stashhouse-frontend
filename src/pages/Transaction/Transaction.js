@@ -99,7 +99,9 @@ export class Transaction extends Component {
     const isExistingTransaction = existingTransactionId ? true : false;
 
     const transactionType = transactionState.transactionType;
-    const fromWarehouseAllowed = ["sell", "move"].includes(transactionType);
+    const fromWarehouseAllowed = ["sell", "move", "writeoff"].includes(
+      transactionType
+    );
     const toWarehouseAllowed = ["buy", "move"].includes(transactionType);
     const invoiceDaysAllowed = ["sell"].includes(transactionType);
     const taxAllowed = ["sell", "buy"].includes(transactionType);

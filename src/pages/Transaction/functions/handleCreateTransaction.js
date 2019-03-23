@@ -13,7 +13,8 @@ const handleCreateTransaction = async (
   const createTransactionTypes = {
     buy: "PURCHASE",
     sell: "INVOICE",
-    move: "TRANSFER"
+    move: "TRANSFER",
+    writeoff: "WRITEOFF"
   };
 
   const {
@@ -35,7 +36,9 @@ const handleCreateTransaction = async (
   const hasNoToWarehouse = Object.keys(toWarehouse).length === 0;
   const hasNoDaysDue = daysDue === undefined;
 
-  const fromWarehouseRequired = ["sell", "move"].includes(transactionType);
+  const fromWarehouseRequired = ["sell", "move", "writeoff"].includes(
+    transactionType
+  );
   const toWarehouseRequired = ["buy", "move"].includes(transactionType);
   const customerRequired = ["sell"].includes(transactionType);
   const daysDueRequired = ["sell"].includes(transactionType);

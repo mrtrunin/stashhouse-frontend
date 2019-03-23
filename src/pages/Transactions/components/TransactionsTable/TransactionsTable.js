@@ -62,7 +62,8 @@ const TransactionsTable = props => {
   const linkTargetOptions = {
     INVOICE: "sell",
     PURCHASE: "buy",
-    TRANSFER: "move"
+    TRANSFER: "move",
+    WRITEOFF: "writeoff"
   };
 
   const unpaidAmountTolerance = 0.05;

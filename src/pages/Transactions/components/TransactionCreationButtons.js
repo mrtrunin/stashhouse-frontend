@@ -5,6 +5,7 @@ import { Button, withStyles } from "@material-ui/core";
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import Add from "@material-ui/icons/Add";
 import AttachMoney from "@material-ui/icons/AttachMoney";
+import Clear from "@material-ui/icons/Clear";
 
 import ButtonRow from "components/Buttons/ButtonRow";
 
@@ -32,6 +33,11 @@ const TransactionCreationButtons = props => {
         <Button href="/buy" color="primary" variant="contained">
           <Add className={classes.leftIcon} />
           Buy
+        </Button>
+
+        <Button href="/writeoff" color="primary" variant="contained">
+          <Clear className={classes.leftIcon} />
+          Write-off
         </Button>
       </ButtonRow>
     );
