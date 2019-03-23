@@ -41,6 +41,10 @@ export function fetchProductsStock(
   businessName,
   date = moment().format("YYYY-MM-DD")
 ) {
+  const endOfDayDate = moment(date)
+    .endOf("day")
+    .format();
+
   return async dispatch => {
     await dispatch({
       type: FETCH_PRODUCTS_STOCK
@@ -50,7 +54,7 @@ export function fetchProductsStock(
     const config = {
       params: {
         business_name: businessName,
-        date: date
+        date: endOfDayDate
       }
     };
 

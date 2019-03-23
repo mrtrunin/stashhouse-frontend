@@ -113,7 +113,7 @@ export class Warehouses extends Component {
 
     const { warehouseDate } = await this.state;
 
-    if (this.isDateFormat(this.state.warehouseDate)) {
+    if (this.isDateFormat(warehouseDate)) {
       await fetchProductsStock(business.name, warehouseDate);
     }
   };
