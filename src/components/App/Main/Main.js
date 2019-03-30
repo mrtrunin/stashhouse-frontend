@@ -1,9 +1,8 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 
 import { withStyles, Grid } from "@material-ui/core";
 import MessageBox from "components/Message/MessageBox";
-import MainStyle from "./MainStyle";
 
 import Message from "components/Message/Message";
 import { bindActionCreators } from "redux";
@@ -13,12 +12,29 @@ import axios from "axios";
 
 import * as loginActions from "pages/Login/LoginActions";
 
-class Main extends Component {
-  componentDidMount = () => {
-    this.interceptApiResponse();
-  };
+const style = theme => ({
+  root: {
+    marginTop: theme.spacing.unit * 8,
+    padding: theme.spacing.unit * 2,
+    width: "100%"
+  },
+  font: theme.typography,
+  landingPage: {
+    backgroundColor: theme.palette.primary.main,
+    minHeight: "600px"
+  },
+  content: {
+    display: "flex",
+    justifyContent: "center"
+  }
+});
 
-  interceptApiResponse = () => {
+const Main = ({ classes, children, actions: { logout, refreshToken } }) => {
+  useEffect(() => {
+    interceptApiResponse();
+  });
+
+  const interceptApiResponse = () => {
     axios.interceptors.request.use(
       config => {
         const token = localStorage.getItem("jwtToken");
@@ -71,7 +87,7 @@ class Main extends Component {
 
         if (hasAuthTokenExpired) {
           return new Promise(async () => {
-            await this.checkTokenExpiration();
+            await checkTokenExpiration();
             error.config.headers.Authorization =
               (await "Bearer ") + localStorage.jwtToken;
             await axios.request(error.config);
@@ -80,13 +96,13 @@ class Main extends Component {
         }
 
         if (hasRefreshTokenExpired) {
-          this.logout();
+          logout();
           return Promise.reject(error);
         }
 
         if (unauthorized) {
           Message("Unauthorized request", "error", 401);
-          this.logout();
+          logout();
           return Promise.reject(error);
         }
 
@@ -95,64 +111,47 @@ class Main extends Component {
     );
   };
 
-  checkTokenExpiration = async () => {
+  const checkTokenExpiration = async () => {
     let expiration_time = localStorage.jwtToken_expiration_time;
     let now = Date.now();
-    const {
-      actions: { refreshToken }
-    } = this.props;
 
     if (localStorage.refresh_token && expiration_time - now < 82800 * 1000) {
       try {
         await refreshToken();
       } catch (error) {
         Message("Could not refresh token: " + error, "error");
-        this.logout();
+        logout();
       }
     }
   };
 
-  logout = () => {
-    const {
-      actions: { logout }
-    } = this.props;
+  const isLandingPage = window.location.pathname === "/";
 
-    logout();
-  };
-
-  render() {
-    const { classes, children } = this.props;
-
-    const isLandingPage = window.location.pathname === "/";
-
-    if (isLandingPage) {
-      return (
-        <Grid
-          container
-          className={[classes.root, classes.font, classes.landingPage].join(
-            " "
-          )}
-          spacing={16}
-        >
-          <Grid item xs={12}>
-            {children}
-          </Grid>
-        </Grid>
-      );
-    }
-
+  if (isLandingPage) {
     return (
-      <Grid container className={[classes.root, classes.font].join(" ")}>
-        <Grid item md={1} />
-        <Grid item xs={12} md={10} className={classes.content}>
+      <Grid
+        container
+        className={[classes.root, classes.font, classes.landingPage].join(" ")}
+        spacing={16}
+      >
+        <Grid item xs={12}>
           {children}
         </Grid>
-        <Grid item md={1} />
-        <MessageBox />
       </Grid>
     );
   }
-}
+
+  return (
+    <Grid container className={[classes.root, classes.font].join(" ")}>
+      <Grid item md={1} />
+      <Grid item xs={12} md={10} className={classes.content}>
+        {children}
+      </Grid>
+      <Grid item md={1} />
+      <MessageBox />
+    </Grid>
+  );
+};
 
 Main.propTypes = {
   actions: PropTypes.object.isRequired,
@@ -177,4 +176,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(MainStyle)(Main));
+)(withStyles(style)(Main));
