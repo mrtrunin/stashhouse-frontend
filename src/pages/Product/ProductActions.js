@@ -16,7 +16,7 @@ export function createProduct(
   tax_rate,
   business_name
 ) {
-  return async dispatch => {
+  return async () => {
     let payload = {};
 
     payload.name = name;
@@ -40,7 +40,7 @@ export function createProduct(
 }
 
 export function deleteProduct(id) {
-  return async dispatch => {
+  return async () => {
     try {
       const { data } = await axios.delete(url + "/products/" + id + "/");
 
@@ -75,7 +75,7 @@ export function fetchProduct(productId) {
 }
 
 export function updateProduct(name, ean, default_price, tax_rate, productId) {
-  return async dispatch => {
+  return async () => {
     let payload = {};
 
     payload.name = name;

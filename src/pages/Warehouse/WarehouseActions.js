@@ -10,7 +10,7 @@ export const RESET_WAREHOUSE = "RESET_WAREHOUSE";
 const url = process.env.REACT_APP_SERVER_URL;
 
 export function createWarehouse(name, business_name) {
-  return async dispatch => {
+  return async () => {
     let payload = {};
 
     payload.name = name;
@@ -31,7 +31,7 @@ export function createWarehouse(name, business_name) {
 }
 
 export function updateWarehouse(name, warehouseId) {
-  return async dispatch => {
+  return async () => {
     let payload = {};
 
     payload.name = name;
@@ -52,7 +52,7 @@ export function updateWarehouse(name, warehouseId) {
 }
 
 export function deleteWarehouse(id) {
-  return async dispatch => {
+  return async () => {
     try {
       const { data } = await axios.delete(url + "/warehouses/" + id + "/");
 

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -20,144 +20,124 @@ import EditorHeader from "components/Editor/EditorHeader";
 import EditorContent from "components/Editor/EditorContent";
 import { bindActionCreators } from "redux";
 
-export class Product extends Component {
-  componentDidMount = async () => {
-    const {
-      actions: { resetProduct }
-    } = this.props;
+const Product = props => {
+  const {
+    productId,
+    product,
+    business,
+    hideProductEditor,
+    actions: {
+      fetchProduct,
+      updateProductField,
+      fetchProductsStock,
+      createProduct,
+      updateProduct,
+      deleteProduct,
+      resetProduct
+    }
+  } = props;
+
+  useEffect(() => {
     resetProduct();
-    this.fetchProduct();
-  };
+    fetchProduct(productId);
+  }, [productId]);
 
-  componentDidUpdate = async prevProps => {
-    if (prevProps.productId !== this.props.productId) {
-      await this.fetchProduct();
-    }
-  };
-
-  fetchProduct = async () => {
-    const {
-      productId,
-      actions: { fetchProduct }
-    } = this.props;
-
-    if (productId) {
-      await fetchProduct(productId);
-    }
-  };
-
-  handleProductChange = e => {
-    const {
-      actions: { updateProductField }
-    } = this.props;
-    updateProductField(e.target.name, e.target.value);
-  };
-
-  handleCreateOrUpdateProduct = async () => {
-    const {
-      product,
-      business,
-      actions: { fetchProductsStock, createProduct, updateProduct }
-    } = this.props;
-
-    if (product.id) {
-      await updateProduct(
-        product.name,
-        product.ean,
-        product.default_price,
-        product.tax_rate,
-        product.id
-      );
-    } else {
-      await createProduct(
-        product.name,
-        product.ean,
-        product.default_price,
-        product.tax_rate,
-        business.name
-      );
-    }
+  const fetchDataAndHideEditor = async () => {
     await fetchProductsStock(business.name);
+    await hideProductEditor();
   };
 
-  handleDeleteProduct = async () => {
-    const {
-      product,
-      business,
-      actions: { fetchProductsStock, deleteProduct }
-    } = this.props;
-
-    await deleteProduct(product.id);
-    await fetchProductsStock(business.name);
-  };
-
-  render() {
-    const { product, hideProductEditor } = this.props;
-
-    return (
-      <Editor>
-        <EditorHeader
-          editedObject={product}
-          addNewObjectLabel="Add new product"
-          updateExistingObjectLabel="Update product"
-          hideEditor={hideProductEditor}
-        />
-
-        <EditorContent>
-          <TextField
-            name="name"
-            value={product.name ? product.name : ""}
-            label="Product Name"
-            margin="dense"
-            onChange={this.handleProductChange}
-          />
-          <TextField
-            name="ean"
-            value={product.ean ? product.ean : ""}
-            label="EAN Code"
-            margin="dense"
-            onChange={this.handleProductChange}
-          />
-          <TextField
-            name="default_price"
-            value={product.default_price ? product.default_price : ""}
-            label="Default Price"
-            margin="dense"
-            onChange={this.handleProductChange}
-          />
-          <FormControl>
-            <InputLabel htmlFor="tax_rate">Default Tax Rate</InputLabel>
-            <Select
-              value={product.tax_rate ? product.tax_rate : ""}
-              onChange={this.handleProductChange}
-              name="tax_rate"
-              renderValue={value => (value * 100).toString() + "%"}
-              input={<Input id="tax_rate" />}
-            >
-              <MenuItem value={(0.0).toString()}>0%</MenuItem>
-              <MenuItem value={0.09}>9%</MenuItem>
-              <MenuItem value={0.2}>20%</MenuItem>
-            </Select>
-          </FormControl>
-        </EditorContent>
-
-        <EditorButtons
-          editedObjectLabel="Product"
-          editedObject={this.props.product}
-          deleteAction={this.handleDeleteProduct}
-          updateAction={this.handleCreateOrUpdateProduct}
-          createAction={this.handleCreateOrUpdateProduct}
-        />
-      </Editor>
+  const handleUpdateProduct = async () => {
+    await updateProduct(
+      product.name,
+      product.ean,
+      product.default_price,
+      product.tax_rate,
+      product.id
     );
-  }
-}
+    await fetchDataAndHideEditor();
+  };
+
+  const handleCreateProduct = async () => {
+    await createProduct(
+      product.name,
+      product.ean,
+      product.default_price,
+      product.tax_rate,
+      business.name
+    );
+    await fetchDataAndHideEditor();
+  };
+
+  const handleDeleteProduct = async () => {
+    await deleteProduct(product.id);
+    await fetchDataAndHideEditor();
+  };
+
+  return (
+    <Editor>
+      <EditorHeader
+        editedObject={product}
+        addNewObjectLabel="Add new product"
+        updateExistingObjectLabel="Update product"
+        hideEditor={hideProductEditor}
+      />
+
+      <EditorContent>
+        <TextField
+          name="name"
+          value={product.name ? product.name : ""}
+          label="Product Name"
+          margin="dense"
+          onChange={e => updateProductField(e.target.name, e.target.value)}
+        />
+        <TextField
+          name="ean"
+          value={product.ean ? product.ean : ""}
+          label="EAN Code"
+          margin="dense"
+          onChange={e => updateProductField(e.target.name, e.target.value)}
+        />
+        <TextField
+          name="default_price"
+          value={product.default_price ? product.default_price : ""}
+          label="Default Price"
+          margin="dense"
+          onChange={e => updateProductField(e.target.name, e.target.value)}
+        />
+        <FormControl>
+          <InputLabel htmlFor="tax_rate">Default Tax Rate</InputLabel>
+          <Select
+            value={product.tax_rate ? product.tax_rate : ""}
+            onChange={e => updateProductField(e.target.name, e.target.value)}
+            name="tax_rate"
+            renderValue={value => (value * 100).toString() + "%"}
+            input={<Input id="tax_rate" />}
+          >
+            <MenuItem value={(0.0).toString()}>0%</MenuItem>
+            <MenuItem value={0.09}>9%</MenuItem>
+            <MenuItem value={0.2}>20%</MenuItem>
+          </Select>
+        </FormControl>
+      </EditorContent>
+
+      <EditorButtons
+        editedObjectLabel="Product"
+        editedObject={product}
+        deleteAction={handleDeleteProduct}
+        createAction={handleCreateProduct}
+        updateAction={handleUpdateProduct}
+      />
+    </Editor>
+  );
+};
 
 Product.propTypes = {
   actions: PropTypes.object.isRequired,
   productId: PropTypes.string,
   product: PropTypes.object,
-  hideProductEditor: PropTypes.func.isRequired
+  hideProductEditor: PropTypes.func.isRequired,
+  business: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => {
