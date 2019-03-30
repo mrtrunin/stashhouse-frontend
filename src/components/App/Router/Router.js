@@ -1,5 +1,6 @@
 import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch } from "react-router-dom";
+import { Route, Redirect } from "react-router";
 import Main from "components/App/Main/Main";
 import PrivateRoute from "./PrivateRoute";
 import Warehouses from "pages/Warehouses/Warehouses";

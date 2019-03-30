@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -8,207 +8,145 @@ import * as transactionsActions from "./TransactionsActions";
 
 import TransactionsTable from "./components/TransactionsTable/TransactionsTable";
 
-import { Button, Grid, withStyles } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import TransactionCreationButtons from "./components/TransactionCreationButtons";
 
 import ButtonRow from "components/Buttons/ButtonRow";
 import TableFilter from "./components/TransactionsTable/TableFilter";
 import EmailDialog from "components/Email/EmailDialog";
+import PageContainer from "../../components/PageContainer/PageContainer";
 
-export const TransactionsStyle = () => ({
-  root: {
-    width: "100%"
-  }
-});
+const Transactions = props => {
+  const {
+    business,
+    transactions,
+    fetched,
+    actions: { fetchTransactions, fetchTransactionPdf, deleteTransactions }
+  } = props;
 
-export class Transactions extends Component {
-  state = {
-    selectedTransactions: [],
-    page: 0,
-    rowsPerPage: 10,
-    filteredTransactionType: "ALL",
-    openEmail: false,
-    transaction: {}
-  };
-  componentDidMount = () => {
-    this.fetchData();
-  };
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedTransactions, setSelectedTransactions] = useState([]);
+  const [filteredTransactionType, setFilteredTransactionType] = useState("ALL");
+  const [openEmail, setOpenEmail] = useState(false);
+  const [transaction, setTransaction] = useState({});
 
-  componentDidUpdate = prevProps => {
-    if (prevProps.business !== this.props.business) {
-      this.fetchData();
-    }
-  };
-
-  fetchData = () => {
-    const {
-      business,
-      actions: { fetchTransactions }
-    } = this.props;
+  useEffect(() => {
     fetchTransactions(business.name);
-  };
+  }, [business]);
 
-  handleDownloadPdf = (transactionId, transactionName, e) => {
+  const handleDownloadPdf = (transactionId, transactionName, e) => {
     e.preventDefault();
-    const {
-      business,
-      actions: { fetchTransactionPdf }
-    } = this.props;
     fetchTransactionPdf(transactionId, transactionName, business.name);
   };
 
-  handleCheckbox = e => {
-    const { transactions } = this.props;
-
+  const handleCheckbox = e => {
     if (e.target.name === "select_all" && e.target.checked) {
       transactions.forEach(transaction => {
-        this.addTransactionIdToState(parseInt(transaction.id, 10));
+        addTransactionIdToState(parseInt(transaction.id, 10));
       });
     }
 
     if (e.target.name === "select_all" && !e.target.checked) {
       transactions.forEach(() => {
-        this.setState({ selectedTransactions: [] });
+        setSelectedTransactions([]);
       });
     }
 
     if (e.target.checked) {
-      this.addTransactionIdToState(e.target.id);
+      addTransactionIdToState(e.target.id);
     } else {
-      this.removeTransactionIdFromState(e.target.id);
+      removeTransactionIdFromState(e.target.id);
     }
   };
 
-  addTransactionIdToState(transactionId) {
-    this.setState(prevState => ({
-      selectedTransactions: [
-        ...prevState.selectedTransactions,
-        parseInt(transactionId, 10)
-      ]
-    }));
-  }
-
-  removeTransactionIdFromState(transactionId) {
-    let index = this.state.selectedTransactions.indexOf(
+  const addTransactionIdToState = transactionId => {
+    setSelectedTransactions(selectedTransactions => [
+      ...selectedTransactions,
       parseInt(transactionId, 10)
-    );
-    this.setState(prevState => ({
-      selectedTransactions: [
-        ...prevState.selectedTransactions.slice(0, index),
-        ...prevState.selectedTransactions.slice(index + 1)
-      ]
-    }));
-  }
+    ]);
+  };
 
-  handleDeleteTransactions = async () => {
-    const {
-      business,
-      actions: { fetchTransactions, deleteTransactions }
-    } = this.props;
-    await deleteTransactions(this.state.selectedTransactions);
+  const removeTransactionIdFromState = transactionId => {
+    let index = selectedTransactions.indexOf(parseInt(transactionId, 10));
+    setSelectedTransactions(selectedTransactions => [
+      ...selectedTransactions.slice(0, index),
+      ...selectedTransactions.slice(index + 1)
+    ]);
+  };
+
+  const handleDeleteTransactions = async () => {
+    await deleteTransactions(selectedTransactions);
     await fetchTransactions(business.name);
-    await this.setState({ selectedTransactions: [] });
+    await setSelectedTransactions([]);
   };
 
-  handleChangePage = (e, page) => {
-    this.setState({ page });
-  };
-
-  handleChangeRowsPerPage = e => {
-    this.setState({ rowsPerPage: e.target.value });
-  };
-
-  handleFilterTransactionType = e => {
+  const handleFilterTransactionType = e => {
     e.persist();
-    this.setState(() => ({
-      filteredTransactionType: e.target.value
-    }));
+    setFilteredTransactionType(e.target.value);
   };
 
-  handleOpenEmail = (transaction, e) => {
+  const handleOpenEmail = (transaction, e) => {
     e.preventDefault();
-    this.setState(() => ({
-      openEmail: true,
-      transaction: transaction
-    }));
+    setOpenEmail(true);
+    setTransaction(transaction);
   };
 
-  handleCloseEmail = () => {
-    this.setState(() => ({
-      openEmail: false,
-      transactionIdForEmail: null,
-      fullTransactionNumber: null
-    }));
+  const handleCloseEmail = () => {
+    setOpenEmail(false);
   };
 
-  render() {
-    const { transactions, fetched, classes } = this.props;
-    const { openEmail, transaction } = this.state;
-
-    const {
-      selectedTransactions,
-      page,
-      rowsPerPage,
-      filteredTransactionType
-    } = this.state;
-
-    if (!fetched) {
-      return <p>Loading...</p>;
-    }
-
-    return (
-      <div className={classes.root}>
-        <EmailDialog
-          open={openEmail}
-          handleClose={this.handleCloseEmail}
-          transaction={transaction}
-        />
-        <Grid container>
-          <Grid item xs={12}>
-            <TableFilter
-              filteredTransactionType={filteredTransactionType}
-              handleFilterTransactionType={this.handleFilterTransactionType}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TransactionsTable
-              transactions={transactions}
-              selectedTransactions={selectedTransactions}
-              onClick={this.handleDownloadPdf}
-              onChange={this.handleCheckbox}
-              handleChangePage={this.handleChangePage}
-              handleChangeRowsPerPage={this.handleChangeRowsPerPage}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              filteredTransactionType={filteredTransactionType}
-              handleFilterTransactionType={this.handleFilterTransactionType}
-              handleOpenEmail={this.handleOpenEmail}
-            />
-          </Grid>
-        </Grid>
-
-        <ButtonRow show={selectedTransactions.length > 0}>
-          <Button
-            color="secondary"
-            variant="contained"
-            onClick={this.handleDeleteTransactions}
-          >
-            Delete transactions
-          </Button>
-        </ButtonRow>
-
-        <TransactionCreationButtons show={selectedTransactions.length === 0} />
-      </div>
-    );
+  if (!fetched) {
+    return <p>Loading...</p>;
   }
-}
+
+  return (
+    <PageContainer>
+      <EmailDialog
+        open={openEmail}
+        handleClose={handleCloseEmail}
+        transaction={transaction}
+      />
+
+      <TableFilter
+        filteredTransactionType={filteredTransactionType}
+        handleFilterTransactionType={handleFilterTransactionType}
+      />
+
+      <TransactionsTable
+        transactions={transactions}
+        selectedTransactions={selectedTransactions}
+        onClick={handleDownloadPdf}
+        onChange={handleCheckbox}
+        handleChangePage={(e, page) => setPage(page)}
+        handleChangeRowsPerPage={e => setRowsPerPage(e.target.value)}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        filteredTransactionType={filteredTransactionType}
+        handleFilterTransactionType={handleFilterTransactionType}
+        handleOpenEmail={handleOpenEmail}
+      />
+
+      <ButtonRow show={selectedTransactions.length > 0}>
+        <Button
+          color="secondary"
+          variant="contained"
+          onClick={handleDeleteTransactions}
+        >
+          Delete transactions
+        </Button>
+      </ButtonRow>
+
+      <TransactionCreationButtons show={selectedTransactions.length === 0} />
+    </PageContainer>
+  );
+};
 
 Transactions.propTypes = {
   actions: PropTypes.object.isRequired,
   transactions: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   business: PropTypes.object.isRequired,
-  fetched: PropTypes.bool,
-  classes: PropTypes.object.isRequired
+  fetched: PropTypes.bool
 };
 
 const mapStateToProps = state => {
@@ -231,4 +169,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(TransactionsStyle)(Transactions));
+)(Transactions);

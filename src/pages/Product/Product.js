@@ -20,23 +20,21 @@ import EditorHeader from "components/Editor/EditorHeader";
 import EditorContent from "components/Editor/EditorContent";
 import { bindActionCreators } from "redux";
 
-const Product = props => {
-  const {
-    productId,
-    product,
-    business,
-    hideProductEditor,
-    actions: {
-      fetchProduct,
-      updateProductField,
-      fetchProductsStock,
-      createProduct,
-      updateProduct,
-      deleteProduct,
-      resetProduct
-    }
-  } = props;
-
+const Product = ({
+  productId,
+  product,
+  business,
+  hideProductEditor,
+  actions: {
+    fetchProduct,
+    updateProductField,
+    fetchProductsStock,
+    createProduct,
+    updateProduct,
+    deleteProduct,
+    resetProduct
+  }
+}) => {
   useEffect(() => {
     resetProduct();
     fetchProduct(productId);
