@@ -30,11 +30,13 @@ class Main extends Component {
         }
         if (!token && !config.url.startsWith(tokenAuthUrl)) {
           // Don't execute request if no authorization token
+          Message("No authorization token!", "error");
           return;
         }
         return config;
       },
       error => {
+        Message("Interceptor is broken!", "error");
         return Promise.reject(error);
       }
     );

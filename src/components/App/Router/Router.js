@@ -26,10 +26,12 @@ const Router = () => {
         <PrivateRoute path="/warehouses/:warehouseId" component={Warehouses} />
         <PrivateRoute exact path="/warehouses/" component={Warehouses} />
         <PrivateRoute
+          exact
           path="/:transactionType(buy|move|sell|writeoff)/:transactionId"
           component={Transaction}
         />
         <PrivateRoute
+          exact
           path="/:transactionType(buy|move|sell|writeoff)/"
           component={Transaction}
         />
