@@ -7,7 +7,6 @@ export const FETCH_WAREHOUSES_REJECTED = "FETCH_WAREHOUSES_REJECTED";
 export function fetchWarehouses(business_name) {
   return async dispatch => {
     let url = process.env.REACT_APP_SERVER_URL;
-
     dispatch({ type: FETCH_WAREHOUSES });
 
     try {

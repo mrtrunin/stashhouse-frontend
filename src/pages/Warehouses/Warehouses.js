@@ -1,207 +1,111 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import WarehouseTable from "./components/WarehouseTable";
+import WarehousesTable from "./components/WarehousesTable";
 import Product from "pages/Product/Product";
 import Warehouse from "pages/Warehouse/Warehouse";
 
-import { withStyles, Button, Grid } from "@material-ui/core";
-
-import { Link, Redirect } from "react-router-dom";
-import { WarehouseStyle } from "./WarehousesStyle";
+import { Redirect } from "react-router";
 import { bindActionCreators } from "redux";
 
 import * as warehousesActions from "./WarehousesActions";
 import * as productsActions from "pages/Products/ProductsActions";
-import WarehouseTableFilter from "./components/WarehouseTableFilter";
+import WarehousesTableFilter from "./components/WarehousesTableFilter";
 
 import * as moment from "moment";
+import WarehousesButtons from "./components/WarehousesButtons";
+import PageContainer from "../../components/PageContainer/PageContainer";
 
-export class Warehouses extends Component {
-  state = {
-    showProductEditor: false,
-    showWarehouseEditor: false,
-    redirectToRoot: false,
-    warehouseDate: moment().format("YYYY-MM-DD")
-  };
+const Warehouses = props => {
+  const today = moment().format("YYYY-MM-DD");
+  const {
+    products,
+    warehouses,
+    fetched,
+    business,
+    actions: { fetchProductsStock, fetchWarehouses }
+  } = props;
 
-  componentDidMount = async () => {
-    await this.fetchData();
-    await this.showEditors();
-  };
+  const [showWarehouseEditor, setShowWarehouseEditor] = useState(false);
+  const [showProductEditor, setShowProductEditor] = useState(false);
+  const [warehouseDate, setWarehouseDate] = useState(today);
+  const [redirect, setRedirect] = useState(false);
 
-  fetchData = async () => {
-    const {
-      business,
-      actions: { fetchWarehouses, fetchProductsStock }
-    } = this.props;
+  useEffect(() => fetchData(), [props.business]);
+  useEffect(() => showEditors(), [props]);
+  useEffect(() => setRedirect(false), [redirect]);
 
+  const fetchData = () => {
     if (business) {
-      await fetchProductsStock(business.name);
-      await fetchWarehouses(business.name);
+      fetchProductsStock(business.name);
+      fetchWarehouses(business.name);
     }
   };
 
-  componentDidUpdate = (prevProps, prevState) => {
-    if (!this.props.products[0].stock) {
-      this.fetchData();
-    }
-
-    if (prevProps !== this.props) {
-      this.showEditors();
-    }
-
-    if (prevProps.business !== this.props.business && this.props.business) {
-      this.fetchData();
-    }
-
-    if (prevState.redirectToRoot === true) {
-      this.setState({
-        redirectToRoot: false
-      });
-    }
+  const showEditors = () => {
+    const { productId, warehouseId } = props.match.params;
+    if (productId) setShowProductEditor(true);
+    if (warehouseId) setShowWarehouseEditor(true);
   };
 
-  showEditors = () => {
-    const { productId, warehouseId } = this.props.match.params;
-
-    if (productId) {
-      this.handleShowProductEditor();
-    }
-
-    if (warehouseId) {
-      this.handleShowWarehouseEditor();
-    }
+  const handleHideEditors = () => {
+    setShowProductEditor(false);
+    setShowWarehouseEditor(false);
+    setRedirect(true);
   };
 
-  handleShowProductEditor = () => {
-    this.setState({
-      showProductEditor: true
-    });
+  const handleWarehouseDateChange = date => {
+    setWarehouseDate(date.format("YYYY-MM-DD"));
+    if (isDateFormat(warehouseDate))
+      fetchProductsStock(business.name, warehouseDate);
   };
 
-  handleShowWarehouseEditor = () => {
-    this.setState({
-      showWarehouseEditor: true
-    });
-  };
-
-  handleHideProductEditor = async () => {
-    this.setState({
-      showProductEditor: false,
-      redirectToRoot: true
-    });
-  };
-
-  handleHideWarehouseEditor = () => {
-    this.setState({
-      showWarehouseEditor: false,
-      redirectToRoot: true
-    });
-  };
-
-  handleWarehouseDateChange = async date => {
-    const {
-      business,
-      actions: { fetchProductsStock }
-    } = this.props;
-
-    await this.setState({
-      warehouseDate: date.format("YYYY-MM-DD")
-    });
-
-    const { warehouseDate } = await this.state;
-
-    if (this.isDateFormat(warehouseDate)) {
-      await fetchProductsStock(business.name, warehouseDate);
-    }
-  };
-
-  isDateFormat = date => {
+  const isDateFormat = date => {
     const regex = /^([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))$/;
     return regex.test(date);
   };
 
-  render() {
-    const { classes, products, warehouses } = this.props;
-    const {
-      showProductEditor,
-      showWarehouseEditor,
-      redirectToRoot,
-      warehouseDate
-    } = this.state;
+  if (!fetched) return <p>Loading</p>;
+  if (redirect) return <Redirect to="/warehouses" />;
 
-    if (!this.props.fetched) {
-      return <p>Loading</p>;
-    }
+  return (
+    <PageContainer>
+      <WarehousesTableFilter
+        warehouseDate={warehouseDate}
+        handleWarehouseDateChange={handleWarehouseDateChange}
+      />
+      <WarehousesTable products={products} warehouses={warehouses} />
 
-    if (redirectToRoot) {
-      return <Redirect to="/warehouses" />;
-    }
-
-    return (
-      <div className={classes.root}>
-        <WarehouseTableFilter
-          warehouseDate={warehouseDate}
-          handleWarehouseDateChange={this.handleWarehouseDateChange}
+      {!showProductEditor && !showWarehouseEditor && (
+        <WarehousesButtons
+          setShowProductEditor={setShowProductEditor}
+          setShowWarehouseEditor={setShowWarehouseEditor}
         />
-        <WarehouseTable products={products} warehouses={warehouses} />
+      )}
 
-        {!showProductEditor && !showWarehouseEditor && (
-          <Grid container>
-            <Grid item className={classes.flex} />
-            <Grid item className={classes.buttons}>
-              <Button
-                onClick={this.handleShowProductEditor}
-                variant="contained"
-                color="primary"
-                component={Link}
-                to="/warehouses/"
-                className={classes.button}
-              >
-                Add New Product
-              </Button>
-              <Button
-                onClick={this.handleShowWarehouseEditor}
-                variant="contained"
-                color="primary"
-                component={Link}
-                to="/warehouses/"
-                className={classes.button}
-              >
-                Add New Warehouse
-              </Button>
-            </Grid>
-          </Grid>
-        )}
+      {showProductEditor && (
+        <Product
+          productId={props.match.params.productId}
+          hideProductEditor={handleHideEditors}
+        />
+      )}
 
-        {showProductEditor && (
-          <Product
-            className={classes.root}
-            productId={this.props.match.params.productId}
-            hideProductEditor={this.handleHideProductEditor}
-          />
-        )}
-
-        {showWarehouseEditor && (
-          <Warehouse
-            className={classes.root}
-            warehouseId={this.props.match.params.warehouseId}
-            hideWarehouseEditor={this.handleHideWarehouseEditor}
-          />
-        )}
-      </div>
-    );
-  }
-}
+      {showWarehouseEditor && (
+        <Warehouse
+          warehouseId={props.match.params.warehouseId}
+          hideWarehouseEditor={handleHideEditors}
+        />
+      )}
+    </PageContainer>
+  );
+};
 
 Warehouses.propTypes = {
   actions: PropTypes.object.isRequired,
   products: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   warehouses: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   fetched: PropTypes.bool,
-  classes: PropTypes.object.isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       productId: PropTypes.string,
@@ -232,4 +136,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(WarehouseStyle)(Warehouses));
+)(Warehouses);

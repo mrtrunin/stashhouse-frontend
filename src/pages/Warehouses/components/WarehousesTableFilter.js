@@ -10,9 +10,11 @@ const styles = theme => ({
   }
 });
 
-const WarehouseTableFilter = props => {
-  const { classes, warehouseDate, handleWarehouseDateChange } = props;
-
+const WarehousesTableFilter = ({
+  classes,
+  warehouseDate,
+  handleWarehouseDateChange
+}) => {
   return (
     <Paper>
       <FormControl
@@ -33,10 +35,10 @@ const WarehouseTableFilter = props => {
   );
 };
 
-WarehouseTableFilter.propTypes = {
+WarehousesTableFilter.propTypes = {
   classes: PropTypes.object.isRequired,
   warehouseDate: PropTypes.string.isRequired,
   handleWarehouseDateChange: PropTypes.func
 };
 
-export default withStyles(styles)(WarehouseTableFilter);
+export default withStyles(styles)(WarehousesTableFilter);

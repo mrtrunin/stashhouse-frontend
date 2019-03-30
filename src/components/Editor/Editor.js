@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Card, Paper, withStyles } from "@material-ui/core";
 
-const EditorStyle = theme => ({
+const style = theme => ({
   root: {
     width: "100%",
     overflowX: "auto"
@@ -29,4 +29,4 @@ Editor.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(EditorStyle)(Editor);
+export default withStyles(style)(Editor);

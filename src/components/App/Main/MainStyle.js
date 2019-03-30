@@ -1,7 +1,8 @@
 const MainStyle = theme => ({
   root: {
     marginTop: theme.spacing.unit * 8,
-    padding: theme.spacing.unit * 2
+    padding: theme.spacing.unit * 2,
+    width: "100%"
   },
   font: theme.typography,
   landingPage: {
