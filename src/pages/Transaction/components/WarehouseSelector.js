@@ -12,6 +12,10 @@ import {
 const WarehouseSelector = props => {
   const { defaultValue, label, warehouses, selectedWarehouse } = props;
 
+  if (!warehouses) {
+    return "Loading...";
+  }
+
   let warehouseOptions = warehouses.map(warehouse => {
     return (
       <MenuItem key={warehouse.id} value={warehouse.name}>

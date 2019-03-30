@@ -4,7 +4,7 @@ import { TableCell, Typography } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
 const WarehousesHeaderRow = ({ warehouses }) => {
-  if (!warehouses) {
+  if (!Object.keys(warehouses).length) {
     return (
       <TableCell padding="dense" align="right">
         <Typography

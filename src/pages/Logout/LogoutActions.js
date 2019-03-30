@@ -16,6 +16,8 @@ export function logout() {
     data.append("client_id", client_id);
     data.append("client_secret", client_secret);
 
+    await dispatch({ type: USER_LOGOUT });
+
     try {
       await axios.post(url + "/auth/revoke-token/", data, {
         headers: {
@@ -23,15 +25,11 @@ export function logout() {
           Authorization: "Bearer " + token
         }
       });
-      await dispatch({ type: USER_LOGOUT });
-
-      localStorage.clear();
 
       Message("Logged out successfully", "success");
     } catch (error) {
-      Message("Could not log out: " + error, "error");
-      dispatch({ type: USER_LOGOUT });
-      localStorage.clear();
+      Message("Could not log out", "error");
     }
+    localStorage.clear();
   };
 }

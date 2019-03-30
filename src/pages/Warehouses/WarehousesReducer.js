@@ -6,7 +6,7 @@ import {
 
 export default function reducer(
   state = {
-    warehouses: {},
+    warehouses: [],
     fetching: false,
     fetched: false,
     error: null

@@ -1,23 +1,17 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import { Redirect } from "react-router-dom";
+import { Redirect } from "react-router";
 import { connect } from "react-redux";
 
 import { bindActionCreators } from "redux";
 import * as actions from "./LogoutActions";
 
-export class Logout extends Component {
-  render() {
-    const {
-      isLoggedIn,
-      actions: { logout }
-    } = this.props;
-    if (isLoggedIn) {
-      logout();
-    }
-    return <Redirect to="/" />;
+const Logout = ({ isLoggedIn, actions: { logout } }) => {
+  if (isLoggedIn) {
+    logout();
   }
-}
+  return <Redirect to="/login" />;
+};
 
 Logout.propTypes = {
   isLoggedIn: PropTypes.bool,

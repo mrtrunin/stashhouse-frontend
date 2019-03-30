@@ -119,7 +119,7 @@ const Main = ({ classes, children, actions: { logout, refreshToken } }) => {
       try {
         await refreshToken();
       } catch (error) {
-        Message("Could not refresh token: " + error, "error");
+        Message("Could not refresh token", "error");
         logout();
       }
     }

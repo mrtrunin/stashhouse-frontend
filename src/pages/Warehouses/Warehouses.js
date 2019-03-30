@@ -32,16 +32,12 @@ const Warehouses = props => {
   const [warehouseDate, setWarehouseDate] = useState(today);
   const [redirect, setRedirect] = useState(false);
 
-  useEffect(() => fetchData(), [props.business]);
+  useEffect(() => {
+    fetchProductsStock(business.name);
+    fetchWarehouses(business.name);
+  }, [business]);
   useEffect(() => showEditors(), [props]);
   useEffect(() => setRedirect(false), [redirect]);
-
-  const fetchData = () => {
-    if (business) {
-      fetchProductsStock(business.name);
-      fetchWarehouses(business.name);
-    }
-  };
 
   const showEditors = () => {
     const { productId, warehouseId } = props.match.params;

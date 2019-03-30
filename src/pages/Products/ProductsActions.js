@@ -68,7 +68,7 @@ export function fetchProductsStock(
 
       return data;
     } catch (error) {
-      dispatch({
+      await dispatch({
         type: FETCH_PRODUCTS_STOCK_REJECTED,
         payload: error
       });

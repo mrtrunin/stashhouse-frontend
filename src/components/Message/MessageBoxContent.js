@@ -21,7 +21,7 @@ const variantIcon = {
   info: InfoIcon
 };
 
-const MessageBoxStyles = theme => ({
+const style = theme => ({
   success: {
     backgroundColor: green[600]
   },
@@ -51,6 +51,10 @@ const MessageBoxContent = props => {
   const { classes, className, message, onClose, variant, ...other } = props;
   const Icon = variantIcon[variant];
 
+  if (!message) {
+    return "";
+  }
+
   return (
     <SnackbarContent
       className={classNames(classes[variant], className)}
@@ -58,7 +62,7 @@ const MessageBoxContent = props => {
       message={
         <span id="client-snackbar" className={classes.message}>
           <Icon className={classNames(classes.icon, classes.iconVariant)} />
-          {message}
+          {message ? message : "undefined message"}
         </span>
       }
       action={[
@@ -85,4 +89,4 @@ MessageBoxContent.propTypes = {
   variant: PropTypes.oneOf(["info", "success", "error", "warning"]).isRequired
 };
 
-export default withStyles(MessageBoxStyles)(MessageBoxContent);
+export default withStyles(style)(MessageBoxContent);
