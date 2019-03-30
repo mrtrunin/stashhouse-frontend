@@ -101,7 +101,9 @@ const TransactionsTable = props => {
       const date_created = moment(transaction.date_created).format(
         "DD-MMM-YYYY"
       );
-      const date_due = moment(transaction.date_due).format("DD-MMM-YYYY");
+      const date_due = transaction.date_due
+        ? moment(transaction.date_due).format("DD-MMM-YYYY")
+        : "-";
 
       const showInvoiceAttribute = transaction.type === "INVOICE";
       const showTransferAttribute = transaction.type === "TRANSFER";
