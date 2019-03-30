@@ -49,10 +49,10 @@ const Warehouses = props => {
     if (warehouseId) setShowWarehouseEditor(true);
   };
 
-  const handleHideEditors = () => {
-    setShowProductEditor(false);
-    setShowWarehouseEditor(false);
-    setRedirect(true);
+  const handleHideEditors = async () => {
+    await setShowProductEditor(false);
+    await setShowWarehouseEditor(false);
+    await setRedirect(true);
   };
 
   const handleWarehouseDateChange = date => {

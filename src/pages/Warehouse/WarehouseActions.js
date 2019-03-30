@@ -4,7 +4,7 @@ import Message from "components/Message/Message";
 export const FETCH_WAREHOUSE = "FETCH_WAREHOUSE";
 export const FETCH_WAREHOUSE_FULFILLED = "FETCH_WAREHOUSE_FULFILLED";
 export const FETCH_WAREHOUSE_REJECTED = "FETCH_WAREHOUSE_REJECTED";
-export const WAREHOUSE_UPDATE_FIELD = "WAREHOUSE_UPDATE_FIELD";
+export const UPDATE_WAREHOUSE_FIELD = "UPDATE_WAREHOUSE_FIELD";
 export const RESET_WAREHOUSE = "RESET_WAREHOUSE";
 
 const url = process.env.REACT_APP_SERVER_URL;
@@ -83,6 +83,16 @@ export function fetchWarehouse(warehouseId) {
         payload: error
       });
     }
+  };
+}
+
+export function updateWarehouseField(field, value) {
+  return async dispatch => {
+    dispatch({
+      type: UPDATE_WAREHOUSE_FIELD,
+      field,
+      payload: value
+    });
   };
 }
 

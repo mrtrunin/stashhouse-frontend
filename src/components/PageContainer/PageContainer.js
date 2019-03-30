@@ -14,7 +14,7 @@ const PageContainer = ({ classes, children }) => {
 
 PageContainer.propTypes = {
   classes: PropTypes.object.isRequired,
-  children: PropTypes.object.isRequired
+  children: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
 };
 
 export default withStyles(style)(PageContainer);

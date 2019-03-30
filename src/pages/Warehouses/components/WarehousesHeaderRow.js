@@ -42,7 +42,6 @@ const WarehousesHeaderRow = ({ warehouses }) => {
 };
 
 WarehousesHeaderRow.propTypes = {
-  hasWarehouses: PropTypes.bool.isRequired,
   warehouses: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
 };
 

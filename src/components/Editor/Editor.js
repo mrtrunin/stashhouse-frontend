@@ -15,11 +15,10 @@ const style = theme => ({
   }
 });
 
-const Editor = props => {
-  const { classes } = props;
+const Editor = ({ classes, children }) => {
   return (
     <Paper className={classes.root}>
-      <Card className={classes.card}>{props.children}</Card>
+      <Card className={classes.card}>{children}</Card>
     </Paper>
   );
 };

@@ -2,7 +2,7 @@ import {
   FETCH_WAREHOUSE,
   FETCH_WAREHOUSE_FULFILLED,
   FETCH_WAREHOUSE_REJECTED,
-  WAREHOUSE_UPDATE_FIELD,
+  UPDATE_WAREHOUSE_FIELD,
   RESET_WAREHOUSE
 } from "./WarehouseActions";
 
@@ -30,7 +30,7 @@ export default function reducer(
     case FETCH_WAREHOUSE_REJECTED: {
       return { ...state, fetching: false, error: action.payload };
     }
-    case WAREHOUSE_UPDATE_FIELD: {
+    case UPDATE_WAREHOUSE_FIELD: {
       return {
         ...state,
         warehouse: {
