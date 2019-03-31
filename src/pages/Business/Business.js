@@ -12,17 +12,15 @@ import * as businessActions from "./BusinessActions";
 import * as businessesActions from "pages/Businesses/BusinessesActions";
 import { bindActionCreators } from "redux";
 
-const Business = props => {
-  const {
-    business,
-    actions: {
-      updateBusinessField,
-      fetchBusinesses,
-      createBusiness,
-      updateBusiness
-    }
-  } = props;
-
+const Business = ({
+  business,
+  actions: {
+    updateBusinessField,
+    fetchBusinesses,
+    createBusiness,
+    updateBusiness
+  }
+}) => {
   const handleUpdateBusinessField = e => {
     e.preventDefault();
     updateBusinessField(e.target.value, e.target.name);

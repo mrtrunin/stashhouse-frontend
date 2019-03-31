@@ -145,3 +145,12 @@ export function updateBusinessField(value, name) {
     });
   };
 }
+
+export function chooseBusiness(business) {
+  return async dispatch => {
+    dispatch({
+      type: FETCH_BUSINESS_FULFILLED,
+      payload: business
+    });
+  };
+}

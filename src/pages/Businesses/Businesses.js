@@ -1,67 +1,55 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import BusinessesTable from "./components/BusinessesTable";
 
 import { connect } from "react-redux";
-import store from "store";
 import { Redirect } from "react-router-dom";
 import Business from "pages/Business/Business";
 import { bindActionCreators } from "redux";
 
-import * as actions from "./BusinessesActions";
+import * as businessesActions from "./BusinessesActions";
+import * as businessActions from "pages/Business/BusinessActions";
 
-export class Businesses extends Component {
-  state = {
-    redirect: false
-  };
+const Businesses = ({
+  businesses,
+  actions: { fetchBusinesses, chooseBusiness }
+}) => {
+  const [redirect, setRedirect] = useState(false);
 
-  componentDidMount = async () => {
-    const {
-      actions: { fetchBusinesses }
-    } = this.props;
-    await fetchBusinesses();
-    const { businesses } = this.props;
+  useEffect(() => {
+    fetchBusinesses();
+  }, []);
+
+  useEffect(() => {
     if (businesses.length === 1) {
-      await this.handleChooseBusiness(businesses[0]);
+      handleChooseBusiness(businesses[0]);
     }
+  }, [businesses]);
+
+  const handleChooseBusiness = async business => {
+    chooseBusiness(business);
+    setRedirect(true);
   };
 
-  handleChooseBusiness = async business => {
-    await store.dispatch({
-      type: "FETCH_BUSINESS_FULFILLED",
-      payload: business
-    });
-
-    await this.setState(() => ({
-      redirect: true
-    }));
-  };
-
-  render() {
-    const { businesses } = this.props;
-    const { redirect } = this.state;
-
-    const noBusinesses = businesses.length === 0;
-
-    if (redirect) {
-      return <Redirect to="/warehouses/" />;
-    }
-
-    if (noBusinesses) {
-      return <Business />;
-    }
-
-    return (
-      <BusinessesTable
-        businesses={businesses}
-        chooseBusiness={this.handleChooseBusiness}
-      />
-    );
+  if (redirect) {
+    return <Redirect to="/warehouses/" />;
   }
-}
+
+  if (businesses.length === 0) {
+    return <Business />;
+  }
+
+  return (
+    <BusinessesTable
+      businesses={businesses}
+      chooseBusiness={handleChooseBusiness}
+    />
+  );
+};
 
 Businesses.propTypes = {
-  businesses: PropTypes.array.isRequired
+  businesses: PropTypes.array.isRequired,
+  actions: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => {
@@ -72,7 +60,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    actions: bindActionCreators({ ...actions }, dispatch)
+    actions: bindActionCreators(
+      { ...businessesActions, ...businessActions },
+      dispatch
+    )
   };
 };
 
