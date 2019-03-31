@@ -46,6 +46,9 @@ const CustomersTable = props => {
           {customer.country}
         </TableCell>
         <TableCell name="Phone number">{customer.phone_number}</TableCell>
+        <TableCell name="Default warehouse">
+          {customer.default_warehouse.name}
+        </TableCell>
       </TableRow>
     );
   });
@@ -61,6 +64,7 @@ const CustomersTable = props => {
           <TableCell padding="dense">City</TableCell>
           <TableCell padding="dense">Country</TableCell>
           <TableCell padding="dense">Phone Number</TableCell>
+          <TableCell padding="dense">Default Warehouse</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>{transactionRows}</TableBody>

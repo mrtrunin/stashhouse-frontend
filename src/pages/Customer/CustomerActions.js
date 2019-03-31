@@ -17,9 +17,10 @@ export function createCustomer(
   city,
   country,
   phone_number,
+  default_warehouse,
   business_name
 ) {
-  return async dispatch => {
+  return async () => {
     let payload = {};
 
     payload = {
@@ -30,6 +31,7 @@ export function createCustomer(
       city,
       country,
       phone_number,
+      default_warehouse,
       business: {
         name: business_name
       }
@@ -90,6 +92,7 @@ export function updateCustomer(
   city,
   country,
   phone_number,
+  default_warehouse,
   customerId
 ) {
   return async dispatch => {
@@ -102,7 +105,8 @@ export function updateCustomer(
       zip_code,
       city,
       country,
-      phone_number
+      phone_number,
+      default_warehouse
     };
 
     try {
