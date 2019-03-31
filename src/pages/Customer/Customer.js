@@ -45,9 +45,9 @@ const Customer = props => {
     customerId && fetchCustomer(customerId);
   }, [customerId]);
 
-  const fetchDataAndHideEditor = () => {
-    fetchCustomers(business.name);
-    hideCustomerEditor();
+  const fetchDataAndHideEditor = async () => {
+    await fetchCustomers(business.name);
+    await hideCustomerEditor();
   };
 
   const handleCreateCustomer = async () => {

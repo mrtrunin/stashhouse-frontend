@@ -47,7 +47,7 @@ const CustomersTable = props => {
         </TableCell>
         <TableCell name="Phone number">{customer.phone_number}</TableCell>
         <TableCell name="Default warehouse">
-          {customer.default_warehouse.name}
+          {customer.default_warehouse ? customer.default_warehouse.name : "-"}
         </TableCell>
       </TableRow>
     );

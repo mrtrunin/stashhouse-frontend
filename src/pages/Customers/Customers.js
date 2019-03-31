@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import CustomersTable from "./components/CustomersTable";
 import { connect } from "react-redux";
@@ -11,94 +11,69 @@ import * as actions from "./CustomersActions";
 import { CustomersStyle } from "./CustomersStyle";
 import Redirect from "react-router-dom/Redirect";
 
-export class Customers extends Component {
-  state = {
-    showCustomerEditor: false,
-    redirectToRoot: false
+const Customers = props => {
+  const {
+    business,
+    customers,
+    fetched,
+    classes,
+    actions: { fetchCustomers }
+  } = props;
+
+  const { customerId } = props.match.params;
+
+  const [showCustomerEditor, setShowCustomerEditor] = useState(false);
+  const [redirect, setRedirect] = useState(false);
+
+  useEffect(() => {
+    fetchCustomers(business.name);
+  }, [business]);
+
+  useEffect(() => showEditor(), [props]);
+  useEffect(() => setRedirect(false), [redirect]);
+
+  const showEditor = () => {
+    if (customerId) setShowCustomerEditor(true);
   };
 
-  componentDidMount = () => {
-    this.fetchData();
-    this.showEditors();
+  const hideCustomerEditor = () => {
+    setShowCustomerEditor(false);
+    setRedirect(true);
   };
 
-  componentDidUpdate = (prevProps, prevState) => {
-    if (prevProps !== this.props) {
-      this.showEditors(this.props);
-    }
-
-    if (prevProps.business !== this.props.business) {
-      this.fetchData();
-    }
-
-    if (prevState.redirectToRoot === true) {
-      this.setState({
-        redirectToRoot: false
-      });
-    }
-  };
-
-  fetchData = async () => {
-    const {
-      business,
-      actions: { fetchCustomers }
-    } = this.props;
-    await fetchCustomers(business.name);
-  };
-
-  showEditors = nextProps => {
-    let props = nextProps ? nextProps : this.props;
-    if (props.match.params.customerId) {
-      this.showCustomerEditor();
-    }
-  };
-
-  showCustomerEditor = () => {
-    this.setState(() => ({ showCustomerEditor: true }));
-  };
-
-  hideCustomerEditor = () => {
-    this.setState(() => ({ showCustomerEditor: false, redirectToRoot: true }));
-  };
-
-  render() {
-    const { customers, fetched, classes } = this.props;
-    const { showCustomerEditor, redirectToRoot } = this.state;
-
-    if (!fetched) {
-      return "Loading...";
-    }
-
-    if (redirectToRoot) {
-      return <Redirect to="/customers" />;
-    }
-
-    return (
-      <div className={classes.root}>
-        <TableBase>
-          <CustomersTable customers={customers} />
-        </TableBase>
-
-        <ButtonRow show={!showCustomerEditor}>
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={this.showCustomerEditor}
-          >
-            Add Customer
-          </Button>
-        </ButtonRow>
-
-        {this.state.showCustomerEditor && (
-          <Customer
-            hideCustomerEditor={this.hideCustomerEditor}
-            customerId={this.props.match.params.customerId}
-          />
-        )}
-      </div>
-    );
+  if (!fetched) {
+    return "Loading...";
   }
-}
+
+  if (redirect) {
+    return <Redirect to="/customers" />;
+  }
+
+  return (
+    <div className={classes.root}>
+      <TableBase>
+        <CustomersTable customers={customers} />
+      </TableBase>
+
+      <ButtonRow show={!showCustomerEditor}>
+        <Button
+          color="primary"
+          variant="contained"
+          onClick={() => setShowCustomerEditor(true)}
+        >
+          Add Customer
+        </Button>
+      </ButtonRow>
+
+      {showCustomerEditor && (
+        <Customer
+          hideCustomerEditor={hideCustomerEditor}
+          customerId={customerId}
+        />
+      )}
+    </div>
+  );
+};
 
 Customers.propTypes = {
   classes: PropTypes.object.isRequired,
