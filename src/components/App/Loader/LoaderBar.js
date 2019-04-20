@@ -1,35 +1,20 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { LinearProgress } from "@material-ui/core";
 
-export class LoaderBar extends Component {
-  constructor(props) {
-    super(props);
-    this.enableMessage = this.enableMessage.bind(this);
+const LoaderBar = () => {
+  const [displayLoader, setDisplayLoader] = useState(false);
 
-    this.state = {
-      displayMessage: false
-    };
+  useEffect(() => {
+    setTimeout(() => {
+      setDisplayLoader(true);
+    }, 300);
+  });
 
-    this.timer = setTimeout(this.enableMessage, 300);
+  if (!displayLoader) {
+    return null;
   }
 
-  componentWillUnmount() {
-    clearTimeout(this.timer);
-  }
-
-  enableMessage() {
-    this.setState({ displayMessage: true });
-  }
-
-  render() {
-    const { displayMessage } = this.state;
-
-    if (!displayMessage) {
-      return null;
-    }
-
-    return <LinearProgress color="primary" variant="indeterminate" />;
-  }
-}
+  return <LinearProgress color="primary" variant="indeterminate" />;
+};
 
 export default LoaderBar;
