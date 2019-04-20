@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import * as emailActions from "components/Email/EmailActions";
 import * as transactionActions from "pages/Transaction/TransactionActions";
@@ -12,28 +12,29 @@ import EmailDialog from "components/Email/EmailDialog";
 import SendEmailButton from "pages/Transactions/components/TransactionsTable/SendEmailButton";
 import { withStyles } from "@material-ui/core";
 
-export const EmailsStyle = theme => ({
+const style = theme => ({
   root: {
     width: "100%"
   }
 });
 
-class Emails extends Component {
-  state = {
-    openEmail: false
-  };
+const Emails = props => {
+  const {
+    emails,
+    transaction,
+    classes,
+    business,
+    actions: { fetchEmails, fetchEmailsForTransaction, fetchTransaction }
+  } = props;
+  const { transactionId } = props.match.params;
+  const [openEmail, setOpenEmail] = useState(false);
+  const transactionExists = transactionId > 0;
 
-  componentDidMount = async () => {
-    this.fetchEmails();
-  };
+  useEffect(() => {
+    fetchEmailActions();
+  }, []);
 
-  fetchEmails = async () => {
-    const { transactionId } = this.props.match.params;
-    const {
-      business,
-      actions: { fetchEmails, fetchEmailsForTransaction, fetchTransaction }
-    } = this.props;
-
+  const fetchEmailActions = async () => {
     if (transactionId) {
       await fetchEmailsForTransaction(transactionId);
       await fetchTransaction(transactionId);
@@ -42,45 +43,31 @@ class Emails extends Component {
     }
   };
 
-  handleOpenEmail = (transaction, e) => {
+  const handleOpenEmail = e => {
     e.preventDefault();
-    this.setState(() => ({
-      openEmail: true
-    }));
+    setOpenEmail(true);
   };
 
-  handleCloseEmail = () => {
-    this.setState(() => ({
-      openEmail: false
-    }));
-
-    this.fetchEmails();
+  const handleCloseEmail = e => {
+    e.preventDefault();
+    setOpenEmail(false);
+    fetchEmailActions();
   };
 
-  render() {
-    const { emails, transaction, classes } = this.props;
-    const { transactionId } = this.props.match.params;
-    const { openEmail } = this.state;
-    const transactionExists = transactionId > 0;
-
-    return (
-      <div className={classes.root}>
-        <EmailDialog
-          open={openEmail}
-          handleClose={this.handleCloseEmail}
-          transaction={transaction}
-        />
-        <EmailsTable emails={emails} />
-        <ButtonRow show={transactionExists}>
-          <SendEmailButton
-            transaction={transaction}
-            onClick={this.handleOpenEmail}
-          />
-        </ButtonRow>
-      </div>
-    );
-  }
-}
+  return (
+    <div className={classes.root}>
+      <EmailDialog
+        open={openEmail}
+        handleClose={handleCloseEmail}
+        transaction={transaction}
+      />
+      <EmailsTable emails={emails} />
+      <ButtonRow show={transactionExists}>
+        <SendEmailButton transaction={transaction} onClick={handleOpenEmail} />
+      </ButtonRow>
+    </div>
+  );
+};
 
 Emails.propTypes = {
   match: PropTypes.shape({
@@ -115,4 +102,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(EmailsStyle)(Emails));
+)(withStyles(style)(Emails));

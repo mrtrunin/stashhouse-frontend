@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -17,160 +17,142 @@ import ButtonRow from "components/Buttons/ButtonRow";
 import { Button } from "@material-ui/core";
 import PaymentEditor from "../Payment/PaymentEditor";
 
-export class Payments extends Component {
-  state = {
-    selectedPayments: [],
-    showPaymentEditor: false,
-    redirectToRoot: false
-  };
-
-  componentDidMount = () => {
-    this.fetchData();
-    this.showEditors();
-  };
-
-  componentDidUpdate = prevProps => {
-    if (prevProps !== this.props) {
-      this.showEditors(this.props);
+const Payments = props => {
+  const {
+    business,
+    payments,
+    fetched,
+    classes,
+    actions: { fetchPayments, deletePayments },
+    match: {
+      params: { paymentId, invoiceId },
+      path
     }
+  } = props;
 
-    if (prevProps.business !== this.props.business) {
-      this.fetchData();
+  const isOnRootPath = path === "/payments/" || path === "/payments";
+
+  const [selectedPayments, setSelectedPayments] = useState([]);
+  const [showPaymentEditor, setShowPaymentEditor] = useState(false);
+  const [redirectToRoot, setRedirectToRoot] = useState(false);
+
+  useEffect(() => {
+    fetchData();
+    showEditors();
+
+    if (redirectToRoot) {
+      setRedirectToRoot(false);
     }
+  }, []);
 
-    if (this.state.redirectToRoot) {
-      this.setState(() => ({
-        redirectToRoot: false
-      }));
-    }
-  };
+  useEffect(() => {
+    fetchData();
+  }, [business]);
 
-  fetchData = () => {
-    const {
-      business,
-      actions: { fetchPayments }
-    } = this.props;
+  useEffect(() => {
+    showEditors();
+  }, [props]);
+
+  const fetchData = () => {
     fetchPayments(business.name);
   };
 
-  handleCheckbox = e => {
-    const { payments } = this.props;
-
+  const handleCheckbox = e => {
     if (e.target.name === "select_all" && e.target.checked) {
       payments.forEach(payment => {
-        this.addPaymentIdToState(parseInt(payment.id, 10));
+        addPaymentIdToState(parseInt(payment.id, 10));
       });
+      return;
     }
 
     if (e.target.name === "select_all" && !e.target.checked) {
       payments.forEach(() => {
-        this.setState({ selectedPayments: [] });
+        setSelectedPayments([]);
       });
+      return;
     }
 
     if (e.target.checked) {
-      this.addPaymentIdToState(e.target.id);
+      addPaymentIdToState(e.target.id);
     } else {
-      this.removePaymentIdFromState(e.target.id);
+      removePaymentIdFromState(e.target.id);
     }
   };
 
-  addPaymentIdToState(paymentId) {
-    this.setState(prevState => ({
-      selectedPayments: [...prevState.selectedPayments, parseInt(paymentId, 10)]
-    }));
-  }
+  const addPaymentIdToState = paymentId => {
+    setSelectedPayments(selectedPayments => [
+      ...selectedPayments,
+      parseInt(paymentId, 10)
+    ]);
+  };
 
-  removePaymentIdFromState(paymentId) {
-    let index = this.state.selectedPayments.indexOf(parseInt(paymentId, 10));
-    this.setState(prevState => ({
-      selectedPayments: [
-        ...prevState.selectedPayments.slice(0, index),
-        ...prevState.selectedPayments.slice(index + 1)
-      ]
-    }));
-  }
+  const removePaymentIdFromState = paymentId => {
+    let index = selectedPayments.indexOf(parseInt(paymentId, 10));
+    setSelectedPayments(selectedPayments => [
+      ...selectedPayments.slice(0, index),
+      ...selectedPayments.slice(index + 1)
+    ]);
+  };
 
-  handleDeletePayments = async () => {
-    const {
-      business,
-      actions: { fetchPayments, deletePayments }
-    } = this.props;
-    await deletePayments(this.state.selectedPayments);
+  const handleDeletePayments = async () => {
+    await deletePayments(selectedPayments);
     await fetchPayments(business.name);
-    await this.setState({ selectedPayments: [] });
-    await this.hidePaymentEditor();
+    await setSelectedPayments([]);
+    handleHidePaymentEditor();
   };
 
-  showEditors = nextProps => {
-    let props = nextProps ? nextProps : this.props;
-    const { paymentId, invoiceId } = props.match.params;
-
+  const showEditors = async () => {
     if (paymentId || invoiceId) {
-      this.showPaymentEditor();
+      handleShowPaymentEditor();
     } else {
-      this.hidePaymentEditor();
+      handleHidePaymentEditor();
     }
   };
 
-  showPaymentEditor = () => {
-    this.setState(() => ({ showPaymentEditor: true }));
+  const handleShowPaymentEditor = () => {
+    setShowPaymentEditor(true);
   };
 
-  hidePaymentEditor = async () => {
-    await this.setState(() => ({
-      showPaymentEditor: false,
-      redirectToRoot: true
-    }));
+  const handleHidePaymentEditor = () => {
+    setShowPaymentEditor(false);
+    setRedirectToRoot(true);
   };
 
-  render() {
-    const { payments, fetched, classes } = this.props;
-    const { showPaymentEditor, redirectToRoot, selectedPayments } = this.state;
-
-    const isOnRootPath =
-      this.props.match.path === "/payments/" ||
-      this.props.match.path === "/payments";
-
-    if (!fetched) {
-      return <p>Loading...</p>;
-    }
-
-    if (redirectToRoot && !isOnRootPath) {
-      return <Redirect exact to="/payments/" />;
-    }
-
-    return (
-      <div className={classes.root}>
-        <PaymentsImportBox />
-        <PaymentsTable
-          payments={payments}
-          selectedPayments={selectedPayments}
-          onChange={this.handleCheckbox}
-        />
-
-        <ButtonRow show={selectedPayments.length > 0}>
-          <Button
-            color="secondary"
-            variant="contained"
-            onClick={this.handleDeletePayments}
-          >
-            Delete payments
-          </Button>
-        </ButtonRow>
-
-        {showPaymentEditor && (
-          <Payment
-            paymentId={this.props.match.params.paymentId}
-            invoiceId={this.props.match.params.invoiceId}
-          >
-            <PaymentEditor hidePayment={this.hidePaymentEditor} />
-          </Payment>
-        )}
-      </div>
-    );
+  if (!fetched) {
+    return <p>Loading...</p>;
   }
-}
+
+  if (redirectToRoot && !isOnRootPath) {
+    return <Redirect exact to="/payments/" />;
+  }
+
+  return (
+    <div className={classes.root}>
+      <PaymentsImportBox />
+      <PaymentsTable
+        payments={payments}
+        selectedPayments={selectedPayments}
+        onChange={handleCheckbox}
+      />
+
+      <ButtonRow show={selectedPayments.length > 0}>
+        <Button
+          color="secondary"
+          variant="contained"
+          onClick={handleDeletePayments}
+        >
+          Delete payments
+        </Button>
+      </ButtonRow>
+
+      {showPaymentEditor && (
+        <Payment paymentId={paymentId} invoiceId={invoiceId}>
+          <PaymentEditor hidePayment={handleHidePaymentEditor} />
+        </Payment>
+      )}
+    </div>
+  );
+};
 
 Payments.propTypes = {
   classes: PropTypes.object.isRequired,

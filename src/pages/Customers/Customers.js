@@ -9,7 +9,7 @@ import Customer from "pages/Customer/Customer";
 import { bindActionCreators } from "redux";
 import * as actions from "./CustomersActions";
 import { CustomersStyle } from "./CustomersStyle";
-import Redirect from "react-router-dom/Redirect";
+import { Redirect } from "react-router-dom";
 
 const Customers = props => {
   const {

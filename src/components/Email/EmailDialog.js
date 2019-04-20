@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Modal, withStyles, TextField, Typography } from "@material-ui/core";
 import { connect } from "react-redux";
@@ -25,74 +25,53 @@ export const EmailStyle = theme => ({
   }
 });
 
-class EmailDialog extends Component {
-  state = {
-    senderEmail: "",
-    recipientEmail: "",
-    recipientName: "",
-    subject: "",
-    body: "",
-    transaction: null
+const EmailDialog = props => {
+  const [recipientEmail, setRecipientEmail] = useState("");
+  const [recipientName, setRecipientName] = useState("");
+  const [subject, setSubject] = useState("");
+  const [body, setBody] = useState("");
+
+  const {
+    transaction,
+    business,
+    actions: { sendEmail },
+    open,
+    handleClose,
+    classes
+  } = props;
+
+  useEffect(() => {
+    setTransactionAndResetState();
+  }, [transaction]);
+
+  const setTransactionAndResetState = () => {
+    transaction &&
+      transaction.customer &&
+      transaction.customer.email &&
+      setRecipientEmail(transaction.customer.email);
+    transaction &&
+      transaction.customer &&
+      transaction.customer.email &&
+      setRecipientName(transaction.customer.name);
+    setSubject(
+      business.default_email_subject + " " + transaction.full_transaction_number
+    );
+    setBody(business.default_email_body);
   };
 
-  componentDidUpdate = prevProps => {
-    const { transaction } = this.props;
-    if (transaction && prevProps.transaction !== this.props.transaction) {
-      this.settransactionAndResetState(transaction);
-    }
+  const handleRecipientChange = e => {
+    setRecipientEmail(e.target.value);
   };
 
-  settransactionAndResetState = transaction => {
-    const { business } = this.props;
-    this.setState(() => ({
-      transaction: transaction,
-      senderEmail: business.email,
-      recipientEmail: transaction.customer.email,
-      recipientName: transaction.customer.name,
-      subject:
-        business.default_email_subject +
-        " " +
-        transaction.full_transaction_number,
-      body: business.default_email_body
-    }));
+  const handleSubjectChange = e => {
+    setSubject(e.target.value);
   };
 
-  handleSenderChange = e => {
-    const senderEmail = e.target.value;
-    this.setState({
-      senderEmail: senderEmail
-    });
+  const handleBodyChange = e => {
+    setBody(e.target.value);
   };
 
-  handleRecipientChange = e => {
-    const recipientEmail = e.target.value;
-    this.setState({
-      recipientEmail: recipientEmail
-    });
-  };
-
-  handleSubjectChange = e => {
-    const subject = e.target.value;
-    this.setState({
-      subject: subject
-    });
-  };
-
-  handleBodyChange = e => {
-    const body = e.target.value;
-    this.setState({
-      body: body
-    });
-  };
-
-  handleSendEmail = async () => {
-    const { transaction, recipientEmail, subject, body } = this.state;
-
-    const {
-      business,
-      actions: { sendEmail }
-    } = this.props;
-
+  const handleSendEmail = async () => {
     await sendEmail(
       business.name,
       transaction.id,
@@ -101,86 +80,74 @@ class EmailDialog extends Component {
       body
     );
 
-    await this.props.handleClose();
+    await props.handleClose();
   };
 
-  render() {
-    const { open, handleClose, classes, transaction, business } = this.props;
-    const { recipientName, recipientEmail, subject, body } = this.state;
+  return (
+    <Modal
+      aria-labelledby="simple-modal-title"
+      aria-describedby="simple-modal-description"
+      open={open}
+      onClose={handleClose}
+    >
+      <div className={classes.root}>
+        <Editor>
+          <EditorHeader
+            label={
+              "Email " +
+              transaction.full_transaction_number +
+              " to " +
+              recipientName
+            }
+            hideEditor={handleClose}
+          />
 
-    return (
-      <Modal
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-        open={open}
-        onClose={handleClose}
-      >
-        <div className={classes.root}>
-          <Editor>
-            <EditorHeader
-              label={
-                "Email " +
-                transaction.full_transaction_number +
-                " to " +
-                recipientName
-              }
-              hideEditor={handleClose}
+          <EditorContent>
+            {/* TODO: Add link to invoice pdf here, so it'd be clear for the user what's going on */}
+            <Typography variant="subtitle1" />
+            <TextField
+              name="from"
+              value={business.email}
+              label="From"
+              margin="dense"
+              required
             />
-
-            <EditorContent>
-              {/* TODO: Add link to invoice pdf here, so it'd be clear for the user what's going on */}
-              <Typography variant="subheading" />
-              <TextField
-                name="from"
-                value={business.email}
-                label="From"
-                margin="dense"
-                required
-              />
-              <TextField
-                name="to"
-                value={recipientEmail}
-                label="To"
-                margin="dense"
-                onChange={this.handleRecipientChange}
-                required
-              />
-              <TextField
-                name="subject"
-                value={subject}
-                label="Subject"
-                margin="dense"
-                onChange={this.handleSubjectChange}
-                required
-              />
-              <TextField
-                name="body"
-                value={body}
-                label="Body"
-                margin="dense"
-                onChange={this.handleBodyChange}
-                required
-                multiline
-              />
-            </EditorContent>
-
-            <EditorButtons
-              mainAction={this.handleSendEmail}
-              mainActionLabel="Send email"
+            <TextField
+              name="to"
+              value={recipientEmail}
+              label="To"
+              margin="dense"
+              onChange={handleRecipientChange}
+              required
             />
-          </Editor>
-          {/* <Typography variant="title" id="modal-title">
-          Send email
-        </Typography>
-        <Input>From</Input>
-        <Input>To</Input>
-        <Input>Subject</Input>
-        <Input>Body</Input> */}
-        </div>
-      </Modal>
-    );
-  }
-}
+            <TextField
+              name="subject"
+              value={subject}
+              label="Subject"
+              margin="dense"
+              onChange={handleSubjectChange}
+              required
+            />
+            <TextField
+              name="body"
+              value={body}
+              label="Body"
+              margin="dense"
+              onChange={handleBodyChange}
+              required
+              multiline
+            />
+          </EditorContent>
+
+          <EditorButtons
+            mainAction={handleSendEmail}
+            mainActionLabel="Send email"
+          />
+        </Editor>
+      </div>
+    </Modal>
+  );
+};
 
 EmailDialog.propTypes = {
   open: PropTypes.bool.isRequired,

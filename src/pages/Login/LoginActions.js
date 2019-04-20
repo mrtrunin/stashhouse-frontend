@@ -39,20 +39,20 @@ export function login(data) {
   };
 }
 
-export const loginWithGoogle = props => {
+export const loginWithGoogle = googleProps => {
   return async dispatch => {
     let client_id = process.env.REACT_APP_CLIENT_ID;
     let client_secret = process.env.REACT_APP_CLIENT_SECRET;
     let url = process.env.REACT_APP_SERVER_URL;
 
-    let formdata = new FormData();
-    formdata.append("grant_type", "convert_token");
-    formdata.append("client_id", client_id);
-    formdata.append("client_secret", client_secret);
-    formdata.append("backend", "google-oauth2");
-    formdata.append("token", props.accessToken);
+    let formdata = await new FormData();
+    await formdata.append("grant_type", "convert_token");
+    await formdata.append("client_id", client_id);
+    await formdata.append("client_secret", client_secret);
+    await formdata.append("backend", "google-oauth2");
+    await formdata.append("token", googleProps.accessToken);
 
-    dispatch({ type: FETCH_AUTH_TOKEN });
+    await dispatch({ type: FETCH_AUTH_TOKEN });
 
     try {
       const { data } = await axios.post(

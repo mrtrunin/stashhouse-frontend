@@ -30,7 +30,8 @@ const PaymentEditor = props => {
     handlePaymentChange,
     handleDateChange,
     handleDeletePayment,
-    handleCreateOrUpdatePayment
+    handleCreatePayment,
+    handleUpdatePayment
   } = props;
 
   const existsPayment = Object.keys(payment).length !== 0 && payment.id > 0;
@@ -145,8 +146,8 @@ const PaymentEditor = props => {
         editedObjectLabel="Payment"
         editedObject={payment}
         deleteAction={handleDeletePayment}
-        updateAction={handleCreateOrUpdatePayment}
-        createAction={handleCreateOrUpdatePayment}
+        updateAction={handleUpdatePayment}
+        createAction={handleCreatePayment}
       />
     </Editor>
   );
@@ -161,7 +162,8 @@ PaymentEditor.propTypes = {
   handlePaymentChange: PropTypes.func,
   handleDateChange: PropTypes.func,
   handleDeletePayment: PropTypes.func,
-  handleCreateOrUpdatePayment: PropTypes.func
+  handleCreatePayment: PropTypes.func,
+  handleUpdatePayment: PropTypes.func
 };
 
 export default PaymentEditor;

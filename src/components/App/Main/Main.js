@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
 import { withStyles, Grid } from "@material-ui/core";
@@ -7,21 +7,25 @@ import MessageBox from "components/Message/MessageBox";
 import Message from "components/Message/Message";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
 
 import axios from "axios";
 
 import * as loginActions from "pages/Login/LoginActions";
 
 const style = theme => ({
+  rootLandingPage: {
+    padding: theme.spacing.unit * 2
+  },
   root: {
     marginTop: theme.spacing.unit * 8,
-    padding: theme.spacing.unit * 2,
-    width: "100%"
+    padding: theme.spacing.unit * 2
   },
   font: theme.typography,
   landingPage: {
     backgroundColor: theme.palette.primary.main,
-    minHeight: "600px"
+    minHeight: "600px",
+    height: "100%"
   },
   content: {
     display: "flex",
@@ -29,9 +33,24 @@ const style = theme => ({
   }
 });
 
-const Main = ({ classes, children, actions: { logout, refreshToken } }) => {
+const Main = ({
+  classes,
+  children,
+  actions: { logout, refreshToken },
+  location
+}) => {
+  const [isLandingPage, setIsLandingPage] = useState(true);
+
   useEffect(() => {
     interceptApiResponse();
+  });
+
+  useEffect(() => {
+    if (location.pathname === "/") {
+      setIsLandingPage(true);
+    } else {
+      setIsLandingPage(false);
+    }
   });
 
   const interceptApiResponse = () => {
@@ -40,15 +59,21 @@ const Main = ({ classes, children, actions: { logout, refreshToken } }) => {
         const token = localStorage.getItem("jwtToken");
         const url = process.env.REACT_APP_SERVER_URL;
         const tokenAuthUrl = url + "/auth/token";
+        const convertTokenUrl = url + "/auth/convert-token";
 
         if (token && !config.url.startsWith(tokenAuthUrl)) {
           config.headers["Authorization"] = "Bearer " + token;
         }
-        if (!token && !config.url.startsWith(tokenAuthUrl)) {
-          // Don't execute request if no authorization token
+
+        if (
+          !token &&
+          !config.url.startsWith(tokenAuthUrl) &&
+          !config.url.startsWith(convertTokenUrl)
+        ) {
           Message("No authorization token!", "error");
           return;
         }
+
         return config;
       },
       error => {
@@ -125,13 +150,15 @@ const Main = ({ classes, children, actions: { logout, refreshToken } }) => {
     }
   };
 
-  const isLandingPage = window.location.pathname === "/";
-
   if (isLandingPage) {
     return (
       <Grid
         container
-        className={[classes.root, classes.font, classes.landingPage].join(" ")}
+        className={[
+          classes.rootLandingPage,
+          classes.font,
+          classes.landingPage
+        ].join(" ")}
         spacing={16}
       >
         <Grid item xs={12}>
@@ -160,7 +187,8 @@ Main.propTypes = {
     PropTypes.element,
     PropTypes.arrayOf(PropTypes.element)
   ]),
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => {
@@ -176,4 +204,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(style)(Main));
+)(withRouter(withStyles(style)(Main)));

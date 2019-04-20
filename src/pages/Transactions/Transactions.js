@@ -45,12 +45,14 @@ const Transactions = props => {
       transactions.forEach(transaction => {
         addTransactionIdToState(parseInt(transaction.id, 10));
       });
+      return;
     }
 
     if (e.target.name === "select_all" && !e.target.checked) {
       transactions.forEach(() => {
         setSelectedTransactions([]);
       });
+      return;
     }
 
     if (e.target.checked) {

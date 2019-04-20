@@ -1,26 +1,24 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 
-class PrivateRoute extends Component {
-  render() {
-    const { isLoggedIn, business, path } = this.props;
+const PrivateRoute = props => {
+  const { isLoggedIn, business, path } = props;
 
-    const noBusinessSelected = Object.keys(business).length === 0;
-    const onBusinessesPage = path === "/businesses/";
+  const noBusinessSelected = Object.keys(business).length === 0;
+  const onBusinessesPage = path === "/businesses/";
 
-    if (isLoggedIn && noBusinessSelected && !onBusinessesPage) {
-      return <Redirect to="/businesses/" />;
-    }
-
-    if (isLoggedIn) {
-      return <Route {...this.props} />;
-    } else {
-      return <Redirect to="/login/" />;
-    }
+  if (isLoggedIn && noBusinessSelected && !onBusinessesPage) {
+    return <Redirect to="/businesses/" />;
   }
-}
+
+  if (isLoggedIn) {
+    return <Route {...props} />;
+  } else {
+    return <Redirect to="/login/" />;
+  }
+};
 
 PrivateRoute.propTypes = {
   isLoggedIn: PropTypes.bool,

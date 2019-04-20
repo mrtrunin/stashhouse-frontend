@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Redirect } from "react-router-dom";
@@ -8,64 +8,54 @@ import * as actions from "./LoginActions";
 import Message from "components/Message/Message";
 import LoginBox from "./components/LoginBox";
 
-class Login extends Component {
-  state = {
+const Login = props => {
+  const {
+    isLoggedIn,
+    actions: { login, fetchUserData, loginWithGoogle }
+  } = props;
+
+  const [state, setState] = useState({
     username: "",
     password: "",
     isLoading: false,
     redirect: false
-  };
+  });
 
-  onSubmit = async e => {
+  const onSubmit = async e => {
     e.preventDefault();
-    const {
-      actions: { login, fetchUserData }
-    } = this.props;
 
     try {
-      await this.setState({ isLoading: true });
-      await login(this.state);
+      await setState({ ...state, isLoading: true });
+      await login(state);
       await fetchUserData();
     } catch (error) {
       Message("Could not submit login: " + error, "error");
     }
   };
 
-  handleChange = name => event => {
+  const handleChange = name => event => {
     event.preventDefault();
-    this.setState({ [name]: event.target.value });
+    setState({ ...state, [name]: event.target.value });
   };
 
-  googleLogin = async props => {
-    const {
-      actions: { loginWithGoogle, fetchUserData }
-    } = this.props;
-
-    await loginWithGoogle(props);
-
-    const { accessToken } = this.props;
-
-    if (accessToken) {
-      await fetchUserData();
-    }
+  const googleLogin = async googleProps => {
+    await setState({ ...state, isLoading: true });
+    await loginWithGoogle(googleProps);
+    await fetchUserData();
   };
 
-  render() {
-    const { isLoggedIn } = this.props;
-
-    if (isLoggedIn) {
-      return <Redirect push exact to="/businesses" />;
-    }
-
-    return (
-      <LoginBox
-        onSubmit={this.onSubmit}
-        handleChange={this.handleChange}
-        googleLogin={this.googleLogin}
-      />
-    );
+  if (isLoggedIn) {
+    return <Redirect push exact to="/businesses" />;
   }
-}
+
+  return (
+    <LoginBox
+      onSubmit={onSubmit}
+      handleChange={handleChange}
+      googleLogin={googleLogin}
+    />
+  );
+};
 
 Login.propTypes = {
   user: PropTypes.shape({

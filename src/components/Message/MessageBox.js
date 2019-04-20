@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { Snackbar } from "@material-ui/core";
 import PropTypes from "prop-types";
 import { bindActionCreators } from "redux";
@@ -6,25 +6,17 @@ import * as actions from "./MessageActions";
 import { connect } from "react-redux";
 import MessageBoxContent from "./MessageBoxContent";
 
-class MessageBox extends Component {
-  render() {
-    const {
-      message,
-      open,
-      variant,
-      actions: { closeMessage }
-    } = this.props;
-    return (
-      <Snackbar open={open} onClose={closeMessage} autoHideDuration={3000}>
-        <MessageBoxContent
-          onClose={closeMessage}
-          variant={variant}
-          message={message}
-        />
-      </Snackbar>
-    );
-  }
-}
+const MessageBox = ({ message, open, variant, actions: { closeMessage } }) => {
+  return (
+    <Snackbar open={open} onClose={closeMessage} autoHideDuration={3000}>
+      <MessageBoxContent
+        onClose={closeMessage}
+        variant={variant}
+        message={message}
+      />
+    </Snackbar>
+  );
+};
 
 MessageBox.propTypes = {
   actions: PropTypes.object.isRequired,
@@ -56,4 +48,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(MessageBox);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MessageBox);

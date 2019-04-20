@@ -1,6 +1,6 @@
 import React from "react";
 import { Switch } from "react-router-dom";
-import { Route, Redirect } from "react-router";
+import { Route } from "react-router";
 import Main from "components/App/Main/Main";
 import PrivateRoute from "./PrivateRoute";
 import Warehouses from "pages/Warehouses/Warehouses";
@@ -12,7 +12,6 @@ import Transactions from "pages/Transactions/Transactions";
 import Payments from "pages/Payments/Payments";
 import Customers from "pages/Customers/Customers";
 import Business from "pages/Business/Business";
-import Reports from "pages/Reports/Reports";
 import Emails from "pages/Emails/Emails";
 
 import LandingPage from "pages/LandingPage/LandingPage";
@@ -47,13 +46,11 @@ const Router = () => {
         <PrivateRoute exact path="/customers/" component={Customers} />
         <PrivateRoute exact path="/settings/" component={Business} />
         <PrivateRoute exact path="/businesses/" component={Businesses} />
-        <PrivateRoute exact path="/reports/" component={Reports} />
         <PrivateRoute exact path="/emails/" component={Emails} />
         <PrivateRoute exact path="/emails/:transactionId" component={Emails} />
         <Route exact path="/logout/" component={Logout} />
         <Route exact path="/login/" component={Login} />
         <Route exact path="/" component={LandingPage} />
-        <Redirect exact from="/" to="/warehouses/" />
       </Switch>
     </Main>
   );
