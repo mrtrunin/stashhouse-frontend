@@ -25,30 +25,31 @@ const Payments = props => {
     classes,
     actions: { fetchPayments, deletePayments },
     match: {
-      params: { paymentId, invoiceId },
-      path
+      params: { paymentId, invoiceId }
     }
   } = props;
 
-  const isOnRootPath = path === "/payments/" || path === "/payments";
-
   const [selectedPayments, setSelectedPayments] = useState([]);
   const [showPaymentEditor, setShowPaymentEditor] = useState(false);
-  const [redirectToRoot, setRedirectToRoot] = useState(false);
+  const [redirect, setRedirect] = useState(false);
 
   useEffect(() => {
     fetchData();
-    showEditors();
-
-    if (redirectToRoot) {
-      setRedirectToRoot(false);
-    }
+    // showEditors();
+    // if (redirect) {
+    //   setRedirectToRoot(false);
+    // }
   }, []);
 
+  // useEffect(() => {
+  //   // fetchData();
+  // }, [business]);
+
   useEffect(() => {
     fetchData();
-  }, [business]);
+  }, [paymentId]);
 
+  useEffect(() => setRedirect(false), [redirect]);
   useEffect(() => {
     showEditors();
   }, [props]);
@@ -101,11 +102,9 @@ const Payments = props => {
     handleHidePaymentEditor();
   };
 
-  const showEditors = async () => {
+  const showEditors = () => {
     if (paymentId || invoiceId) {
       handleShowPaymentEditor();
-    } else {
-      handleHidePaymentEditor();
     }
   };
 
@@ -113,18 +112,16 @@ const Payments = props => {
     setShowPaymentEditor(true);
   };
 
-  const handleHidePaymentEditor = () => {
-    setShowPaymentEditor(false);
-    setRedirectToRoot(true);
+  const handleHidePaymentEditor = async () => {
+    await setShowPaymentEditor(false);
+    await setRedirect(true);
   };
 
   if (!fetched) {
     return <p>Loading...</p>;
   }
 
-  if (redirectToRoot && !isOnRootPath) {
-    return <Redirect exact to="/payments/" />;
-  }
+  if (redirect) return <Redirect exact to="/payments/" />;
 
   return (
     <div className={classes.root}>
@@ -146,7 +143,11 @@ const Payments = props => {
       </ButtonRow>
 
       {showPaymentEditor && (
-        <Payment paymentId={paymentId} invoiceId={invoiceId}>
+        <Payment
+          paymentId={paymentId}
+          invoiceId={invoiceId}
+          hidePaymentEditor={handleHidePaymentEditor}
+        >
           <PaymentEditor hidePayment={handleHidePaymentEditor} />
         </Payment>
       )}

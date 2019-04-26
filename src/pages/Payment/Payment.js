@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -11,7 +11,6 @@ import { addCommas } from "services/functions";
 import { bindActionCreators } from "redux";
 
 import { MenuItem } from "@material-ui/core";
-import { Redirect } from "react-router-dom";
 
 const Payment = props => {
   const {
@@ -21,6 +20,7 @@ const Payment = props => {
     invoices,
     business,
     children,
+    hidePaymentEditor,
     actions: {
       resetPayment,
       fetchInvoices,
@@ -33,14 +33,10 @@ const Payment = props => {
     }
   } = props;
 
-  const [redirectToRoot, setRedirectToRoot] = useState(false);
-
   useEffect(() => {
     resetPayment();
     fetchInvoices();
     fetchPayment(paymentId);
-
-    setRedirectToRoot(false);
   }, []);
 
   useEffect(() => {
@@ -76,11 +72,6 @@ const Payment = props => {
     updatePaymentField(field, value);
   };
 
-  const fetchDataAndRedirect = async () => {
-    await fetchPayments(business.name);
-    await setRedirectToRoot(true);
-  };
-
   const handleCreatePayment = async () => {
     const relatedInvoice = invoices.find(invoice => {
       return invoice.full_transaction_number === payment.transaction;
@@ -95,7 +86,7 @@ const Payment = props => {
       payment.description,
       business.name
     );
-    await fetchDataAndRedirect();
+    await fetchPayments(business.name);
   };
 
   const handleUpdatePayment = async () => {
@@ -103,7 +94,7 @@ const Payment = props => {
       return invoice.full_transaction_number === payment.transaction;
     });
 
-    updatePayment(
+    await updatePayment(
       payment.date_payment,
       relatedInvoice.id,
       payment.amount,
@@ -112,12 +103,14 @@ const Payment = props => {
       payment.description,
       payment.id
     );
-    await fetchDataAndRedirect();
+    await fetchPayments(business.name);
+    await hidePaymentEditor();
   };
 
   const handleDeletePayment = async () => {
     await deletePayment(payment.id);
-    await fetchDataAndRedirect();
+    await fetchPayments(business.name);
+    await hidePaymentEditor();
   };
 
   const existsInvoices = Object.keys(invoices).length !== 0;
@@ -167,12 +160,7 @@ const Payment = props => {
     });
   });
 
-  return (
-    <div>
-      {redirectToRoot && <Redirect to="/payments" />}
-      {childrenWithProps}
-    </div>
-  );
+  return <div>{childrenWithProps}</div>;
 };
 
 Payment.propTypes = {
@@ -185,7 +173,8 @@ Payment.propTypes = {
   children: PropTypes.object.isRequired,
   match: PropTypes.shape({
     path: PropTypes.string
-  })
+  }),
+  hidePaymentEditor: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
