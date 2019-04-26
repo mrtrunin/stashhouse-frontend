@@ -99,7 +99,7 @@ const Payments = props => {
     await deletePayments(selectedPayments);
     await fetchPayments(business.name);
     await setSelectedPayments([]);
-    handleHidePaymentEditor();
+    await handleHidePaymentEditor();
   };
 
   const showEditors = () => {
