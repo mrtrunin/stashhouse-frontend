@@ -48,10 +48,10 @@ const Emails = props => {
     setOpenEmail(true);
   };
 
-  const handleCloseEmail = e => {
+  const handleCloseEmail = async e => {
     e.preventDefault();
-    setOpenEmail(false);
-    fetchEmailActions();
+    await setOpenEmail(false);
+    await fetchEmailActions();
   };
 
   return (

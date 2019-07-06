@@ -80,7 +80,7 @@ const EmailDialog = props => {
       body
     );
 
-    await props.handleClose();
+    await handleClose();
   };
 
   return (
