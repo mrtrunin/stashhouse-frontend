@@ -219,9 +219,9 @@ const Transaction = props => {
                 <Button
                   color="primary"
                   variant="contained"
-                  onClick={() => {
-                    updateTransaction(transactionState, business);
-                    setRedirect(true);
+                  onClick={async () => {
+                    await updateTransaction(transactionState, business);
+                    await setRedirect(true);
                   }}
                 >
                   Update
@@ -232,9 +232,9 @@ const Transaction = props => {
                 <Button
                   color="primary"
                   variant="contained"
-                  onClick={() => {
-                    createTransaction(transactionState, business);
-                    setRedirect(true);
+                  onClick={async () => {
+                    await createTransaction(transactionState, business);
+                    await setRedirect(true);
                   }}
                 >
                   {transactionState.transactionType}
