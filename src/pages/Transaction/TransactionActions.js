@@ -217,7 +217,7 @@ export function selectCustomer(customers, selectedCustomerName) {
 }
 
 export function calculateTotals(transactionState) {
-  return async () => {
+  return () => {
     let total_without_tax = 0;
     let tax = 0;
     let total_with_tax = 0;
