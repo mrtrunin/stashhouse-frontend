@@ -43,8 +43,7 @@ const Emails = props => {
     }
   };
 
-  const handleOpenEmail = e => {
-    e.preventDefault();
+  const handleOpenEmail = () => {
     setOpenEmail(true);
   };
 
