@@ -58,6 +58,25 @@ export function fetchEmails(business_name) {
   };
 }
 
+export function fetchEmailsByPageUrl(pageUrl) {
+  return async dispatch => {
+    await dispatch({ type: FETCH_EMAILS });
+    try {
+      const { data } = await axios.get(pageUrl);
+      await dispatch({
+        type: FETCH_EMAILS_FULFILLED,
+        payload: data
+      });
+    } catch (error) {
+      Message("Error fetching emails: " + error, "error");
+      dispatch({
+        type: FETCH_EMAILS_REJECTED,
+        payload: error
+      });
+    }
+  };
+}
+
 export function fetchEmailsForTransaction(id) {
   return async dispatch => {
     await dispatch({ type: FETCH_EMAILS });

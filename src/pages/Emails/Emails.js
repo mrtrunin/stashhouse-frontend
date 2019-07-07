@@ -24,10 +24,21 @@ const Emails = props => {
     transaction,
     classes,
     business,
-    actions: { fetchEmails, fetchEmailsForTransaction, fetchTransaction }
+    count,
+    next,
+    previous,
+    actions: {
+      fetchEmails,
+      fetchEmailsForTransaction,
+      fetchTransaction,
+      fetchEmailsByPageUrl
+    },
+    match: {
+      params: { transactionId }
+    }
   } = props;
-  const { transactionId } = props.match.params;
   const [openEmail, setOpenEmail] = useState(false);
+  const [page, setPage] = useState(0);
   const transactionExists = transactionId > 0;
 
   useEffect(() => {
@@ -53,6 +64,11 @@ const Emails = props => {
     await fetchEmailActions();
   };
 
+  const handleChangePage = async (e, nextPage) => {
+    await fetchEmailsByPageUrl(nextPage > page ? next : previous);
+    await setPage(nextPage);
+  };
+
   return (
     <div className={classes.root}>
       <EmailDialog
@@ -60,7 +76,12 @@ const Emails = props => {
         handleClose={handleCloseEmail}
         transaction={transaction}
       />
-      <EmailsTable emails={emails} />
+      <EmailsTable
+        emails={emails}
+        count={count}
+        page={page}
+        handleChangePage={handleChangePage}
+      />
       <ButtonRow show={transactionExists}>
         <SendEmailButton transaction={transaction} onClick={handleOpenEmail} />
       </ButtonRow>
@@ -78,13 +99,19 @@ Emails.propTypes = {
   actions: PropTypes.object.isRequired,
   transaction: PropTypes.object,
   emails: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  count: PropTypes.number.isRequired,
+  next: PropTypes.string,
+  previous: PropTypes.string
 };
 
 const mapStateToProps = state => {
   return {
     business: state.business.business,
     transaction: state.transaction.transaction,
+    count: state.emails.count,
+    next: state.emails.next,
+    previous: state.emails.previous,
     emails: state.emails.emails
   };
 };
