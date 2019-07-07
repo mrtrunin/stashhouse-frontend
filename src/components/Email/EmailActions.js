@@ -3,6 +3,8 @@ import Message from "components/Message/Message";
 
 export const FETCH_EMAILS = "FETCH_EMAILS";
 export const FETCH_EMAILS_FULFILLED = "FETCH_EMAILS_FULFILLED";
+export const FETCH_EMAILS_FOR_TRANSACTION_FULFILLED =
+  "FETCH_EMAILS_FOR_TRANSACTION_FULFILLED";
 export const FETCH_EMAILS_REJECTED = "FETCH_EMAILS_REJECTED";
 
 const url = process.env.REACT_APP_SERVER_URL;
@@ -85,7 +87,7 @@ export function fetchEmailsForTransaction(id) {
     try {
       const { data } = await axios.get(url + "/transactions/" + id);
       await dispatch({
-        type: FETCH_EMAILS_FULFILLED,
+        type: FETCH_EMAILS_FOR_TRANSACTION_FULFILLED,
         payload: data.sent_emails
       });
       return data;

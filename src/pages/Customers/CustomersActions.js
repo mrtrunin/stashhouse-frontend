@@ -32,8 +32,6 @@ export function fetchCustomers(businessName) {
 
 export function fetchCustomersByPageUrl(pageUrl) {
   return async dispatch => {
-    let url = process.env.REACT_APP_SERVER_URL;
-
     await dispatch({
       type: FETCH_CUSTOMERS
     });

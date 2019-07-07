@@ -1,7 +1,8 @@
 import {
   FETCH_EMAILS,
   FETCH_EMAILS_FULFILLED,
-  FETCH_EMAILS_REJECTED
+  FETCH_EMAILS_REJECTED,
+  FETCH_EMAILS_FOR_TRANSACTION_FULFILLED
 } from "./EmailActions";
 
 export default function reducer(
@@ -29,6 +30,15 @@ export default function reducer(
         count: action.payload.count,
         next: action.payload.next,
         previous: action.payload.previous
+      };
+    }
+    case FETCH_EMAILS_FOR_TRANSACTION_FULFILLED: {
+      return {
+        ...state,
+        fetching: false,
+        fetched: true,
+        emails: action.payload,
+        count: action.payload.length
       };
     }
     case FETCH_EMAILS_REJECTED: {
