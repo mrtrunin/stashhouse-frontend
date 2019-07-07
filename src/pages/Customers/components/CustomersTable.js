@@ -6,12 +6,13 @@ import {
   TableBody,
   TableHead,
   TableCell,
-  Typography
+  Typography,
+  TablePagination
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
 const CustomersTable = props => {
-  const { customers } = props;
+  const { customers, count, page, handleChangePage } = props;
 
   let transactionRows = customers.map((customer, i) => {
     return (
@@ -54,26 +55,45 @@ const CustomersTable = props => {
   });
 
   return (
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell padding="dense">Name</TableCell>
-          <TableCell padding="dense">Email</TableCell>
-          <TableCell padding="dense">Address</TableCell>
-          <TableCell padding="dense">Zip code</TableCell>
-          <TableCell padding="dense">City</TableCell>
-          <TableCell padding="dense">Country</TableCell>
-          <TableCell padding="dense">Phone Number</TableCell>
-          <TableCell padding="dense">Default Warehouse</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>{transactionRows}</TableBody>
-    </Table>
+    <>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell padding="dense">Name</TableCell>
+            <TableCell padding="dense">Email</TableCell>
+            <TableCell padding="dense">Address</TableCell>
+            <TableCell padding="dense">Zip code</TableCell>
+            <TableCell padding="dense">City</TableCell>
+            <TableCell padding="dense">Country</TableCell>
+            <TableCell padding="dense">Phone Number</TableCell>
+            <TableCell padding="dense">Default Warehouse</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>{transactionRows}</TableBody>
+      </Table>
+      <TablePagination
+        component="div"
+        count={count}
+        rowsPerPage={10}
+        page={page}
+        backIconButtonProps={{
+          "aria-label": "Previous Page"
+        }}
+        nextIconButtonProps={{
+          "aria-label": "Next Page"
+        }}
+        onChangePage={handleChangePage}
+        rowsPerPageOptions={[10]}
+      />
+    </>
   );
 };
 
 CustomersTable.propTypes = {
-  customers: PropTypes.array.isRequired
+  customers: PropTypes.array.isRequired,
+  count: PropTypes.number.isRequired,
+  page: PropTypes.number.isRequired,
+  handleChangePage: PropTypes.func.isRequired
 };
 
 export default CustomersTable;

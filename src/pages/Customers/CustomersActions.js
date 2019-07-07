@@ -29,3 +29,27 @@ export function fetchCustomers(businessName) {
     }
   };
 }
+
+export function fetchCustomersByPageUrl(pageUrl) {
+  return async dispatch => {
+    let url = process.env.REACT_APP_SERVER_URL;
+
+    await dispatch({
+      type: FETCH_CUSTOMERS
+    });
+
+    try {
+      const { data } = await axios.get(pageUrl);
+
+      await dispatch({
+        type: FETCH_CUSTOMERS_FULFILLED,
+        payload: data
+      });
+    } catch (error) {
+      await dispatch({
+        type: FETCH_CUSTOMERS_REJECTED,
+        payload: error
+      });
+    }
+  };
+}

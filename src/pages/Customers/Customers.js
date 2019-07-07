@@ -17,13 +17,17 @@ const Customers = props => {
     customers,
     fetched,
     classes,
-    actions: { fetchCustomers }
+    count,
+    next,
+    previous,
+    actions: { fetchCustomers, fetchCustomersByPageUrl }
   } = props;
 
   const { customerId } = props.match.params;
 
   const [showCustomerEditor, setShowCustomerEditor] = useState(false);
   const [redirect, setRedirect] = useState(false);
+  const [page, setPage] = useState(0);
 
   useEffect(() => {
     fetchCustomers(business.name);
@@ -41,6 +45,11 @@ const Customers = props => {
     setRedirect(true);
   };
 
+  const handleChangePage = async (e, nextPage) => {
+    await fetchCustomersByPageUrl(nextPage > page ? next : previous);
+    await setPage(nextPage);
+  };
+
   if (!fetched) {
     return "Loading...";
   }
@@ -52,7 +61,12 @@ const Customers = props => {
   return (
     <div className={classes.root}>
       <TableBase>
-        <CustomersTable customers={customers} />
+        <CustomersTable
+          customers={customers}
+          count={count}
+          page={page}
+          handleChangePage={handleChangePage}
+        />
       </TableBase>
 
       <ButtonRow show={!showCustomerEditor}>
@@ -83,14 +97,20 @@ Customers.propTypes = {
   }),
   fetched: PropTypes.bool.isRequired,
   business: PropTypes.object.isRequired,
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
+  count: PropTypes.number.isRequired,
+  next: PropTypes.string,
+  previous: PropTypes.string
 };
 
 const mapStateToProps = state => {
   return {
     customers: state.customers.customers,
     fetched: state.customers.fetched,
-    business: state.business.business
+    business: state.business.business,
+    count: state.customers.count,
+    next: state.customers.next,
+    previous: state.customers.previous
   };
 };
 
