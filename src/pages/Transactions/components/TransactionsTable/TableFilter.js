@@ -49,14 +49,14 @@ const TableFilter = props => {
             label="Purchase"
           />
           <FormControlLabel
-            value="WRITEOFF"
-            control={<Radio />}
-            label="Write-Off"
-          />
-          <FormControlLabel
             value="TRANSFER"
             control={<Radio />}
             label="Transfer"
+          />
+          <FormControlLabel
+            value="WRITEOFF"
+            control={<Radio />}
+            label="Write-Off"
           />
 
           <FormControlLabel value="UNPAID" control={<Radio />} label="Unpaid" />
