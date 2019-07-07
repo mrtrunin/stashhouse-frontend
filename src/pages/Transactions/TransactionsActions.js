@@ -7,13 +7,34 @@ export const FETCH_TRANSACTIONS_REJECTED = "FETCH_TRANSACTIONS_REJECTED";
 
 const url = process.env.REACT_APP_SERVER_URL;
 
-export function fetchTransactions(businessName) {
+export function fetchTransactions(businessName, transactionType = null) {
   return async dispatch => {
     await dispatch({ type: FETCH_TRANSACTIONS });
     try {
-      const { data } = await axios.get(
-        url + "/transactions/?business_name=" + businessName
-      );
+      const { data } = await axios.get(url + "/transactions/", {
+        params: {
+          business_name: businessName,
+          transaction_type: transactionType
+        }
+      });
+      await dispatch({
+        type: FETCH_TRANSACTIONS_FULFILLED,
+        payload: data
+      });
+    } catch (error) {
+      dispatch({
+        type: FETCH_TRANSACTIONS_REJECTED,
+        payload: error
+      });
+    }
+  };
+}
+
+export function fetchTransactionsByPageUrl(pageUrl) {
+  return async dispatch => {
+    await dispatch({ type: FETCH_TRANSACTIONS });
+    try {
+      const { data } = await axios.get(pageUrl);
       await dispatch({
         type: FETCH_TRANSACTIONS_FULFILLED,
         payload: data

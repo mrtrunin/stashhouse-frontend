@@ -7,6 +7,9 @@ import {
 export default function reducer(
   state = {
     warehouses: [],
+    count: 0,
+    next: null,
+    previous: null,
     fetching: false,
     fetched: false,
     error: null
@@ -22,7 +25,10 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: true,
-        warehouses: action.payload
+        warehouses: action.payload.results,
+        count: action.payload.count,
+        next: action.payload.next,
+        previous: action.payload.previous
       };
     }
     case FETCH_WAREHOUSES_REJECTED: {

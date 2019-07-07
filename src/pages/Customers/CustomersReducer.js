@@ -6,7 +6,10 @@ import {
 
 export default function transactions(
   state = {
-    customers: {},
+    customers: [],
+    count: 0,
+    next: null,
+    previous: null,
     fetching: false,
     fetched: false,
     error: null
@@ -22,7 +25,10 @@ export default function transactions(
         ...state,
         fetching: false,
         fetched: true,
-        customers: action.payload
+        customers: action.payload.results,
+        count: action.payload.count,
+        next: action.payload.next,
+        previous: action.payload.previous
       };
     }
     case FETCH_CUSTOMERS_REJECTED: {

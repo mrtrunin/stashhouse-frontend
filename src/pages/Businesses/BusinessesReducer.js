@@ -7,6 +7,9 @@ import {
 export default function reducer(
   state = {
     businesses: [],
+    count: 0,
+    next: null,
+    previous: null,
     fetching: false,
     fetched: false,
     error: null
@@ -22,7 +25,10 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: true,
-        businesses: action.payload
+        businesses: action.payload.results,
+        count: action.payload.count,
+        next: action.payload.next,
+        previous: action.payload.previous
       };
     }
     case FETCH_BUSINESSES_REJECTED: {

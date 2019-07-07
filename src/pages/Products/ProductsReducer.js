@@ -10,6 +10,9 @@ import {
 export default function reducer(
   state = {
     products: {},
+    count: 0,
+    next: null,
+    previous: null,
     fetching: false,
     fetched: false,
     error: null
@@ -25,7 +28,10 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: true,
-        products: action.payload
+        products: action.payload.results,
+        count: action.payload.count,
+        next: action.payload.next,
+        previous: action.payload.previous
       };
     }
     case FETCH_PRODUCTS_REJECTED: {
@@ -39,7 +45,10 @@ export default function reducer(
         ...state,
         fetching: false,
         fetched: true,
-        products: action.payload
+        products: action.payload.results,
+        count: action.payload.count,
+        next: action.payload.next,
+        previous: action.payload.previous
       };
     }
     case FETCH_PRODUCTS_STOCK_REJECTED: {

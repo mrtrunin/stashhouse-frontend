@@ -53,10 +53,8 @@ const TransactionsTable = props => {
     onClick,
     handleOpenEmail,
     handleChangePage,
-    handleChangeRowsPerPage,
-    rowsPerPage,
     page,
-    filteredTransactionType
+    count
   } = props;
 
   const linkTargetOptions = {
@@ -66,137 +64,102 @@ const TransactionsTable = props => {
     WRITEOFF: "writeoff"
   };
 
-  const unpaidAmountTolerance = 0.05;
+  const transactionRows = transactions.map(transaction => {
+    const date_created = moment(transaction.date_created).format("DD-MMM-YYYY");
+    const date_due = transaction.date_due
+      ? moment(transaction.date_due).format("DD-MMM-YYYY")
+      : "-";
 
-  const filteredTransactions = transactions.filter(transaction => {
-    let transactionAmountWithTax = transaction.amount + transaction.tax;
-    let paidAmount = transaction.paid_amount;
-    let unpaidAmount = transactionAmountWithTax - paidAmount;
-    let absUnpaidAmount = Math.abs(unpaidAmount);
+    const showInvoiceAttribute = transaction.type === "INVOICE";
+    const showTransferAttribute = transaction.type === "TRANSFER";
+    const linkTarget = linkTargetOptions[transaction.type];
 
-    if (filteredTransactionType === "ALL") {
-      return true;
-    }
+    const transactionAmountWithTax = transaction.amount + transaction.tax;
+    const paidAmount = transaction.paid_amount;
+    const unpaidAmount = transactionAmountWithTax - paidAmount;
+    const absUnpaidAmount = Math.abs(unpaidAmount);
+    const unpaidAmountTolerance = 0.05;
+    const showUnpaidAmount =
+      absUnpaidAmount >= unpaidAmountTolerance && showInvoiceAttribute;
 
-    if (filteredTransactionType === "UNPAID") {
-      return (
-        transaction.type === "INVOICE" &&
-        absUnpaidAmount >= unpaidAmountTolerance
-      );
-    }
-    return transaction.type === filteredTransactionType;
-  });
-  const sortedTransactions = filteredTransactions.sort(
-    (transactionA, transactionB) => {
-      return (
-        new Date(transactionB.date_created) -
-        new Date(transactionA.date_created)
-      );
-    }
-  );
-
-  const transactionRows = sortedTransactions
-    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-    .map(transaction => {
-      const date_created = moment(transaction.date_created).format(
-        "DD-MMM-YYYY"
-      );
-      const date_due = transaction.date_due
-        ? moment(transaction.date_due).format("DD-MMM-YYYY")
-        : "-";
-
-      const showInvoiceAttribute = transaction.type === "INVOICE";
-      const showTransferAttribute = transaction.type === "TRANSFER";
-      const linkTarget = linkTargetOptions[transaction.type];
-
-      const transactionAmountWithTax = transaction.amount + transaction.tax;
-      const paidAmount = transaction.paid_amount;
-      const unpaidAmount = transactionAmountWithTax - paidAmount;
-
-      const absUnpaidAmount = Math.abs(unpaidAmount);
-      const showUnpaidAmount =
-        absUnpaidAmount >= unpaidAmountTolerance && showInvoiceAttribute;
-
-      return (
-        <TableRow key={transaction.id}>
-          <TableCell padding="checkbox" name="checkbox">
-            <Checkbox
-              onChange={onChange}
-              id={transaction.id.toString()}
-              checked={selectedTransactions.includes(transaction.id)}
-            />
-          </TableCell>
-          <TableCell padding="dense" name="ID">
+    return (
+      <TableRow key={transaction.id}>
+        <TableCell padding="checkbox" name="checkbox">
+          <Checkbox
+            onChange={onChange}
+            id={transaction.id.toString()}
+            checked={selectedTransactions.includes(transaction.id)}
+          />
+        </TableCell>
+        <TableCell padding="dense" name="ID">
+          <Typography
+            align="center"
+            noWrap
+            color="secondary"
+            style={{
+              textDecoration: "none",
+              display: "inline"
+            }}
+            component={Link}
+            to={linkTarget + "/" + transaction.id}
+          >
+            {transaction.full_transaction_number}
+          </Typography>
+        </TableCell>
+        <TableCell padding="dense" name="Date created">
+          {date_created}
+        </TableCell>
+        <TableCell padding="dense" name="Date due">
+          {date_due}
+        </TableCell>
+        <TableCell padding="dense" name="Customer">
+          {transaction.customer ? transaction.customer.name : "-" || "-"}
+        </TableCell>
+        <TableCell padding="dense" name="Warehouse">
+          {transaction.warehouse}
+        </TableCell>
+        <TableCell padding="dense" name="Total Amount" align="right">
+          {addCommas(transactionAmountWithTax.toFixed(2))}
+          {showUnpaidAmount && (
             <Typography
-              align="center"
-              noWrap
-              color="secondary"
-              style={{
-                textDecoration: "none",
-                display: "inline"
-              }}
+              variant="caption"
               component={Link}
-              to={linkTarget + "/" + transaction.id}
-            >
-              {transaction.full_transaction_number}
-            </Typography>
-          </TableCell>
-          <TableCell padding="dense" name="Date created">
-            {date_created}
-          </TableCell>
-          <TableCell padding="dense" name="Date due">
-            {date_due}
-          </TableCell>
-          <TableCell padding="dense" name="Customer">
-            {transaction.customer ? transaction.customer.name : "-" || "-"}
-          </TableCell>
-          <TableCell padding="dense" name="Warehouse">
-            {transaction.warehouse}
-          </TableCell>
-          <TableCell padding="dense" name="Total Amount" align="right">
-            {addCommas(transactionAmountWithTax.toFixed(2))}
-            {showUnpaidAmount && (
-              <Typography
-                variant="caption"
-                component={Link}
-                to={
-                  "/payments/invoice/" +
-                  transaction.full_transaction_number +
-                  "/"
-                }
-                className={
-                  unpaidAmount > 0
-                    ? classes.unpaidAmount
-                    : unpaidAmount < 0
-                    ? classes.overpaidAmount
-                    : ""
-                }
-              >
-                {unpaidAmount > 0
-                  ? "Unpaid: "
+              to={
+                "/payments/invoice/" + transaction.full_transaction_number + "/"
+              }
+              className={
+                unpaidAmount > 0
+                  ? classes.unpaidAmount
                   : unpaidAmount < 0
-                  ? "Overpaid: "
-                  : ""}
-                {addCommas(absUnpaidAmount.toFixed(2))}
-              </Typography>
-            )}
-          </TableCell>
-          <TableCell padding="dense">
-            {(showInvoiceAttribute || showTransferAttribute) && (
-              <ExportPdfButton transaction={transaction} onClick={onClick} />
-            )}
-          </TableCell>
-          <TableCell padding="dense" align="center">
-            {showInvoiceAttribute && (
-              <ShowCounterOrSendEmailButton
-                transaction={transaction}
-                handleOpenEmail={handleOpenEmail}
-              />
-            )}
-          </TableCell>
-        </TableRow>
-      );
-    });
+                  ? classes.overpaidAmount
+                  : ""
+              }
+            >
+              {unpaidAmount > 0
+                ? "Unpaid: "
+                : unpaidAmount < 0
+                ? "Overpaid: "
+                : ""}
+              {addCommas(absUnpaidAmount.toFixed(2))}
+            </Typography>
+          )}
+        </TableCell>
+        <TableCell padding="dense">
+          {(showInvoiceAttribute || showTransferAttribute) && (
+            <ExportPdfButton transaction={transaction} onClick={onClick} />
+          )}
+        </TableCell>
+        <TableCell padding="dense" align="center">
+          {showInvoiceAttribute && (
+            <ShowCounterOrSendEmailButton
+              transaction={transaction}
+              handleOpenEmail={handleOpenEmail}
+            />
+          )}
+        </TableCell>
+      </TableRow>
+    );
+  });
 
   return (
     <Paper className={classes.root}>
@@ -223,8 +186,8 @@ const TransactionsTable = props => {
 
       <TablePagination
         component="div"
-        count={filteredTransactions.length}
-        rowsPerPage={rowsPerPage}
+        count={count}
+        rowsPerPage={10}
         page={page}
         backIconButtonProps={{
           "aria-label": "Previous Page"
@@ -233,7 +196,7 @@ const TransactionsTable = props => {
           "aria-label": "Next Page"
         }}
         onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
+        rowsPerPageOptions={[10]}
       />
     </Paper>
   );
@@ -244,15 +207,14 @@ TransactionsTable.propTypes = {
   onClick: PropTypes.func,
   onChange: PropTypes.func.isRequired,
   handleChangePage: PropTypes.func.isRequired,
-  handleChangeRowsPerPage: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   selectedTransactions: PropTypes.array,
-  rowsPerPage: PropTypes.number,
   page: PropTypes.number,
   data: PropTypes.object,
   filteredTransactionType: PropTypes.string,
   handleFilterTransactionType: PropTypes.func,
-  handleOpenEmail: PropTypes.func.isRequired
+  handleOpenEmail: PropTypes.func.isRequired,
+  count: PropTypes.number.isRequired
 };
 
 export default withTheme()(

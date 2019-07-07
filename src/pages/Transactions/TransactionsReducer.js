@@ -6,7 +6,10 @@ import {
 
 export function transactions(
   state = {
-    transactions: {},
+    transactions: [],
+    count: 0,
+    next: null,
+    previous: null,
     fetching: false,
     fetched: false,
     error: null
@@ -22,7 +25,10 @@ export function transactions(
         ...state,
         fetching: false,
         fetched: true,
-        transactions: action.payload
+        transactions: action.payload.results,
+        count: action.payload.count,
+        next: action.payload.next,
+        previous: action.payload.previous
       };
     }
     case FETCH_TRANSACTIONS_REJECTED: {

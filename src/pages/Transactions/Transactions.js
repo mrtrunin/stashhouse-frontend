@@ -20,12 +20,19 @@ const Transactions = props => {
   const {
     business,
     transactions,
+    count,
+    next,
+    previous,
     fetched,
-    actions: { fetchTransactions, fetchTransactionPdf, deleteTransactions }
+    actions: {
+      fetchTransactions,
+      fetchTransactionPdf,
+      deleteTransactions,
+      fetchTransactionsByPageUrl
+    }
   } = props;
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedTransactions, setSelectedTransactions] = useState([]);
   const [filteredTransactionType, setFilteredTransactionType] = useState("ALL");
   const [openEmail, setOpenEmail] = useState(false);
@@ -83,15 +90,22 @@ const Transactions = props => {
     await setSelectedTransactions([]);
   };
 
-  const handleFilterTransactionType = e => {
+  const handleFilterTransactionType = async e => {
     e.persist();
-    setFilteredTransactionType(e.target.value);
+    const transactionType = e.target.value;
+    await fetchTransactions(business.name, transactionType);
+    await setFilteredTransactionType(transactionType);
   };
 
   const handleOpenEmail = (transaction, e) => {
     e.preventDefault();
     setOpenEmail(true);
     setTransaction(transaction);
+  };
+
+  const handleChangePage = async (e, nextPage) => {
+    await fetchTransactionsByPageUrl(nextPage > page ? next : previous);
+    await setPage(nextPage);
   };
 
   const handleCloseEmail = () => {
@@ -117,13 +131,12 @@ const Transactions = props => {
 
       <TransactionsTable
         transactions={transactions}
+        count={count}
         selectedTransactions={selectedTransactions}
         onClick={handleDownloadPdf}
         onChange={handleCheckbox}
-        handleChangePage={(e, page) => setPage(page)}
-        handleChangeRowsPerPage={e => setRowsPerPage(e.target.value)}
+        handleChangePage={handleChangePage}
         page={page}
-        rowsPerPage={rowsPerPage}
         filteredTransactionType={filteredTransactionType}
         handleFilterTransactionType={handleFilterTransactionType}
         handleOpenEmail={handleOpenEmail}
@@ -148,12 +161,18 @@ Transactions.propTypes = {
   actions: PropTypes.object.isRequired,
   transactions: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   business: PropTypes.object.isRequired,
-  fetched: PropTypes.bool
+  fetched: PropTypes.bool,
+  count: PropTypes.number.isRequired,
+  next: PropTypes.string,
+  previous: PropTypes.string
 };
 
 const mapStateToProps = state => {
   return {
     transactions: state.transactions.transactions,
+    count: state.transactions.count,
+    next: state.transactions.next,
+    previous: state.transactions.previous,
     fetched: state.transactions.fetched,
     business: state.business.business
   };
