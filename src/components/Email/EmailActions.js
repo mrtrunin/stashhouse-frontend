@@ -41,9 +41,11 @@ export function fetchEmails(business_name) {
   return async dispatch => {
     await dispatch({ type: FETCH_EMAILS });
     try {
-      const { data } = await axios.get(
-        url + "/emails/?business_name=" + business_name
-      );
+      const { data } = await axios.get(url + "/emails/", {
+        params: {
+          business_name
+        }
+      });
       await dispatch({
         type: FETCH_EMAILS_FULFILLED,
         payload: data

@@ -39,6 +39,30 @@ export function fetchPayments(businessName) {
   };
 }
 
+export function fetchPaymentsByPageUrl(pageUrl) {
+  return async dispatch => {
+    await dispatch({
+      type: FETCH_PAYMENTS
+    });
+
+    try {
+      const { data } = await axios.get(pageUrl);
+
+      await dispatch({
+        type: FETCH_PAYMENTS_FULFILLED,
+        payload: data
+      });
+      return data;
+    } catch (error) {
+      dispatch({
+        type: FETCH_PAYMENTS_REJECTED,
+        payload: error
+      });
+      return error;
+    }
+  };
+}
+
 export function fetchInvoices() {
   return async dispatch => {
     await dispatch({

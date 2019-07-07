@@ -23,7 +23,10 @@ const Payments = props => {
     payments,
     fetched,
     classes,
-    actions: { fetchPayments, deletePayments },
+    count,
+    next,
+    previous,
+    actions: { fetchPayments, deletePayments, fetchPaymentsByPageUrl },
     match: {
       params: { paymentId, invoiceId }
     }
@@ -32,18 +35,11 @@ const Payments = props => {
   const [selectedPayments, setSelectedPayments] = useState([]);
   const [showPaymentEditor, setShowPaymentEditor] = useState(false);
   const [redirect, setRedirect] = useState(false);
+  const [page, setPage] = useState(0);
 
   useEffect(() => {
     fetchData();
-    // showEditors();
-    // if (redirect) {
-    //   setRedirectToRoot(false);
-    // }
   }, []);
-
-  // useEffect(() => {
-  //   // fetchData();
-  // }, [business]);
 
   useEffect(() => {
     fetchData();
@@ -117,6 +113,11 @@ const Payments = props => {
     await setRedirect(true);
   };
 
+  const handleChangePage = async (e, nextPage) => {
+    await fetchPaymentsByPageUrl(nextPage > page ? next : previous);
+    await setPage(nextPage);
+  };
+
   if (!fetched) {
     return <p>Loading...</p>;
   }
@@ -130,6 +131,9 @@ const Payments = props => {
         payments={payments}
         selectedPayments={selectedPayments}
         onChange={handleCheckbox}
+        count={count}
+        page={page}
+        handleChangePage={handleChangePage}
       />
 
       <ButtonRow show={selectedPayments.length > 0}>
@@ -167,14 +171,20 @@ Payments.propTypes = {
     }),
     path: PropTypes.string
   }),
-  business: PropTypes.object.isRequired
+  business: PropTypes.object.isRequired,
+  count: PropTypes.number.isRequired,
+  next: PropTypes.string,
+  previous: PropTypes.string
 };
 
 const mapStateToProps = state => {
   return {
     payments: state.payments.payments,
     fetched: state.payments.fetched,
-    business: state.business.business
+    business: state.business.business,
+    count: state.payments.count,
+    next: state.payments.next,
+    previous: state.payments.previous
   };
 };
 
