@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { CardActions, Button, withStyles } from "@material-ui/core";
+import { CardActions, withStyles } from "@material-ui/core";
+import { Button } from "antd";
 
 const EditorButtonStyle = () => ({
   button: {
@@ -22,12 +23,7 @@ const EditorButtons = props => {
   return (
     <CardActions>
       {editedObject && editedObject.id && deleteAction ? (
-        <Button
-          variant="contained"
-          color="secondary"
-          className={classes.button}
-          onClick={deleteAction}
-        >
+        <Button type="danger" className={classes.button} onClick={deleteAction}>
           Delete
         </Button>
       ) : (
@@ -35,8 +31,7 @@ const EditorButtons = props => {
       )}
       {editedObject && editedObject.id && updateAction ? (
         <Button
-          variant="contained"
-          color="primary"
+          type="primary"
           className={classes.button}
           onClick={updateAction}
         >
@@ -45,8 +40,7 @@ const EditorButtons = props => {
       ) : (
         createAction && (
           <Button
-            variant="contained"
-            color="primary"
+            type="primary"
             className={classes.button}
             onClick={createAction}
           >
@@ -56,12 +50,7 @@ const EditorButtons = props => {
       )}
 
       {mainAction && (
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          onClick={mainAction}
-        >
+        <Button type="primary" className={classes.button} onClick={mainAction}>
           {mainActionLabel}
         </Button>
       )}

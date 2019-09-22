@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 
 import { withStyles, Grid } from "@material-ui/core";
@@ -33,25 +33,10 @@ const style = theme => ({
   }
 });
 
-const Main = ({
-  classes,
-  children,
-  actions: { logout, refreshToken },
-  location
-}) => {
-  const [isLandingPage, setIsLandingPage] = useState(true);
-
+const Main = ({ classes, children, actions: { logout, refreshToken } }) => {
   useEffect(() => {
     interceptApiResponse();
   });
-
-  useEffect(() => {
-    if (location.pathname === "/") {
-      setIsLandingPage(true);
-    } else {
-      setIsLandingPage(false);
-    }
-  }, [setIsLandingPage, location.pathname]);
 
   const interceptApiResponse = () => {
     axios.interceptors.request.use(
@@ -149,24 +134,6 @@ const Main = ({
       }
     }
   };
-
-  if (isLandingPage) {
-    return (
-      <Grid
-        container
-        className={[
-          classes.rootLandingPage,
-          classes.font,
-          classes.landingPage
-        ].join(" ")}
-        spacing={16}
-      >
-        <Grid item xs={12}>
-          {children}
-        </Grid>
-      </Grid>
-    );
-  }
 
   return (
     <Grid container className={[classes.root, classes.font].join(" ")}>

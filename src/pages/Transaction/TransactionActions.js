@@ -306,62 +306,51 @@ export function loadExistingTransaction(
 
     try {
       let transaction = await dispatch(fetchTransaction(transactionId));
-
       if (transaction.status === 404) {
         return;
       }
-
       let firstStockId = transaction.stock_list[0];
       let firstStock = await dispatch(fetchStock(firstStockId));
       let fromWarehouse = firstStock.from_warehouse;
       let toWarehouse = firstStock.to_warehouse;
-
       await dispatch({
         type: TRANSACTION_STATE_RESET
       });
-
       // HANDLE EXISTING TRANSACTION
       await dispatch({
         type: TRANSACTION_STATE_ADD_EXISTING_TRANSACTION,
         payload: transactionId
       });
-
       // HANDLE CUSTOMER
       if (customers && transaction.customer) {
         const selectedCustomer = customers.find(customer => {
           return customer.name === transaction.customer.name;
         });
-
         await dispatch({
           type: TRANSACTION_STATE_CHANGE_CUSTOMER,
           payload: selectedCustomer
         });
       }
-
       // HANDLE FROM WAREHOUSE
       if (fromWarehouse) {
         let selectedFromWarehouse = warehouses.find(warehouse => {
           return warehouse.name === fromWarehouse;
         });
-
         await dispatch({
           type: TRANSACTION_STATE_CHANGE_FROM_WAREHOUSE,
           payload: selectedFromWarehouse
         });
       }
-
       // HANDLE TO WAREHOUSE
       if (toWarehouse) {
         let selectedToWarehouse = warehouses.find(warehouse => {
           return warehouse.name === toWarehouse;
         });
-
         await dispatch({
           type: TRANSACTION_STATE_CHANGE_TO_WAREHOUSE,
           payload: selectedToWarehouse
         });
       }
-
       // HANDLE TO WAREHOUSE
       if (transaction.days_due) {
         await dispatch({
@@ -369,25 +358,21 @@ export function loadExistingTransaction(
           payload: transaction.days_due
         });
       }
-
       // HANDLE PRODUCTS
       transaction.stock_list.map(async stockId => {
         let stock = await dispatch(fetchStock(stockId));
         let product = products.find(product => {
           return product.name === stock.product;
         });
-
         let price = stock.price;
         let quantity = stock.quantity;
         let tax_rate = stock.tax_rate;
-
         let transformedProduct = transformSelectedProduct(
           product,
           price,
           quantity,
           tax_rate
         );
-
         await dispatch({
           type: TRANSACTION_STATE_ADD_PRODUCT,
           payload: transformedProduct

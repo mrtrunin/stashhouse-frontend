@@ -79,6 +79,7 @@ const Transaction = props => {
   const [redirect, setRedirect] = useState(false);
 
   const setStartingPosition = useCallback(async () => {
+    await setTransactionType(props.match.params.transactionType);
     await resetTransaction();
     await fetchCustomers(business.name);
     await fetchWarehouses(business.name);
@@ -89,25 +90,22 @@ const Transaction = props => {
       products,
       transactionId
     );
-    await setTransactionType(props.match.params.transactionType);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    props.match.params.transactionType,
     resetTransaction,
+    business,
     fetchCustomers,
     fetchWarehouses,
     fetchProducts,
-    business,
-    loadExistingTransaction,
-    customers,
-    warehouses,
-    products,
-    transactionId,
     setTransactionType,
-    props.match.params.transactionType
+    transactionId,
+    loadExistingTransaction
   ]);
 
   useEffect(() => {
     setStartingPosition();
-  }, [business, transactionId, setStartingPosition]);
+  }, [setStartingPosition]);
 
   const totals = calculateTotals(transactionState);
 
