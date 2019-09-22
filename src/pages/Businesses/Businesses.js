@@ -28,7 +28,7 @@ const Businesses = ({
 
   useEffect(() => {
     if (businesses.length === 1) {
-      return handleChooseBusiness(businesses[0]);
+      handleChooseBusiness(businesses[0]);
     }
   }, [businesses, handleChooseBusiness]);
 
