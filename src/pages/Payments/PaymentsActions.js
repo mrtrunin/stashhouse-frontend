@@ -88,6 +88,35 @@ export function fetchInvoices() {
   };
 }
 
+export function fetchUnpaidInvoices() {
+  return async dispatch => {
+    await dispatch({
+      type: FETCH_INVOICES
+    });
+
+    try {
+      const { data } = await axios.get(url + "/invoices/", {
+        params: {
+          unpaid: true
+        }
+      });
+
+      await dispatch({
+        type: FETCH_INVOICES_FULFILLED,
+        payload: data
+      });
+
+      return data;
+    } catch (error) {
+      dispatch({
+        type: FETCH_INVOICES_REJECTED,
+        payload: error
+      });
+      Message("Could not fetch invoices: " + error, "error");
+    }
+  };
+}
+
 export function importStatement(statementFile, businessName) {
   return async dispatch => {
     const formData = new FormData();

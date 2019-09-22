@@ -23,7 +23,7 @@ const Payment = props => {
     hidePaymentEditor,
     actions: {
       resetPayment,
-      fetchInvoices,
+      fetchUnpaidInvoices,
       fetchPayment,
       updatePaymentField,
       fetchPayments,
@@ -35,9 +35,9 @@ const Payment = props => {
 
   useEffect(() => {
     resetPayment();
-    fetchInvoices();
+    fetchUnpaidInvoices();
     fetchPayment(paymentId);
-  }, [resetPayment, fetchInvoices, fetchPayment, paymentId]);
+  }, [resetPayment, fetchUnpaidInvoices, fetchPayment, paymentId]);
 
   const handlePaymentChangeStore = useCallback(
     (field, value) => {
