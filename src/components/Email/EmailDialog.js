@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import PropTypes from "prop-types";
 import { Modal, withStyles, TextField, Typography } from "@material-ui/core";
 import { connect } from "react-redux";
@@ -40,11 +40,7 @@ const EmailDialog = props => {
     classes
   } = props;
 
-  useEffect(() => {
-    setTransactionAndResetState();
-  }, [transaction]);
-
-  const setTransactionAndResetState = () => {
+  const setTransactionAndResetState = useCallback(() => {
     transaction &&
       transaction.customer &&
       transaction.customer.email &&
@@ -57,7 +53,11 @@ const EmailDialog = props => {
       business.default_email_subject + " " + transaction.full_transaction_number
     );
     setBody(business.default_email_body);
-  };
+  }, [transaction, business]);
+
+  useEffect(() => {
+    setTransactionAndResetState();
+  }, [transaction, setTransactionAndResetState]);
 
   const handleRecipientChange = e => {
     setRecipientEmail(e.target.value);

@@ -155,7 +155,7 @@ const PaymentEditor = props => {
 
 PaymentEditor.propTypes = {
   payment: PropTypes.object,
-  invoicesList: PropTypes.array,
+  invoicesList: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
   hidePayment: PropTypes.func.isRequired,
   invoice: PropTypes.object,
   invoiceId: PropTypes.number,

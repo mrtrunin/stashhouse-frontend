@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import CustomersTable from "./components/CustomersTable";
 import { connect } from "react-redux";
@@ -31,14 +31,14 @@ const Customers = props => {
 
   useEffect(() => {
     fetchCustomers(business.name);
-  }, [business]);
+  }, [business, fetchCustomers]);
 
-  useEffect(() => showEditor(), [props]);
-  useEffect(() => setRedirect(false), [redirect]);
-
-  const showEditor = () => {
+  const showEditor = useCallback(() => {
     if (customerId) setShowCustomerEditor(true);
-  };
+  }, [customerId]);
+
+  useEffect(() => showEditor(), [props, showEditor]);
+  useEffect(() => setRedirect(false), [redirect]);
 
   const hideCustomerEditor = () => {
     setShowCustomerEditor(false);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -37,22 +37,24 @@ const Payments = props => {
   const [redirect, setRedirect] = useState(false);
   const [page, setPage] = useState(0);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const fetchData = useCallback(() => {
+    fetchPayments(business.name);
+  }, [fetchPayments, business]);
+
+  const showEditors = useCallback(() => {
+    if (paymentId || invoiceId) {
+      handleShowPaymentEditor();
+    }
+  }, [paymentId, invoiceId]);
 
   useEffect(() => {
     fetchData();
-  }, [paymentId]);
+  }, [paymentId, fetchData]);
 
   useEffect(() => setRedirect(false), [redirect]);
   useEffect(() => {
     showEditors();
-  }, [props]);
-
-  const fetchData = () => {
-    fetchPayments(business.name);
-  };
+  }, [props, showEditors]);
 
   const handleCheckbox = e => {
     if (e.target.name === "select_all" && e.target.checked) {
@@ -96,12 +98,6 @@ const Payments = props => {
     await fetchPayments(business.name);
     await setSelectedPayments([]);
     await handleHidePaymentEditor();
-  };
-
-  const showEditors = () => {
-    if (paymentId || invoiceId) {
-      handleShowPaymentEditor();
-    }
   };
 
   const handleShowPaymentEditor = () => {

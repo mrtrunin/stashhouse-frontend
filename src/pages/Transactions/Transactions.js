@@ -40,7 +40,7 @@ const Transactions = props => {
 
   useEffect(() => {
     fetchTransactions(business.name);
-  }, [business]);
+  }, [business, fetchTransactions]);
 
   const handleDownloadPdf = (transactionId, transactionName, e) => {
     e.preventDefault();

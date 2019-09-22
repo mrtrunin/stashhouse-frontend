@@ -35,7 +35,7 @@ const Warehouse = props => {
 
   useEffect(() => {
     warehouseId ? fetchWarehouse(warehouseId) : resetWarehouse();
-  }, [warehouseId]);
+  }, [warehouseId, fetchWarehouse, resetWarehouse]);
 
   const fetchDataAndHideEditor = () => {
     fetchProductsStock(business.name);

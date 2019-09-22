@@ -2,6 +2,7 @@ import React from "react";
 import Router from "components/App/Router";
 import NavBar from "components/App/NavBar/NavBar";
 import { AppTheme } from "./AppTheme";
+// import "antd/dist/antd.css";
 
 import { MuiPickersUtilsProvider } from "material-ui-pickers";
 import MomentUtils from "@date-io/moment";

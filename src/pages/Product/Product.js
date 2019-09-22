@@ -38,7 +38,7 @@ const Product = ({
   useEffect(() => {
     resetProduct();
     fetchProduct(productId);
-  }, [productId]);
+  }, [productId, resetProduct, fetchProduct]);
 
   const fetchDataAndHideEditor = async () => {
     await fetchProductsStock(business.name);

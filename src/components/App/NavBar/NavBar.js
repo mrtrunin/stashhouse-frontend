@@ -25,10 +25,10 @@ const NavBar = ({
   fetching
 }) => {
   useEffect(() => {
-    return () => {
-      fetchBusinesses();
-    };
-  }, [isLoggedIn]);
+    if (isLoggedIn) {
+      return fetchBusinesses;
+    }
+  }, [isLoggedIn, fetchBusinesses]);
 
   return (
     <AppBar elevation={0}>

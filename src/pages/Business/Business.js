@@ -26,9 +26,7 @@ const Business = ({
     updateBusinessField(e.target.value, e.target.name);
   };
 
-  useEffect(() => {
-    fetchBusinesses();
-  }, [business]);
+  useEffect(() => fetchBusinesses, [business, fetchBusinesses]);
 
   return (
     <Editor>

@@ -39,11 +39,11 @@ const Customer = props => {
   useEffect(() => {
     resetCustomer();
     fetchWarehouses(business.name);
-  }, []);
+  }, [resetCustomer, fetchWarehouses, business]);
 
   useEffect(() => {
     customerId && fetchCustomer(customerId);
-  }, [customerId]);
+  }, [customerId, fetchCustomer]);
 
   const fetchDataAndHideEditor = async () => {
     await fetchCustomers(business.name);

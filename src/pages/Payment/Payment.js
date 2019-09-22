@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -37,21 +37,31 @@ const Payment = props => {
     resetPayment();
     fetchInvoices();
     fetchPayment(paymentId);
-  }, []);
+  }, [resetPayment, fetchInvoices, fetchPayment, paymentId]);
+
+  const handlePaymentChangeStore = useCallback(
+    (field, value) => {
+      updatePaymentField(field, value);
+    },
+    [updatePaymentField]
+  );
+
+  const handleInvoiceChange = useCallback(
+    async invoiceId => {
+      handlePaymentChangeStore("transaction", invoiceId);
+    },
+    [handlePaymentChangeStore]
+  );
 
   useEffect(() => {
     if (invoiceId) {
       handleInvoiceChange(invoiceId);
     }
-  }, [invoiceId]);
+  }, [invoiceId, handleInvoiceChange]);
 
   useEffect(() => {
     fetchPayment(paymentId);
-  }, [paymentId]);
-
-  const handleInvoiceChange = async invoiceId => {
-    handlePaymentChangeStore("transaction", invoiceId);
-  };
+  }, [paymentId, fetchPayment]);
 
   const handleDateChange = async date => {
     handlePaymentChangeStore("date_payment", moment(date).format());
@@ -66,10 +76,6 @@ const Payment = props => {
     }
 
     handlePaymentChangeStore(field, value);
-  };
-
-  const handlePaymentChangeStore = (field, value) => {
-    updatePaymentField(field, value);
   };
 
   const handleCreatePayment = async () => {

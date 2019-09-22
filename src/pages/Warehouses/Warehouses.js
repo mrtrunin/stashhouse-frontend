@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
@@ -27,6 +27,8 @@ const Warehouses = props => {
     actions: { fetchProductsStock, fetchWarehouses }
   } = props;
 
+  const { productId, warehouseId } = props.match.params;
+
   const [showWarehouseEditor, setShowWarehouseEditor] = useState(false);
   const [showProductEditor, setShowProductEditor] = useState(false);
   const [warehouseDate, setWarehouseDate] = useState(today);
@@ -35,15 +37,15 @@ const Warehouses = props => {
   useEffect(() => {
     fetchProductsStock(business.name);
     fetchWarehouses(business.name);
-  }, [business]);
-  useEffect(() => showEditors(), [props]);
-  useEffect(() => setRedirect(false), [redirect]);
+  }, [business, fetchProductsStock, fetchWarehouses]);
 
-  const showEditors = () => {
-    const { productId, warehouseId } = props.match.params;
+  const showEditors = useCallback(() => {
     if (productId) setShowProductEditor(true);
     if (warehouseId) setShowWarehouseEditor(true);
-  };
+  }, [productId, warehouseId]);
+
+  useEffect(() => showEditors(), [props, showEditors]);
+  useEffect(() => setRedirect(false), [redirect]);
 
   const handleHideEditors = async () => {
     await setShowProductEditor(false);

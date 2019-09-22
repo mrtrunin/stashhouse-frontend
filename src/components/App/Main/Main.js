@@ -51,7 +51,7 @@ const Main = ({
     } else {
       setIsLandingPage(false);
     }
-  });
+  }, [setIsLandingPage, location.pathname]);
 
   const interceptApiResponse = () => {
     axios.interceptors.request.use(

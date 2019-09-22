@@ -25,5 +25,3 @@ export function fetchBusinesses() {
     }
   };
 }
-
-export default fetchBusinesses;

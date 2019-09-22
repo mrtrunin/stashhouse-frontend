@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
@@ -78,11 +78,7 @@ const Transaction = props => {
 
   const [redirect, setRedirect] = useState(false);
 
-  useEffect(() => {
-    setStartingPosition();
-  }, [business, transactionId]);
-
-  const setStartingPosition = async () => {
+  const setStartingPosition = useCallback(async () => {
     await resetTransaction();
     await fetchCustomers(business.name);
     await fetchWarehouses(business.name);
@@ -94,7 +90,24 @@ const Transaction = props => {
       transactionId
     );
     await setTransactionType(props.match.params.transactionType);
-  };
+  }, [
+    resetTransaction,
+    fetchCustomers,
+    fetchWarehouses,
+    fetchProducts,
+    business,
+    loadExistingTransaction,
+    customers,
+    warehouses,
+    products,
+    transactionId,
+    setTransactionType,
+    props.match.params.transactionType
+  ]);
+
+  useEffect(() => {
+    setStartingPosition();
+  }, [business, transactionId, setStartingPosition]);
 
   const totals = calculateTotals(transactionState);
 

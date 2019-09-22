@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import BusinessesTable from "./components/BusinessesTable";
 
@@ -16,20 +16,21 @@ const Businesses = ({
 }) => {
   const [redirect, setRedirect] = useState(false);
 
-  useEffect(() => {
-    fetchBusinesses();
-  }, []);
+  useEffect(() => fetchBusinesses, [fetchBusinesses]);
+
+  const handleChooseBusiness = useCallback(
+    async business => {
+      chooseBusiness(business);
+      setRedirect(true);
+    },
+    [chooseBusiness]
+  );
 
   useEffect(() => {
     if (businesses.length === 1) {
-      handleChooseBusiness(businesses[0]);
+      return handleChooseBusiness(businesses[0]);
     }
-  }, [businesses]);
-
-  const handleChooseBusiness = async business => {
-    chooseBusiness(business);
-    setRedirect(true);
-  };
+  }, [businesses, handleChooseBusiness]);
 
   if (redirect) {
     return <Redirect to="/warehouses/" />;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import * as emailActions from "components/Email/EmailActions";
 import * as transactionActions from "pages/Transaction/TransactionActions";
@@ -41,18 +41,24 @@ const Emails = props => {
   const [page, setPage] = useState(0);
   const transactionExists = transactionId > 0;
 
-  useEffect(() => {
-    fetchEmailActions();
-  }, []);
-
-  const fetchEmailActions = async () => {
+  const fetchEmailActions = useCallback(async () => {
     if (transactionId) {
       await fetchEmailsForTransaction(transactionId);
       await fetchTransaction(transactionId);
     } else {
       await fetchEmails(business.name);
     }
-  };
+  }, [
+    transactionId,
+    fetchEmailsForTransaction,
+    fetchTransaction,
+    fetchEmails,
+    business
+  ]);
+
+  useEffect(() => {
+    fetchEmailActions();
+  }, [fetchEmailActions]);
 
   const handleOpenEmail = () => {
     setOpenEmail(true);
